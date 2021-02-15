@@ -309,6 +309,8 @@ void OvmsVehicleVWeUp::PollSetState(uint8_t state)
 {
   const char *statename[] = { "OFF", "AWAKE", "CHARGING", "ON" };
   ESP_LOGI(TAG, "PollSetState: %s -> %s", statename[m_poll_state], statename[state]);
+  if (state != m_poll_state)
+    m_obd_pollstart = monotonictime;
   OvmsVehicle::PollSetState(state);
 }
 

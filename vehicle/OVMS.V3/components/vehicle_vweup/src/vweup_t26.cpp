@@ -189,6 +189,8 @@ void OvmsVehicleVWeUp::T26Init()
 
 void OvmsVehicleVWeUp::T26Ticker1(uint32_t ticker)
 {
+  bool switch_off = false;
+
   // Autodisable climate control ticker (30 min.)
   if (vweup_remote_climate_ticker != 0) {
     vweup_remote_climate_ticker--;
@@ -209,25 +211,40 @@ void OvmsVehicleVWeUp::T26Ticker1(uint32_t ticker)
     ocu_awake = true;
   }
 
-  if (StdMetrics.ms_v_bat_12v_voltage->AsFloat() < 13 && !t26_ring_awake && StandardMetrics.ms_v_env_charging12v->AsBool()) {
+  // Check OBD bus state:
+  if (!IsOff() && monotonictime > m_obd_pollstart + 10 &&
+      (m_can1->GetErrorState() >= CAN_errorstate_passive || m_lv_pwrstate->IsStale()))
+  {
+    ESP_LOGI(TAG, "T26Ticker1: OBD switch-off detected");
+    switch_off = true;
+  }
+
+  if (StdMetrics.ms_v_bat_12v_voltage->AsFloat() < 13 && !t26_ring_awake &&
+      StdMetrics.ms_v_env_charging12v->AsBool())
+  {
     // Wait for 12v voltage to come up to 13.2v while getting a boost:
     t26_12v_boost_cnt++;
     if (t26_12v_boost_cnt > 20) {
       ESP_LOGI(TAG, "Car stopped itself charging the 12v battery");
-      StandardMetrics.ms_v_env_charging12v->SetValue(false);
-      StandardMetrics.ms_v_env_aux12v->SetValue(false);
-      t26_12v_boost = false;
-      t26_12v_boost_cnt = 0;
-
-      // Clear powers & currents that are not supported by T26:
-      StdMetrics.ms_v_bat_current->SetValue(0);
-      StdMetrics.ms_v_bat_power->SetValue(0);
-      StdMetrics.ms_v_bat_12v_current->SetValue(0);
-      StdMetrics.ms_v_charge_12v_current->SetValue(0);
-      StdMetrics.ms_v_charge_12v_power->SetValue(0);
-      t26_12v_wait_off = 120; // Wait for two minutes before allowing new polling
-      PollSetState(VWEUP_OFF);
+      switch_off = true;
     }
+  }
+
+  if (switch_off)
+  {
+    StandardMetrics.ms_v_env_charging12v->SetValue(false);
+    StandardMetrics.ms_v_env_aux12v->SetValue(false);
+    t26_12v_boost = false;
+    t26_12v_boost_cnt = 0;
+
+    // Clear powers & currents that are not supported by T26:
+    StdMetrics.ms_v_bat_current->SetValue(0);
+    StdMetrics.ms_v_bat_power->SetValue(0);
+    StdMetrics.ms_v_bat_12v_current->SetValue(0);
+    StdMetrics.ms_v_charge_12v_current->SetValue(0);
+    StdMetrics.ms_v_charge_12v_power->SetValue(0);
+    t26_12v_wait_off = 120; // Wait for two minutes before allowing new polling
+    PollSetState(VWEUP_OFF);
   }
 
   if (StdMetrics.ms_v_bat_12v_voltage->AsFloat() >= 13 && t26_12v_boost_cnt == 0) {

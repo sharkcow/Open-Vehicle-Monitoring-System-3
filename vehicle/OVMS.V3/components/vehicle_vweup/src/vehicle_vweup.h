@@ -308,6 +308,7 @@ protected:
 protected:
   obd_state_t         m_obd_state;                // OBD subsystem state
   poll_vector_t       m_poll_vector;              // List of PIDs to poll
+  uint32_t            m_obd_pollstart;            // monotonictime of last poll state change
 
   int                 m_cfg_cell_interval_drv;    // Cell poll interval while driving, default 15 sec.
   int                 m_cfg_cell_interval_chg;    // … while charging, default 60 sec.
