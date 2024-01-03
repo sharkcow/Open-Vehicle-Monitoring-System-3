@@ -160,6 +160,7 @@ using namespace std;
 #define VWUP_BAT_MGMT_CELL_TBASE        0x1EAE    // cell temperature base address
 #define VWUP_BAT_MGMT_CELL_TLAST        0x1EBD    // cell temperature last address
 #define VWUP_BAT_MGMT_CELL_T17          0x7425    // cell temperature for module #17 (gen1)
+#define VWUP_BAT_MGMT_SOH_CAC           0x74CB    // Ah of HV battery and all cells
 
 #define VWUP_BRKSENS_TEMP               0x1024    // sensor temperature
 
