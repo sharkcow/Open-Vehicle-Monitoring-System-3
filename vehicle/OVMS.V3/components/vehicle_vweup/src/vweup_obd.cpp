@@ -114,7 +114,7 @@ const OvmsPoller::poll_pid_t vweup_gen1_polls[] = {
   // VWUP_MOT_ELEC_GEAR not available
   {VWUP_MOT_ELEC, UDS_READ, VWUP_MOT_ELEC_DRIVEMODE,        {  0,  0,  0,  5}, 1, ISOTP_STD},
 
-  {VWUP_CHG,      UDS_READ, VWUP1_CHG_AC_U,                 {  0,  0,  3,  0}, 1, ISOTP_STD},
+  {VWUP_CHG,      UDS_READ, VWUP1_CHG_AC_U,                 {  0, 20,  3,  0}, 1, ISOTP_STD},
   {VWUP_CHG,      UDS_READ, VWUP1_CHG_AC_I,                 {  0,  0,  3,  0}, 1, ISOTP_STD},
   // Same tick & order important of above 2: VWUP_CHG_AC_I calculates the AC power
   {VWUP_CHG,      UDS_READ, VWUP1_CHG_DC_U,                 {  0,  0,  3,  0}, 1, ISOTP_STD},
@@ -130,7 +130,7 @@ const OvmsPoller::poll_pid_t vweup_gen2_polls[] = {
   {VWUP_MOT_ELEC, UDS_READ, VWUP_MOT_ELEC_GEAR,             {  0,  0,  0,  2}, 1, ISOTP_STD},
   {VWUP_MOT_ELEC, UDS_READ, VWUP_MOT_ELEC_DRIVEMODE,        {  0,  0,  0,  5}, 1, ISOTP_STD},
 
-  {VWUP_CHG,      UDS_READ, VWUP2_CHG_AC_U,                 {  0,  0,  3,  0}, 1, ISOTP_STD},
+  {VWUP_CHG,      UDS_READ, VWUP2_CHG_AC_U,                 {  0, 20,  3,  0}, 1, ISOTP_STD},
   {VWUP_CHG,      UDS_READ, VWUP2_CHG_AC_I,                 {  0,  0,  3,  0}, 1, ISOTP_STD},
   // Same tick & order important of above 2: VWUP_CHG_AC_I calculates the AC power
   {VWUP_CHG,      UDS_READ, VWUP2_CHG_DC_U,                 {  0,  0,  3,  0}, 1, ISOTP_STD},
@@ -964,7 +964,7 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
 
     case VWUP1_CHG_AC_U:
       if (PollReply.FromUint16("VWUP_CHG_AC1_U", value) && value != 511) {
-        if (IsChargeModeAC()) {
+        if (!IsChargeModeDC()) { // always publish so we know if we are plugged
           StdMetrics.ms_v_charge_voltage->SetValue(value);
         }
         VALUE_LOG(TAG, "VWUP_CHG_AC1_U=%f", value);

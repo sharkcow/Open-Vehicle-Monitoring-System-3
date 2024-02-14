@@ -1,0 +1,24 @@
+// wait for success:
+// event group waitforevent
+// EventGroupd setevent
+// semaphore?
+
+// Problem wakeup/request bei Batt<13V:
+// NOK stopping & restarting m_ocuheartbeat
+// NOK in T26Ticker1: <11 & >=11
+// NOK deleting ocuheartbeat: no profile0 success at all anymore...
+// OK wait after wakeup helps 
+
+// XXX Ladeklappe, Auf-/Zuschließen in Profil0?
+// Test Ladedetektion mit ICCBt
+// XXX make RequestProfile0 a custom function
+// XXX add function to reset profile0 to default values?
+// XXX update config values on readprofile (how to avoid looping?)
+// XXX BUG: stray charge message when turning cc on/off (& charge current change?) from wakeup?
+// XXX sometimes crash (0x40091956 0x7ffffffd) in timer, setting pdTRUE and checking for NULL doesn't help...
+// XXX call request on each wakeup to update xvu settings? How to hook in?
+// XXX directly react to messages on CAN, e.g. when cc is on -> stop running attempts/retries!
+// XXX message that cc can't be enabled w/o cc_onbat and no socket power
+// XXX investigate power/current in new e-Up (forum)
+// XXX hide unused features in App
+// XXX CC button on mobile display w/o direct link: turn on EVSE w/ 16A!

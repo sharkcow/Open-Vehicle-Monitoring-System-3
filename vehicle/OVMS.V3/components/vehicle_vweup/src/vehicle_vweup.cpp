@@ -625,7 +625,7 @@ void OvmsVehicleVWeUp::Ticker1(uint32_t ticker)
       {
           if (profile0_state == PROFILE0_IDLE) {
             ESP_LOGI(TAG, "Ticker1: SOC crossed sufficient SOC limit (%d%%), stopping charge", suff_soc);
-            StartStopChargeT26(false);
+            StartStopChargeT26(false); // XXX don't use blocking functions! -> fix use of CommandStartCharge when workaround is active!
           }
           else {
             ESP_LOGW(TAG, "Ticker1: Can't stop charge, profile0 communication already running");
