@@ -1515,15 +1515,15 @@ OvmsVehicle::vehicle_command_t OvmsVehicle::CommandStatTrip(int verbosity, OvmsW
   if (duration_h > 0) 
     {
     buf
-      << duration_h
+      << +duration_h
       << ":"
       << std::setw(2) << std::setfill('0')
       ;
     }
   buf
-    << duration_min
+    << +duration_min
     << ":"
-    << std::setw(2) << std::setfill('0') << duration_sec
+    << std::setw(2) << std::setfill('0') << +duration_sec
     << std::setfill(' ')
     << ") "
     << " Avg "
