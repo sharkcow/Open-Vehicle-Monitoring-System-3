@@ -76,6 +76,7 @@ const OvmsPoller::poll_pid_t vweup_polls[] = {
   {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_TEMP,             {  0, 20, 20, 20}, 1, ISOTP_STD},
   {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_HIST18,           {  0, 20, 20, 20}, 1, ISOTP_STD},
   {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_CAC,          {  0, 20, 20, 20}, 1, ISOTP_STD},
+  {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0, 20, 20, 20}, 1, ISOTP_STD}, //(znams)
 
   {VWUP_CHG,      UDS_READ, VWUP_CHG_POWER_EFF,             {  0,  0, 10,  0}, 1, ISOTP_STD},
 
@@ -954,6 +955,12 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
         float soh = value / ((vweup_modelyear > 2019) ? 120.0f : 50.0f);
         m_bat_soh_vw->SetValue(soh);
         VALUE_LOG(TAG, "VWUP_BAT_MGMT_SOH_CAC: %f => CAC=%f, SOH=%f", value, cac, m_bat_soh_vw->AsFloat());
+      }
+      break;
+
+    case VWUP_BAT_MGMT_SOH_HIST: // (znams) Testing the reply from the PID 74CC
+      if (PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, 4)) {
+        ESP_LOGD(TAG, "Testing_reply_from_74CC=%f", value);
       }
       break;
 
