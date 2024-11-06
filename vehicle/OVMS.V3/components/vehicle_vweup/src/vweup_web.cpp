@@ -660,8 +660,8 @@ void OvmsVehicleVWeUp::GetDashboardConfig(DashboardConfig& cfg)
   dash_gauge_t speed_dash(NULL,Kph);
   speed_dash.SetMinMax(0, 140, 5);
   speed_dash.AddBand("green", 0, 100);
-  speed_dash.AddBand("yellow", 100, 120);
-  speed_dash.AddBand("red", 120, 140);
+  speed_dash.AddBand("yellow", 100, 110);   //(znams) Changing the dashboard in order to verify changes after flashing (before=120, after=110)
+  speed_dash.AddBand("red", 110, 140);      //(before=120, after=110)
 
   // Voltage:
   dash_gauge_t voltage_dash(NULL,Volts);
