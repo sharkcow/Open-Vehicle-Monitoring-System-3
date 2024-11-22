@@ -32,6 +32,8 @@ static const char *TAG = "v-vweup";
 #include <iomanip>
 #include <algorithm>
 #include <cmath>
+#include <array>    //(znams)
+#include <sstream>  //(znams)
 
 #include "pcp.h"
 #include "ovms_metrics.h"
@@ -960,7 +962,27 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
 
     case VWUP_BAT_MGMT_SOH_HIST: // (znams) Testing the reply from the PID 74CC
       if (PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, 4)) {
-        ESP_LOGD(TAG, "Testing_reply_from_74CC=%f", value);
+        int i;    //Number of cell pack
+        int j;    //Quarterly measurement
+        int byteCounter = 4; // Starting position of the first byte
+        int cellPack;
+        int quarter = 40;
+        if (vweup_modelyear > 2019){  //checking the model year
+          cellPack = 14;
+        } else {
+          cellPack = 17;
+        }
+        std::array<std::array<int, quarter>, cellPack> sohArray;
+        std::stringstream ss;
+        for(i = 0; i < cellPack; i++){
+          for(j = 0; j < quarter; j++){
+              PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, byteCounter++);
+              sohArray[i][j] = value;
+              ss << sohArray[i][j] << " "; // Add each element and a space
+          }
+        }
+        std::string result = ss.str();
+        ESP_LOGD(TAG, "SOH_history_from_74CC: %s", result);
       }
       break;
 
