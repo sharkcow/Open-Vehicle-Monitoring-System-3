@@ -965,17 +965,17 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
         int i;    //Number of cell pack
         int j;    //Quarterly measurement
         int byteCounter = 4; // Starting position of the first byte
-        int cellPack;
-        int quarter = 40;
-        if (vweup_modelyear > 2019){  //checking the model year
+        //int cellPack;
+        //int quarter = 40;
+       /* if (vweup_modelyear > 2019){  //checking the model year
           cellPack = 14;
         } else {
           cellPack = 17;
-        }
-        std::array<std::array<int, quarter>, cellPack> sohArray;
+        }*/
+        std::array<std::array<int, 40>, 17> sohArray;
         std::stringstream ss;
-        for(i = 0; i < cellPack; i++){
-          for(j = 0; j < quarter; j++){
+        for(i = 0; i < 17; i++){
+          for(j = 0; j < 40; j++){
               PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, byteCounter++);
               sohArray[i][j] = value;
               ss << sohArray[i][j] << " "; // Add each element and a space
