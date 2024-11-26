@@ -981,8 +981,8 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
               ss << sohArray[i][j] << " "; // Add each element and a space
           }
         }
-        std::string resultSoh = ss.str();
-        ESP_LOGD(TAG, "SOH_history_from_74CC: %i", resultSoh);
+        //std::string resultSoh = ss.str();
+        ESP_LOGD(TAG, "SOH_history_from_74CC: %s", ss.str());
       }
       break;
 
