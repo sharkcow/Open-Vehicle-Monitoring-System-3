@@ -982,7 +982,7 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
           }
         }
         std::string resultSoh = ss.str();
-        ESP_LOGD(TAG, "SOH_history_from_74CC: %c", resultSoh);
+        ESP_LOGD(TAG, "SOH_history_from_74CC: %i", resultSoh);
       }
       break;
 
