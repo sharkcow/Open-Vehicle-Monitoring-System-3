@@ -979,7 +979,7 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
           for(j = 0; j < 40; j++){
               PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, byteCounter++);
               sohArray[i][j] = value;
-              resultSoh += to_string(sohArray[i][j]);
+              resultSoh += std::to_string(sohArray[i][j]);
               //ss << sohArray[i][j] << " "; // Add each element and a space
           }
         }
@@ -1361,7 +1361,7 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
       }
       break;
 
-    case VWUP_BAT_MGMT_HIST18:lockst
+    case VWUP_BAT_MGMT_HIST18:
       // XXX OBD-Amigos: AC Ah: b21-b24, DC Ah: b29-b32, regen Ah: b5-b8, HV usage counter: U16(V2,V3), CCS usage counter: U16(V8,V9)
       break;
     case VWUP_CHG_HEATER_I:
