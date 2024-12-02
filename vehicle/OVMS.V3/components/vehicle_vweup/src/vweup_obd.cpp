@@ -982,7 +982,7 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
               sohArray[i][j] = value;
               char buffer[12];
               snprintf(buffer, sizeof(buffer), "%d", sohArray[i][j]);
-              resultSoh += buffer;
+              resultSoh += buffer // removed semicolumn (Testing)
               resultSoh += " ";
               //ss << sohArray[i][j] << " "; // Add each element and a space
           }
