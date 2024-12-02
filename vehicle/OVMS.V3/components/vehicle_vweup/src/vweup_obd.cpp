@@ -34,6 +34,7 @@ static const char *TAG = "v-vweup";
 #include <cmath>
 #include <array>    //(znams)
 #include <sstream>  //(znams)
+#include <cstdio>   //(znams)
 
 #include "pcp.h"
 #include "ovms_metrics.h"
@@ -979,12 +980,15 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
           for(j = 0; j < 40; j++){
               PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, byteCounter++);
               sohArray[i][j] = value;
-              resultSoh += std::to_string(sohArray[i][j]);
+              char buffer[12];
+              snprintf(buffer, sizeof(buffer), "%d", sohArray[i][j]);
+              resultSoh += buffer;
+              resultSoh += " ";
               //ss << sohArray[i][j] << " "; // Add each element and a space
           }
         }
         //std::string resultSoh = ss.str();
-        ESP_LOGD(TAG, "SOH_history_from_74CC: %s", resultSoh);
+        ESP_LOGD(TAG, "SOH_history_from_74CC: %s", resultSoh.c_str());
       }
       break;
 
