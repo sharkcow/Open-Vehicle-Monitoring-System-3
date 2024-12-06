@@ -976,7 +976,7 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
         std::array<std::array<int, 40>, 17> sohArray;
         //std::stringstream ss;
         std::string resultSoh = "";
-        for(i = 0; i < 17; i++){
+        for(i = 0; i < ((vweup_modelyear > 2019) ? 14 : 17); i++){    // Distinguishing model year
           for(j = 0; j < 40; j++){
               PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, byteCounter++);
               sohArray[i][j] = value;
