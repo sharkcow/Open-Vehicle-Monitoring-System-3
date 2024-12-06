@@ -966,7 +966,7 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
         int i;    //Number of cell pack
         int j;    //Quarterly measurement
         int byteCounter = 4; // Starting position of the first byte
-        std::array<std::array<int, 40>, ((vweup_modelyear > 2019) ? 14 : 17)> sohArray; // Distinguishing model year
+        std::array<std::array<int, 40>, 17> sohArray;
         std::string resultSoh = "";
         for(i = 0; i < ((vweup_modelyear > 2019) ? 14 : 17); i++){    // Distinguishing model year
           for(j = 0; j < 40; j++){
