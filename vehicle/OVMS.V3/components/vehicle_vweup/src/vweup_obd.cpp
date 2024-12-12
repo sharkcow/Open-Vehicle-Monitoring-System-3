@@ -968,17 +968,19 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
         int i;    //Number of cell pack
         int j;    //Quarterly measurement
         int byteCounter = 4; // Starting position of the first byte
-        std::array<std::array<int, 40>, 17> sohArray;
+        //std::array<std::array<int, 40>, 17> sohArray;
+        std::vector<int> sohArray(17);
         std::string resultSoh = "";
         for(i = 0; i < ((vweup_modelyear > 2019) ? 14 : 17); i++){    // Distinguishing model year
-          for(j = 0; j < 40; j++){
+         // for(j = 0; j < 40; j++){
               PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, byteCounter++);
-              sohArray[i][j] = value;
+              sohArray[i]/*[j]*/ = value;
               char buffer[12];
-              snprintf(buffer, sizeof(buffer), "%d", sohArray[i][j]);
+              snprintf(buffer, sizeof(buffer), "%d", sohArray[i]/*[j]*/);
               resultSoh += buffer;
               resultSoh += " ";
-          }
+              SOHHistory->SetElemValue(i,value);
+         // }
         }
         ESP_LOGD(TAG, "SOH_history_from_74CC: %s", resultSoh.c_str());
       }
