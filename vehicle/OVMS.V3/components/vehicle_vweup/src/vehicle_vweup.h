@@ -426,6 +426,8 @@ protected:
   OvmsMetricInt *ServiceDays;                     // Days until next scheduled maintenance/service
   OvmsMetricVector<float> *TPMSDiffusion;         // TPMS Indicator for Pressure Diffusion
   OvmsMetricVector<float> *TPMSEmergency;         // TPMS Indicator for Tyre Emergency
+  OvmsMetricVector<int> *SOHHistory;              // SOH history data (znams)
+
 
   OvmsMetricFloat *BatTempMax;
   OvmsMetricFloat *BatTempMin;
