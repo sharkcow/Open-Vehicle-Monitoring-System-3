@@ -76,7 +76,7 @@ void OvmsVehicleVWeUp::WebDeInit()
 /**
  * WebCfgFeatures: configure general parameters (URL /xvu/config)
  */
-void OvmsVehicleVWeUp::WebCfgFeatures(PageEntry_t &p, PageContext_t &c)
+void OvmsVehicleVWeUp::WebCfgFeatures(PageEntry_t &p, PageContext_t &c)   //(znams) The void function I need
 {
   ConfigParamMap pmap = MyConfig.GetParamMap("xvu");
   ConfigParamMap nmap = pmap;
@@ -247,6 +247,7 @@ void OvmsVehicleVWeUp::WebCfgFeatures(PageEntry_t &p, PageContext_t &c)
     "for accuracy and is more temperature dependent.</p><p>For more details, see <a target=\"_blank\" "
     "href=\"https://docs.openvehicles.com/en/latest/components/vehicle_vweup/docs/index_obd.html#battery-capacity-soh\""
     ">Battery Capacity &amp; SOH</a>.</p>");
+    c.input_radiobtn_end("<p><b>Official SOH History data</b> ");   //(znams)
   c.fieldset_end();
 
   c.fieldset_start("BMS Cell Monitoring", "needs-con-obd");
