@@ -247,7 +247,78 @@ void OvmsVehicleVWeUp::WebCfgFeatures(PageEntry_t &p, PageContext_t &c)   //(zna
     "for accuracy and is more temperature dependent.</p><p>For more details, see <a target=\"_blank\" "
     "href=\"https://docs.openvehicles.com/en/latest/components/vehicle_vweup/docs/index_obd.html#battery-capacity-soh\""
     ">Battery Capacity &amp; SOH</a>.</p>");
-    c.input_radiobtn_end("<p><b>Official SOH History data</b> ");   //(znams)
+    c.input_radiobtn_end("<p><b>Official SOH History data</b> "   //(znams)
+    "    <h4>TPMS</h4>
+     <div class="metric table"
+       data-metric="xvu.b.soh.hist">
+       <table class="table table-striped table-bordered table-hover"
+id="v-table" />
+     </div>
+<script>
+(function(){
+
+   // Utilities:
+   var alertMap = {
+     0: '',
+     1: '<i class="warning">⚐</i>',
+     2: '<i class="danger">⚑</i>',
+   };
+
+   function fmtCode(value, map) {
+     return (map[value] !== undefined) ? map[value] : null;
+   }
+   function fmtNumber(value, prec) {
+     return (value !== undefined) ? Number(value).toFixed(prec) : null;
+   }
+
+   // Init table:
+   $('#v-table').table({
+     responsive: false,
+     paging: false,
+     searching: false,
+     info: false,
+     autoWidth: false,
+     columns: [
+       { title: "",         className: "dt-body-center",  width: "6%",
+responsivePriority: 1 },
+       { title: "FL",   className: "dt-body-right",   width: "22%",
+responsivePriority: 3 },
+       { title: "FR",   className: "dt-body-right",   width: "22%",
+responsivePriority: 4 },
+       { title: "RL",   className: "dt-body-right",   width: "22%",
+responsivePriority: 5 },
+       { title: "RR",  className: "dt-body-right",   width: "22%",
+responsivePriority: 2 },
+     ],
+     rowId: 0,
+     onUpdate: function(update) {
+       // Get vector metrics to display:
+       var v1 = [];
+       v1.push([
+         "diffusion",
+         metrics["xvu.b.soh.hist"][0],
+         metrics["xvu.b.soh.hist"][1],
+         metrics["xvu.b.soh.hist"][2],
+         metrics["xvu.b.soh.hist"][3],
+       ]);
+       var v2 = [];
+       v2.push([
+         "emergency",
+         metrics["xvu.b.soh.hist"][4],
+         metrics["xvu.b.soh.hist"][5],
+         metrics["xvu.b.soh.hist"][6],
+         metrics["xvu.b.soh.hist"][7],
+       ]);
+       // Display new data:
+       this.clear().rows.add(v1).draw();
+       this.rows.add(v2).draw();
+     },
+   });
+})();
+</script>
+   </div>
+  </div>
+</div>");   //(znams)
   c.fieldset_end();
 
   c.fieldset_start("BMS Cell Monitoring", "needs-con-obd");
