@@ -687,7 +687,7 @@ void OvmsWebServer::HandleBmsCellMonitor(PageEntry_t& p, PageContext_t& c)
 
   c.print(
     "<div class=\"panel panel-primary panel-single receiver\" id=\"livestatus\">\n"
-      "<div class=\"panel-heading\">BMS Cell Monitor</div>\n"
+      "<div class=\"panel-heading\">BMS Cell Monitor TEST CHANGE</div>\n" //(znams)
       "<div class=\"panel-body\">\n"
         "<div class=\"row\">\n"
           "<div id=\"voltchart\" style=\"width: 100%; max-width: 100%; height: 45vh; min-height: 280px; margin: 0 auto\"></div>\n"
