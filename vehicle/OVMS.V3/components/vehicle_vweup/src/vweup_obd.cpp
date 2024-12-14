@@ -193,6 +193,8 @@ void OvmsVehicleVWeUp::OBDInit()
     TPMSDiffusion = MyMetrics.InitVector<float>("xvu.v.t.diff", SM_STALE_NONE, 0);
     TPMSEmergency = MyMetrics.InitVector<float>("xvu.v.t.emgcy", SM_STALE_NONE, 0);
     SOHHistory = MyMetrics.InitVector<int>("xvu.b.soh.hist", SM_STALE_NONE, 0, Percentage);  //(znams)
+    int i;
+    int j;
     std::vector<int> sohArray = {125, 124, 123, 122, 121, 120, 119, 118, 117, 116};
     //SOHHistory -> sohArray;
     //int value = 125;
