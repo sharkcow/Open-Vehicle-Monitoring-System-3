@@ -194,12 +194,12 @@ void OvmsVehicleVWeUp::OBDInit()
     TPMSEmergency = MyMetrics.InitVector<float>("xvu.v.t.emgcy", SM_STALE_NONE, 0);
     SOHHistory = MyMetrics.InitVector<int>("xvu.b.soh.hist", SM_STALE_NONE, 0, Percentage);  //(znams)
     std::vector<int> sohArray = {125, 124, 123, 122, 121, 120, 119, 118, 117, 116};
-    SOHHistory -> sohArray;
+    //SOHHistory -> sohArray;
+    //int value = 125;
+    for(j = 0; j < ((vweup_modelyear > 2019) ? 14 : 17); j++){
+      SOHHistory->SetElemValue(i,sohArray);
 
-  /* for(i = 0; i < ((vweup_modelyear > 2019) ? 14 : 17); i++){
-      SOHHistory->SetElemValue(i,value);
-
-    } */
+    } 
 
     // Battery SOH:
     //  . from ECU 8C PID 74 CB
