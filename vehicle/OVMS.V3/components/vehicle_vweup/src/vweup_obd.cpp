@@ -193,7 +193,8 @@ void OvmsVehicleVWeUp::OBDInit()
     TPMSDiffusion = MyMetrics.InitVector<float>("xvu.v.t.diff", SM_STALE_NONE, 0);
     TPMSEmergency = MyMetrics.InitVector<float>("xvu.v.t.emgcy", SM_STALE_NONE, 0);
     SOHHistory = MyMetrics.InitVector<int>("xvu.b.soh.hist", SM_STALE_NONE, 0, Percentage);  //(znams)
-
+    std::vector<int> sohArray = {125, 124, 123, 122, 121, 120, 119, 118, 117, 116};
+    SOHHistory = sohArray;
 
     // Battery SOH:
     //  . from ECU 8C PID 74 CB
@@ -964,27 +965,28 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
       break;
 
     case VWUP_BAT_MGMT_SOH_HIST: // (znams) Testing the reply from the PID 74CC
-      if (PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, 4)) {
-        int i;    //Number of cell pack
-        int j;    //Quarterly measurement
-        int byteCounter = 4; // Starting position of the first byte
+      
+      //if (PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, 4)) {
+       // int i;    //Number of cell pack
+       // int j;    //Quarterly measurement
+       // int byteCounter = 4; // Starting position of the first byte
         //std::array<std::array<int, 40>, 17> sohArray;
-        std::vector<int> sohArray(17);
-        std::string resultSoh = "";
-        for(i = 0; i < ((vweup_modelyear > 2019) ? 14 : 17); i++){    // Distinguishing model year
+       // std::vector<int> sohArray(17);
+       // std::string resultSoh = "";
+       // for(i = 0; i < ((vweup_modelyear > 2019) ? 14 : 17); i++){    // Distinguishing model year
          // for(j = 0; j < 40; j++){
-              PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, byteCounter++);
-              sohArray[i]/*[j]*/ = value;
-              char buffer[12];
-              snprintf(buffer, sizeof(buffer), "%d", sohArray[i]/*[j]*/);
-              resultSoh += buffer;
-              resultSoh += " ";
-              SOHHistory->SetElemValue(i,value);
+         //     PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, byteCounter++);
+           //   sohArray[i]/*[j]*/ = value;
+             // char buffer[12];
+            //  snprintf(buffer, sizeof(buffer), "%d", sohArray[i]/*[j]*/);
+            //  resultSoh += buffer;
+            //  resultSoh += " ";
+            //  SOHHistory->SetElemValue(i,value);
          // }
-        }
-        ESP_LOGD(TAG, "SOH_history_from_74CC: %s", resultSoh.c_str());
-      }
-      break;
+       // }
+       // ESP_LOGD(TAG, "SOH_history_from_74CC: %s", resultSoh.c_str());
+     // }
+      break; 
 
     case VWUP1_CHG_AC_U:
       if (PollReply.FromUint16("VWUP_CHG_AC1_U", value) && value != 511) {
