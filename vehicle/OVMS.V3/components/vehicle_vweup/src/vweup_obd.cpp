@@ -197,9 +197,9 @@ void OvmsVehicleVWeUp::OBDInit()
     int j;
     std::vector<int> sohArray = {125, 124, 123, 122, 121, 120, 119, 118, 117, 116};
     //SOHHistory -> sohArray;
-    //int value = 125;
+    int value = 125;
     for(i = 0; i < ((vweup_modelyear > 2019) ? 14 : 17); i++){
-      SOHHistory->SetElemValue(i,sohArray);
+      SOHHistory->SetElemValue(i,value);
 
     } 
 
