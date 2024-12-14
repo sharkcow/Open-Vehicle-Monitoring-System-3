@@ -199,7 +199,7 @@ void OvmsVehicleVWeUp::OBDInit()
     //SOHHistory -> sohArray;
     int value = 125;
     for(i = 0; i < ((vweup_modelyear > 2019) ? 14 : 17); i++){
-      SOHHistory->SetElemValue(i,value);
+      SOHHistory->SetElemValue(i,value--);
 
     } 
 
