@@ -195,12 +195,11 @@ void OvmsVehicleVWeUp::OBDInit()
     SOHHistory = MyMetrics.InitVector<int>("xvu.b.soh.hist", SM_STALE_NONE, 0, Percentage);  //(znams)
     int i;
     int j;
-    std::vector<int> sohArray = {125, 124, 123, 122, 121, 120, 119, 118, 117, 116};
+    std::vector<int> sohArray = {130, 129, 123, 122, 121, 120, 119, 118, 117, 116};
     //SOHHistory -> sohArray;
     int value = 125;
     for(i = 0; i < ((vweup_modelyear > 2019) ? 14 : 17); i++){
-      SOHHistory->SetElemValue(i,value--);
-
+      SOHHistory->SetElemValue(i, sohArray[i++]);
     } 
 
     // Battery SOH:
