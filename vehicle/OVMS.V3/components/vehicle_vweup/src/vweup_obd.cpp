@@ -220,7 +220,7 @@ void OvmsVehicleVWeUp::OBDInit()
 
     std::vector<int> sohArray = {100, 97, 100, 97, 95, 95, 96, 97, 93, 93, 94, 94, 94, 92, 94, 91, 93, 91, 90, 91, 91, 89, 93, 92, 204};
     for(j = 0; j < 25; j++){
-         SOHHistory->SetElemValue(i, sohArray[k++]);
+         SOHHistory->SetElemValue(j, sohArray[k++]);
       }
 
     // Battery SOH:
