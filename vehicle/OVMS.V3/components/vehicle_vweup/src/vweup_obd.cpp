@@ -197,7 +197,7 @@ void OvmsVehicleVWeUp::OBDInit()
     int j;
     int k = 0;
     int p = 0;
-    /*std::vector<vector<int>> sohArray = {
+    std::vector<vector<int>> sohArray = {
       {100, 97, 100, 97, 95, 95, 96, 97, 93, 93, 94, 94, 94, 92, 94, 91, 93, 91, 90, 91, 91, 89, 93, 92, 204},
       {100, 97, 99, 96, 95, 95, 95, 96, 93, 93, 94, 93, 93, 92, 93, 91, 92, 91, 90, 90, 90, 89, 93, 91, 204},
       {100, 96, 99, 96, 95, 95, 96, 97, 94, 93, 94, 94, 93, 92, 93, 91, 92, 90, 92, 90, 91, 89, 93, 91, 204},
@@ -211,17 +211,18 @@ void OvmsVehicleVWeUp::OBDInit()
       {100, 97, 99, 96, 95, 95, 96, 97, 94, 93, 94, 94, 94, 92, 93, 91, 93, 90, 91, 90, 91, 90, 93, 91, 204},
     };
     //SOHHistory -> sohArray;
-    int value = 125;
-    for(i = 0; i < ((vweup_modelyear > 2019) ? 14 : 17); i++){
+   // int value = 125;
+    for(i = 0; i < 11; i++){
       for(j = 0; j < 25; j++){
-         SOHHistory->SetElemValue(i, sohArray[k++][p++]);
+         SOHHistory->SetElemValue(j, sohArray[k++][p++]);
       }
-    } */
-
+    } 
+/*
     std::vector<int> sohArray = {100, 97, 100, 97, 95, 95, 96, 97, 93, 93, 94, 94, 94, 92, 94, 91, 93, 91, 90, 91, 91, 89, 93, 92, 204};
     for(j = 0; j < 25; j++){
          SOHHistory->SetElemValue(j, sohArray[k++]);
       }
+*/
 
     // Battery SOH:
     //  . from ECU 8C PID 74 CB
