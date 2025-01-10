@@ -197,7 +197,7 @@ void OvmsVehicleVWeUp::OBDInit()
     int j;
     int k = 0;
     int p = 0;
-    /*
+    
     std::vector<vector<int>> sohArray = {
       {100, 97, 100, 97, 95, 95, 96, 97, 93, 93, 94, 94, 94, 92, 94, 91, 93, 91, 90, 91, 91, 89, 93, 92, 204},
       {100, 97, 99, 96, 95, 95, 95, 96, 93, 93, 94, 93, 93, 92, 93, 91, 92, 91, 90, 90, 90, 89, 93, 91, 204},
@@ -218,13 +218,13 @@ void OvmsVehicleVWeUp::OBDInit()
       for(j = 0; j < 25; j++){
          SOHHistory->SetElemValue(j, sohArray[k++][p++]);
       }
-    } */
-
-    std::vector<int> sohArray = {100, 97, 100, 97, 95, 95, 96, 97, 93, 93, 94, 94, 94, 92, 94, 91, 93, 91, 90, 91, 91, 89, 93, 92, 204};
+    } 
+/*
+    std::vector<int> sohArray = {100, 97, 100, 97, 95, 95, 96, 97, 93, 93, 94, 94, 94, 92, 94, 91, 93, 91, 90, 91, 91, 89, 93, 92, 204}; //(znams) Only one battery cell
     for(j = 0; j < 25; j++){
          SOHHistory->SetElemValue(j, sohArray[k++]);
       }
-
+*/
 
     // Battery SOH:
     //  . from ECU 8C PID 74 CB
