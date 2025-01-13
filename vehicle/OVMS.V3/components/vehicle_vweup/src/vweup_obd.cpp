@@ -217,7 +217,7 @@ void OvmsVehicleVWeUp::OBDInit()
    
     for(i = 0; i < 11; i++){
       for(j = 0; j < 25; j++){
-        sohArray[i][j] = value;
+        value = sohArray[i][j];
          SOHHistory->SetElemValue(i, value);
       }
     } 
