@@ -192,7 +192,7 @@ void OvmsVehicleVWeUp::OBDInit()
     ServiceDays =  MyMetrics.InitInt("xvu.e.serv.days", SM_STALE_NONE, 0);
     TPMSDiffusion = MyMetrics.InitVector<float>("xvu.v.t.diff", SM_STALE_NONE, 0);
     TPMSEmergency = MyMetrics.InitVector<float>("xvu.v.t.emgcy", SM_STALE_NONE, 0);
-    SOHHistory = MyMetrics.InitVector<MyMetrics.InitVector<int>("xvu.b.soh.hist", SM_STALE_NONE, 0, Percentage)>;  //(znams)
+    SOHHistory = MyMetrics.InitVector<MyMetrics.InitVector<int>>("xvu.b.soh.hist", SM_STALE_NONE, 0, Percentage);  //(znams)
     int i;
     int j;
     int value;
