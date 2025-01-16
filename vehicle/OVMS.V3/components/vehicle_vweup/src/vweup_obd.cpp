@@ -192,7 +192,7 @@ void OvmsVehicleVWeUp::OBDInit()
     ServiceDays =  MyMetrics.InitInt("xvu.e.serv.days", SM_STALE_NONE, 0);
     TPMSDiffusion = MyMetrics.InitVector<float>("xvu.v.t.diff", SM_STALE_NONE, 0);
     TPMSEmergency = MyMetrics.InitVector<float>("xvu.v.t.emgcy", SM_STALE_NONE, 0);
-    SOHHistory = MyMetrics.InitVector<MyMetrics.InitVector<int>>("xvu.b.soh.hist", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHHistory = MyMetrics.InitVector<int>("xvu.b.soh.hist", SM_STALE_NONE, 0, Percentage);  //(znams)
     int i;
     int j;
     int value;
@@ -218,8 +218,10 @@ void OvmsVehicleVWeUp::OBDInit()
     for(i = 0; i < 11; i++){
       for(j = 0; j < 25; j++){
         value = sohArray[i][j];
-         SOHHistory->SetElemValue(i, value);
+         SOHHistory->SetElemValue(j, value);
       }
+      value = sohArray[i][j];
+         SOHHistory->SetElemValue(i, value);
     } 
 /*
     std::vector<int> sohArray = {100, 97, 100, 97, 95, 95, 96, 97, 93, 93, 94, 94, 94, 92, 94, 91, 93, 91, 90, 91, 91, 89, 93, 92, 204}; //(znams) Only one battery cell
