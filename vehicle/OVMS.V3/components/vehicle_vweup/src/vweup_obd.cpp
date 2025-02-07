@@ -1004,7 +1004,7 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
         int byteCounter = 4; // Starting position of the first byte
         //std::array<std::array<int, 40>, 17> sohArray;
         std::vector<int> sohArray(680);
-       // std::string resultSoh = "";
+        std::string resultSoh = "";
        // for(i = 0; i < ((vweup_modelyear > 2019) ? 14 : 17); i++){    // Distinguishing model year
          // for(j = 0; j < 40; j++){
          for(i = 0; i < ((vweup_modelyear > 2019) ? 560 : 640); i++){
@@ -1016,9 +1016,9 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
               resultSoh += " ";
               SOHHistory->SetElemValue(i,value);
           }
-        }
+       // }
         ESP_LOGD(TAG, "SOH_history_from_74CC: %s", resultSoh.c_str());
-  //}
+  }
       break; 
 
     case VWUP1_CHG_AC_U:
