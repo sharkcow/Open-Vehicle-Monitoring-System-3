@@ -193,12 +193,12 @@ void OvmsVehicleVWeUp::OBDInit()
     TPMSDiffusion = MyMetrics.InitVector<float>("xvu.v.t.diff", SM_STALE_NONE, 0);
     TPMSEmergency = MyMetrics.InitVector<float>("xvu.v.t.emgcy", SM_STALE_NONE, 0);
     SOHHistory = MyMetrics.InitVector<int>("xvu.b.soh.hist", SM_STALE_NONE, 0, Percentage);  //(znams)
-    int i;
+   /* int i;
     int j;
     int value;
     int k = 0;
     int p = 0;
-    std::vector<int> sohVector = {100, 97, 100, 97, 95, 95, 96, 97, 93, 93, 94, 94, 94, 92, 94, 91, 93, 91, 90, 91, 91, 89, 93, 92, 204, 100, 97, 99, 96, 95, 95, 95, 96, 93, 93, 94, 93, 93, 92, 93, 91, 92, 91, 90, 90, 90, 89, 93, 91, 204, 100, 96, 99, 96, 95, 95, 96, 97, 94, 93, 94, 94, 93, 92, 93, 91, 92, 90, 92, 90, 91, 89, 93, 91, 204, 100, 96, 99, 97, 94, 95, 96, 96, 93, 93, 94, 94, 93, 92, 92, 91, 92, 90, 91, 90, 89, 89, 93, 91, 204, 100, 97, 99, 96, 95, 95, 96, 96, 93, 93, 94, 94, 93, 92, 93, 91, 93, 90, 91, 90, 89, 90, 93, 91, 204, 100, 97, 99, 96, 95, 95, 96, 97, 94, 93, 94, 94, 94, 92, 93, 91, 93, 90, 91, 90, 91, 90, 93, 91, 204, 100, 97, 99, 96, 95, 95, 95, 96, 93, 93, 94, 93, 93, 92, 93, 91, 92, 91, 90, 90, 90, 89, 93, 91, 204, 100, 96, 99, 96, 95, 95, 96, 97, 94, 93, 94, 94, 93, 92, 93, 91, 92, 90, 92, 90, 91, 89, 93, 91, 204};
+    std::vector<int> sohVector = {100, 97, 100, 97, 95, 95, 96, 97, 93, 93, 94, 94, 94, 92, 94, 91, 93, 91, 90, 91, 91, 89, 93, 92, 204, 100, 97, 99, 96, 95, 95, 95, 96, 93, 93, 94, 93, 93, 92, 93, 91, 92, 91, 90, 90, 90, 89, 93, 91, 204, 100, 96, 99, 96, 95, 95, 96, 97, 94, 93, 94, 94, 93, 92, 93, 91, 92, 90, 92, 90, 91, 89, 93, 91, 204, 100, 96, 99, 97, 94, 95, 96, 96, 93, 93, 94, 94, 93, 92, 92, 91, 92, 90, 91, 90, 89, 89, 93, 91, 204, 100, 97, 99, 96, 95, 95, 96, 96, 93, 93, 94, 94, 93, 92, 93, 91, 93, 90, 91, 90, 89, 90, 93, 91, 204, 100, 97, 99, 96, 95, 95, 96, 97, 94, 93, 94, 94, 94, 92, 93, 91, 93, 90, 91, 90, 91, 90, 93, 91, 204, 100, 97, 99, 96, 95, 95, 95, 96, 93, 93, 94, 93, 93, 92, 93, 91, 92, 91, 90, 90, 90, 89, 93, 91, 204, 100, 96, 99, 96, 95, 95, 96, 97, 94, 93, 94, 94, 93, 92, 93, 91, 92, 90, 92, 90, 91, 89, 93, 91, 204};*/
    /* std::vector<vector<int>> sohArray = {
       {100, 97, 100, 97, 95, 95, 96, 97, 93, 93, 94, 94, 94, 92, 94, 91, 93, 91, 90, 91, 91, 89, 93, 92, 204},
       {100, 97, 99, 96, 95, 95, 95, 96, 93, 93, 94, 93, 93, 92, 93, 91, 92, 91, 90, 90, 90, 89, 93, 91, 204},
@@ -215,11 +215,11 @@ void OvmsVehicleVWeUp::OBDInit()
     //SOHHistory -> sohArray;
    // int value = 125;
    
-    for(i = 0; i < 200; i++){
+    /*for(i = 0; i < 200; i++){
  //     for(j = 0; j < 25; j++){
         value = sohVector[i];
          SOHHistory->SetElemValue(i, value);
-      }
+      }*/
 
 /*
     std::vector<int> sohArray = {100, 97, 100, 97, 95, 95, 96, 97, 93, 93, 94, 94, 94, 92, 94, 91, 93, 91, 90, 91, 91, 89, 93, 92, 204}; //(znams) Only one battery cell
@@ -998,26 +998,27 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
 
     case VWUP_BAT_MGMT_SOH_HIST: // (znams) Testing the reply from the PID 74CC
       
-      //if (PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, 4)) {
-       // int i;    //Number of cell pack
+      if (PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, 4)) {
+        int i;    //Number of cell pack
        // int j;    //Quarterly measurement
-       // int byteCounter = 4; // Starting position of the first byte
+        int byteCounter = 4; // Starting position of the first byte
         //std::array<std::array<int, 40>, 17> sohArray;
-       // std::vector<int> sohArray(17);
+        std::vector<int> sohArray(680);
        // std::string resultSoh = "";
        // for(i = 0; i < ((vweup_modelyear > 2019) ? 14 : 17); i++){    // Distinguishing model year
          // for(j = 0; j < 40; j++){
-         //     PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, byteCounter++);
-           //   sohArray[i]/*[j]*/ = value;
-             // char buffer[12];
-            //  snprintf(buffer, sizeof(buffer), "%d", sohArray[i]/*[j]*/);
-            //  resultSoh += buffer;
-            //  resultSoh += " ";
-            //  SOHHistory->SetElemValue(i,value);
-         // }
-       // }
-       // ESP_LOGD(TAG, "SOH_history_from_74CC: %s", resultSoh.c_str());
-     // }
+         for(i = 0; i < ((vweup_modelyear > 2019) ? 560 : 640); i++){
+              PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, byteCounter++);
+              sohArray[i]/*[j]*/ = value;
+              char buffer[12];
+              snprintf(buffer, sizeof(buffer), "%d", sohArray[i]/*[j]*/);
+              resultSoh += buffer;
+              resultSoh += " ";
+              SOHHistory->SetElemValue(i,value);
+          }
+        }
+        ESP_LOGD(TAG, "SOH_history_from_74CC: %s", resultSoh.c_str());
+  //}
       break; 
 
     case VWUP1_CHG_AC_U:
