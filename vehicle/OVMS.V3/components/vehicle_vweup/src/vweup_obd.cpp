@@ -242,7 +242,19 @@ void OvmsVehicleVWeUp::OBDInit()
                                       7d 7a 7c 79 77 77 77 79 75 75 76 75 75 73 75 72 74 72 71 71 71 70 75 72 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
                                       7d 79 7c 79 77 77 78 7a 76 75 76 76 75 73 75 72 74 71 73 71 72 70 75 72 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
                                       7d 79 7c 7a 76 77 78 79 75 75 76 76 75 73 74 72 74 71 72 71 70 70 75 72 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
-                                      7d 7a 7c 79 77 77 78 79 75 75 76 76 75 73 75 72 75 71} 
+                                      7d 7a 7c 79 77 77 78 79 75 75 76 76 75 73 75 72 75 71 72 71 70 71 75 72 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                                      7d 7a 7c 79 77 77 78 7a 76 75 76 76 76 73 75 72 75 71 72 71 72 71 75 72 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                                      7d 79 7c 79 76 76 78 79 75 74 76 75 75 73 74 72 73 70 73 70 71 70 75 72 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                                      7d 79 7b 78 76 76 77 79 75 74 75 75 74 72 74 72 73 71 72 70 6f 6f 74 72 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                                      7d 7a 7b 79 76 76 78 79 75 74 75 75 75 72 74 72 73 71 71 71 70 70 75 72 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                                      7d 79 7b 78 75 76 78 79 74 74 75 75 74 72 74 71 73 71 72 70 6f 6f 74 71 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                                      7d 79 7b 78 75 75 76 78 74 74 75 74 74 71 73 71 72 70 73 70 6f 6f 74 70 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                                      7d 79 7b 78 75 76 78 78 74 74 75 74 74 72 73 71 72 71 73 70 70 6f 74 71 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                                      7d 79 7b 79 76 76 78 78 74 74 76 75 74 72 74 71 73 71 71 70 70 70 74 72 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                                      7d 79 7b 79 76 76 78 79 75 74 75 75 75 72 74 71 74 71 72 70 70 70 74 71 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                                      7d 79 7c 79 76 76 77 79 75 74 76 75 74 72 74 72 73 71 72 70 71 6f 74 71 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                                      7d 79 7b 79 75 75 78 78 74 74 75 74 74 71 73 71 73 70 72 70 70 70 74 71 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                                      7d 79 7b 78 75 76 78 79 74 74 76 75 74 72 74 71 73 71 73 70 70 6f 74 70 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff} 
    /* std::vector<vector<int>> sohArray = {
       {100, 97, 100, 97, 95, 95, 96, 97, 93, 93, 94, 94, 94, 92, 94, 91, 93, 91, 90, 91, 91, 89, 93, 92, 204},
       {100, 97, 99, 96, 95, 95, 95, 96, 93, 93, 94, 93, 93, 92, 93, 91, 92, 91, 90, 90, 90, 89, 93, 91, 204},
