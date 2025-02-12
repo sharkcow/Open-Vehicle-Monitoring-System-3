@@ -1096,7 +1096,7 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
 
     case VWUP_BAT_MGMT_SOH_HIST: // (znams) Testing the reply from the PID 74CC
       
-      if (PollReply.FromUint16("VWUP_BAT_MGMT_SOH_HIST", value, 4)) {
+      if (PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, 4)) {
         int i;    //Number of cell pack
        // int j;    //Quarterly measurement
         int byteCounter = 4; // Starting position of the first byte
@@ -1106,7 +1106,7 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
        // for(i = 0; i < ((vweup_modelyear > 2019) ? 14 : 17); i++){    // Distinguishing model year
          // for(j = 0; j < 40; j++){
          for(i = 0; i < ((vweup_modelyear > 2019) ? 560 : 680); i++){
-              PollReply.FromUint16("VWUP_BAT_MGMT_SOH_HIST", value, byteCounter++);
+              PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, byteCounter++);
               sohArray[i]/*[j]*/ = value;
               char buffer[12];
               snprintf(buffer, sizeof(buffer), "%d", sohArray[i]/*[j]*/);
