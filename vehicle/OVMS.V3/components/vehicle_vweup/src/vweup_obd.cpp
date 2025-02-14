@@ -274,7 +274,7 @@ void OvmsVehicleVWeUp::OBDInit()
                                       
                                       7d  79  7b  78  75  76  78  79  74  74  76  75  74  72  74  71  73  71  73  70  70  6f  74  70  ff  ff  ff  ff  ff  ff  ff  ff  ff  ff  ff  ff  ff  ff  ff  ff};
                                       125,121,123,120,117,118,120,121,116,116,118,117,116,114,116,113,115,113,115,112,112,111,116,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255  */  
-    int i;
+ /*   int i;
     //int j;
     int value;
     std::vector<int> sohVector = {125,122,125,122,119,119,120,122,117,117,118,118,118,115,118,114,117,114,113,114,114,112,117,115,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
@@ -301,7 +301,7 @@ void OvmsVehicleVWeUp::OBDInit()
         if (value == 204)
             continue;
         SOHHistory->SetElemValue(i, value);
-      }
+      }*/
 
 
     // Battery SOH:
@@ -1074,10 +1074,10 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
 
     case VWUP_BAT_MGMT_SOH_HIST: // (znams) Testing the reply from the PID 74CC
       
-     /* if (PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, 4)) {
+      if (PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, 4)) {
         int i;    //Number of cell pack
        // int j;    //Quarterly measurement
-        int byteCounter = 4; // Starting position of the first byte
+        int byteCounter = 256; // Starting position of the first byte
         //std::array<std::array<int, 40>, 17> sohArray;
         std::vector<int> sohArray(680);
         std::string resultSoh = "";
@@ -1095,7 +1095,7 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
           }
        // }
         ESP_LOGD(TAG, "SOH_history_from_74CC: %s", resultSoh.c_str());
-      }*/
+      }
       break; 
 
     case VWUP1_CHG_AC_U:
