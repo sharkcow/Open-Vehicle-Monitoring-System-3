@@ -295,15 +295,15 @@ void OvmsVehicleVWeUp::OBDInit()
                                   125,121,123,121,117,117,120,120,116,116,117,116,116,113,115,113,115,112,114,112,112,112,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
                                   125,121,123,120,117,118,120,121,116,116,118,117,116,114,116,113,115,113,115,112,112,111,116,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255}; 
 
-    for(i = 0; i < 680; i++){
-        sohVector[i] = sohVector[i] *100 / 125;
-        value = sohVector[i];
-        if (value == 204){
-          value = sohVector.erase(value);
+    for (auto it = sohVector.begin(); it != sohVector.end(); ) {
+        *it = (*it * 100) / 125; 
+
+        if (*it == 204) {  // If invalid value, remove it
+            it = sohVector.erase(it); 
         } else {
-          SOHHistory->SetElemValue(i, value);
+            ++it;  // Move to the next element only if not erased
         }
-      }
+    }
 
 
     // Battery SOH:
