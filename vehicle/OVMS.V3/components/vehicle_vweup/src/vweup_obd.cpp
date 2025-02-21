@@ -1080,7 +1080,7 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
     case VWUP_BAT_MGMT_SOH_HIST: // (znams) Testing the reply from the PID 74CC
       
       if (PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, 4)) {
-        //int i;    //Number of cell pack
+        int i;    //Number of cell pack
         int totalBytes = (vweup_modelyear > 2019) ? 560 : 680;
         int firstChunk = 4; // Starting position of the first byte
         int secondChunk = 260;
