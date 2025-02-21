@@ -274,7 +274,7 @@ void OvmsVehicleVWeUp::OBDInit()
                                       
                                       7d  79  7b  78  75  76  78  79  74  74  76  75  74  72  74  71  73  71  73  70  70  6f  74  70  ff  ff  ff  ff  ff  ff  ff  ff  ff  ff  ff  ff  ff  ff  ff  ff};
                                       125,121,123,120,117,118,120,121,116,116,118,117,116,114,116,113,115,113,115,112,112,111,116,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255  */  
-    int i;
+   /* int i;
     //int j;
     int value;
     std::vector<int> sohVector = {125,122,125,122,119,119,120,122,117,117,118,118,118,115,118,114,117,114,113,114,114,112,117,115,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
@@ -283,7 +283,7 @@ void OvmsVehicleVWeUp::OBDInit()
                                   125,121,124,122,118,119,120,121,117,117,118,118,117,115,116,114,116,113,114,113,112,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
                                   125,122,124,121,119,119,120,121,117,117,118,118,117,115,117,114,117,113,114,113,112,113,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
                                   125,122,124,121,119,119,120,122,118,117,118,118,118,115,117,114,117,113,114,113,114,113,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,124,121,118,118,120,121,117,116,118,117,117,115,116,114,115,112,115,112,113,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,        
+                                  125,121,124,121,118,118,120,121,117,116,118,117,117,115,116,114,115,112,115,112,113,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
                                   125,121,123,120,118,118,119,121,117,116,117,117,116,114,116,114,115,113,114,112,111,111,116,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
                                   125,122,123,121,118,118,120,121,117,116,117,117,117,114,116,114,115,113,113,113,112,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
                                   125,121,123,120,117,118,120,121,116,116,117,117,116,114,116,113,115,113,114,112,111,111,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
@@ -306,7 +306,7 @@ void OvmsVehicleVWeUp::OBDInit()
             SOHHistory->SetElemValue(sohIndex++, *it);  // Store valid values
             ++it;  // Move to next element
         }
-    }
+    }*/
 
 
     // Battery SOH:
@@ -1079,28 +1079,35 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
 
     case VWUP_BAT_MGMT_SOH_HIST: // (znams) Testing the reply from the PID 74CC
       
-     /* if (PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, 4)) {
+      if (PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, 4)) {
         int i;    //Number of cell pack
-       // int j;    //Quarterly measurement
-        int byteCounter = 256; // Starting position of the first byte
-        //std::array<std::array<int, 40>, 17> sohArray;
-        std::vector<int> sohArray(680);
+        int totalBytes = (vweup_modelyear > 2019) ? 560 : 680;
+       // int byteCounter = 4;  Starting position of the first byte
+        int bytesPerChunk = 256;
+        std::vector<int> sohArray(totalBytes);
         std::string resultSoh = "";
-        //for(i = 0; i < ((vweup_modelyear > 2019) ? 14 : 17); i++){    // Distinguishing model year
-         // for(j = 0; j < 40; j++){
-         for(i = 0; i < ((vweup_modelyear > 2019) ? 560 : 680); i++){
-              PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, byteCounter);
-              sohArray[i] = value;
-              char buffer[12];
-              snprintf(buffer, sizeof(buffer), "%d", sohArray[i]);
-              resultSoh += buffer;
-              resultSoh += " ";
-              SOHHistory->SetElemValue(i,value);
-              byteCounter++;
-          }
-       // }
+         for (int chunkStart = 4; chunkStart < totalBytes + 4; chunkStart += bytesPerChunk) {
+        int chunkSize = std::min(bytesPerChunk, totalBytes + 4 - chunkStart);
+
+        for (int i = 0; i < chunkSize; i++) {
+            int value;
+            if (PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, chunkStart + i)) {
+                int index = chunkStart + i - 4;
+                if (index < totalBytes) {
+                    sohArray[index] = value;
+                    SOHHistory->SetElemValue(index, value);
+
+                    // Logging
+                    char buffer[12];
+                    snprintf(buffer, sizeof(buffer), "%d", value);
+                    resultSoh += buffer;
+                    resultSoh += " ";
+                }
+            }
+        }
+    }
         ESP_LOGD(TAG, "SOH_history_from_74CC: %s", resultSoh.c_str());
-      }*/
+      }
       break; 
 
     case VWUP1_CHG_AC_U:
