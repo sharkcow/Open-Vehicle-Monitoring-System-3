@@ -1080,32 +1080,45 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
     case VWUP_BAT_MGMT_SOH_HIST: // (znams) Testing the reply from the PID 74CC
       
       if (PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, 4)) {
-        int i;    //Number of cell pack
+        //int i;    //Number of cell pack
         int totalBytes = (vweup_modelyear > 2019) ? 560 : 680;
-       // int byteCounter = 4;  Starting position of the first byte
-        int bytesPerChunk = 256;
+        int firstChunk = 4; // Starting position of the first byte
+        int secondChunk = 260;
+        int thirdChunk = 516;
+      //  int bytesPerChunk = 256;
         std::vector<int> sohArray(totalBytes);
         std::string resultSoh = "";
-         for (int chunkStart = 4; chunkStart < totalBytes + 4; chunkStart += bytesPerChunk) {
-        int chunkSize = std::min(bytesPerChunk, totalBytes + 4 - chunkStart);
-
-        for (int i = 0; i < chunkSize; i++) {
-            int value;
-            if (PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, chunkStart + i)) {
-                int index = chunkStart + i - 4;
-                if (index < totalBytes) {
-                    sohArray[index] = value;
-                    SOHHistory->SetElemValue(index, value);
-
-                    // Logging
-                    char buffer[12];
-                    snprintf(buffer, sizeof(buffer), "%d", value);
-                    resultSoh += buffer;
-                    resultSoh += " ";
-                }
-            }
-        }
-    }
+         for(i = 0; i < 256; i++){
+              PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, firstChunk);
+              sohArray[i] = value;
+              char buffer[12];
+              snprintf(buffer, sizeof(buffer), "%d", sohArray[i]);
+              resultSoh += buffer;
+              resultSoh += " ";
+              SOHHistory->SetElemValue(i,value);
+              firstChunk++;
+          }
+          for(i = 260; i < 516; i++){
+              PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, secondChunk);
+              sohArray[i] = value;
+              char buffer[12];
+              snprintf(buffer, sizeof(buffer), "%d", sohArray[i]);
+              resultSoh += buffer;
+              resultSoh += " ";
+              SOHHistory->SetElemValue(i,value);
+              secondChunk++;
+          }
+          for(i = 516; i < 680; i++){
+              PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, thirdChunk);
+              sohArray[i] = value;
+              char buffer[12];
+              snprintf(buffer, sizeof(buffer), "%d", sohArray[i]);
+              resultSoh += buffer;
+              resultSoh += " ";
+              SOHHistory->SetElemValue(i,value);
+              thirdChunk++;
+          }
+    
         ESP_LOGD(TAG, "SOH_history_from_74CC: %s", resultSoh.c_str());
       }
       break; 
