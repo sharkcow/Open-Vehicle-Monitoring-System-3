@@ -1101,7 +1101,7 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
 
         ESP_LOGD(TAG, "SOH_history_from_74CC: %s", resultSoh.c_str());
         ESP_LOGD(TAG, "Total size of Store: %d", ReplyFromStore.GetStoreSize());
-        ESP_LOGD(TAG, "Content of Store: %s", ReplyFromStore.GetStoreContent());
+        ESP_LOGD(TAG, "Content of Store: %s", ReplyFromStore.GetStoreContent().c_str());
       }
       break; 
 
