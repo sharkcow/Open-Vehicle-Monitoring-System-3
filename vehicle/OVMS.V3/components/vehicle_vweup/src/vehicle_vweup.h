@@ -477,6 +477,7 @@ protected:
 
 private:
   PollReplyHelper     PollReply;
+  PollReplyHelper     ReplyFromStore;   //(znams)
 
   float               BatMgmtCellMax;             // Maximum cell voltage
   float               BatMgmtCellMin;             // Minimum cell voltage

@@ -1083,12 +1083,12 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
         int i;    //Number of cell pack
         int totalBytes = (vweup_modelyear > 2019) ? 560 : 680;
         int firstChunk = 4; // Starting position of the first byte
-        int secondChunk = 260;
-        int thirdChunk = 516;
+      //  int secondChunk = 260;
+      //  int thirdChunk = 516;
       //  int bytesPerChunk = 256;
         std::vector<int> sohArray(totalBytes);
         std::string resultSoh = "";
-         for(i = 0; i < 256; i++){
+         for(i = 0; i < totalBytes; i++){
               PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, firstChunk);
               sohArray[i] = value;
               char buffer[12];
@@ -1098,28 +1098,10 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
               SOHHistory->SetElemValue(i,value);
               firstChunk++;
           }
-          for(i = 260; i < 516; i++){
-              PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, secondChunk);
-              sohArray[i] = value;
-              char buffer[12];
-              snprintf(buffer, sizeof(buffer), "%d", sohArray[i]);
-              resultSoh += buffer;
-              resultSoh += " ";
-              SOHHistory->SetElemValue(i,value);
-              secondChunk++;
-          }
-          for(i = 516; i < 680; i++){
-              PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, thirdChunk);
-              sohArray[i] = value;
-              char buffer[12];
-              snprintf(buffer, sizeof(buffer), "%d", sohArray[i]);
-              resultSoh += buffer;
-              resultSoh += " ";
-              SOHHistory->SetElemValue(i,value);
-              thirdChunk++;
-          }
-    
+
         ESP_LOGD(TAG, "SOH_history_from_74CC: %s", resultSoh.c_str());
+        ESP_LOGD(TAG, "Total size of Store: %d", ReplyFromStore.GetStoreSize());
+        ESP_LOGD(TAG, "Content of Store: %s", ReplyFromStore.GetStoreContent());
       }
       break; 
 
