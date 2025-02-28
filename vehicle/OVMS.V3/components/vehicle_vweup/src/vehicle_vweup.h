@@ -398,6 +398,7 @@ public:
   static void ShellPollControl(int verbosity, OvmsWriter* writer, OvmsCommand* cmd, int argc, const char* const* argv);
   static void CommandReadProfile0(int verbosity, OvmsWriter* writer, OvmsCommand* cmd, int argc, const char* const* argv);
   static void CommandResetProfile0(int verbosity, OvmsWriter* writer, OvmsCommand* cmd, int argc, const char* const* argv);
+  static void znams_test(int verbosity, OvmsWriter* writer, OvmsCommand* cmd, int argc, const char* const* argv); //(znams)
 
 protected:
   OvmsMetricFloat *MotElecSoCAbs;                 // Absolute SoC of main battery from motor electrics ECU

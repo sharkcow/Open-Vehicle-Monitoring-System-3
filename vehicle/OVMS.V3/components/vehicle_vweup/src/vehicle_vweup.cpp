@@ -143,12 +143,20 @@ OvmsVehicleVWeUp::OvmsVehicleVWeUp()
   cmd->RegisterCommand("read", "Show current contents", CommandReadProfile0);
   cmd->RegisterCommand("reset", "Reset to default values", CommandResetProfile0);
 
+  cmd = cmd_xvu->RegisterCommand("znams", "bla bla");
+  cmd->RegisterCommand("test", "bla-bla", znams_test);
+
   // Load initial config:
   ConfigChanged(NULL);
 
 #ifdef CONFIG_OVMS_COMP_WEBSERVER
   WebInit();
 #endif
+}
+
+void OvmsVehicleVWeUp::znams_test(int verbosity, OvmsWriter* writer, OvmsCommand* cmd, int argc, const char* const* argv)
+{
+  ESP_LOGD(TAG,"znams test");
 }
 
 OvmsVehicleVWeUp::~OvmsVehicleVWeUp()
