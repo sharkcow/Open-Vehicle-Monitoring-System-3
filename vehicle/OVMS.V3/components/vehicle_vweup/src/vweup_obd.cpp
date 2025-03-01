@@ -1079,24 +1079,21 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
 
     case VWUP_BAT_MGMT_SOH_HIST: // (znams) Testing the reply from the PID 74CC
       
-      if (PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, 4)) {
+      if (PollReply.FromUint8Mod("VWUP_BAT_MGMT_SOH_HIST", value, 4)) {
         int i;    //Number of cell pack
         int totalBytes = (vweup_modelyear > 2019) ? 560 : 680;
-        int firstChunk = 4; // Starting position of the first byte
-      //  int secondChunk = 260;
-      //  int thirdChunk = 516;
-      //  int bytesPerChunk = 256;
+        int byteCounter = 4; // Starting position of the first byte
         std::vector<int> sohArray(totalBytes);
         std::string resultSoh = "";
          for(i = 0; i < totalBytes; i++){
-              PollReply.FromUint8("VWUP_BAT_MGMT_SOH_HIST", value, firstChunk);
+              PollReply.FromUint8Mod("VWUP_BAT_MGMT_SOH_HIST", value, byteCounter);
               sohArray[i] = value;
               char buffer[12];
               snprintf(buffer, sizeof(buffer), "%d", sohArray[i]);
               resultSoh += buffer;
               resultSoh += " ";
               SOHHistory->SetElemValue(i,value);
-              firstChunk++;
+              byteCounter++;
           }
 
         ESP_LOGD(TAG, "SOH_history_from_74CC: %s", resultSoh.c_str());
