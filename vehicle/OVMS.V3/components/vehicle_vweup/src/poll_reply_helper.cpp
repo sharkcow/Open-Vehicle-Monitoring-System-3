@@ -59,7 +59,7 @@ std::string PollReplyHelper::GetHexString()
   return msg.str();
 }
 
-bool PollReplyHelper::FromUint8Mod(const std::string &info, int &value, uint8_t bytesToSkip /*= 0*/)
+bool PollReplyHelper::FromUint8Mod(const std::string &info, int &value, uint16_t bytesToSkip /*= 0*/)
 { //(znams) Modified PollReply method for reading the SOH history
   if (Store.size() < (1 + bytesToSkip)) {
     ESP_LOGE(TAG, "%s: Data length=%d is too short for FromUint8(skippedBytes=%hu)",
@@ -67,7 +67,7 @@ bool PollReplyHelper::FromUint8Mod(const std::string &info, int &value, uint8_t 
     return false;
   }
 
-  value = static_cast<int>((uint8_t)Store[0 + bytesToSkip]);
+  value = static_cast<int>((uint16_t)Store[0 + bytesToSkip]);
   return true;
 }
 
