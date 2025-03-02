@@ -59,6 +59,18 @@ std::string PollReplyHelper::GetHexString()
   return msg.str();
 }
 
+bool PollReplyHelper::FromUint8Mod(const std::string &info, float &value, uint16_t bytesToSkip /*= 0*/)
+{ //(znams) Modified PollReply method for reading the SOH history
+  if (Store.size() < (1 + bytesToSkip)) {
+    ESP_LOGE(TAG, "%s: Data length=%d is too short for FromUint8(skippedBytes=%hu)",
+      info.c_str(), Store.size(), bytesToSkip);
+    return false;
+  }
+
+  value = static_cast<int>((uint16_t)Store[0 + bytesToSkip]);
+  return true;
+}
+
 bool PollReplyHelper::FromUint8Mod(const std::string &info, int &value, uint16_t bytesToSkip /*= 0*/)
 { //(znams) Modified PollReply method for reading the SOH history
   if (Store.size() < (1 + bytesToSkip)) {
