@@ -67,7 +67,7 @@ bool PollReplyHelper::FromUint8Mod(const std::string &info, float &value, uint16
     return false;
   }
 
-  value = static_cast<int>((uint16_t)Store[0 + bytesToSkip]);
+  value = static_cast<int>((uint8_t)Store[0 + bytesToSkip]);
   return true;
 }
 
@@ -79,7 +79,7 @@ bool PollReplyHelper::FromUint8Mod(const std::string &info, int &value, uint16_t
     return false;
   }
 
-  value = static_cast<int>((uint16_t)Store[0 + bytesToSkip]);
+  value = static_cast<int>((uint8_t)Store[0 + bytesToSkip]);
   return true;
 }
 
