@@ -430,6 +430,8 @@ protected:
   OvmsMetricVector<float> *TPMSDiffusion;         // TPMS Indicator for Pressure Diffusion
   OvmsMetricVector<float> *TPMSEmergency;         // TPMS Indicator for Tyre Emergency
   OvmsMetricVector<int> *SOHHistory;              // SOH history data (znams)
+  OvmsMetricVector<int> *SOHStat;                 // SOH statistics data (znams)
+  OvmsMetricVector<int> *SOHDummy;                // SOH Dummy data for testing (znams)
 
 
   OvmsMetricFloat *BatTempMax;
