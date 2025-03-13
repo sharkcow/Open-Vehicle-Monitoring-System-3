@@ -193,7 +193,8 @@ void OvmsVehicleVWeUp::OBDInit()
     TPMSDiffusion = MyMetrics.InitVector<float>("xvu.v.t.diff", SM_STALE_NONE, 0);
     TPMSEmergency = MyMetrics.InitVector<float>("xvu.v.t.emgcy", SM_STALE_NONE, 0);
     SOHHistory = MyMetrics.InitVector<int>("xvu.b.soh.hist", SM_STALE_NONE, 0, Percentage);  //(znams)
-
+    SOHStat = MyMetrics.InitVector<int>("xvu.b.soh.stat", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHDummy = MyMetrics.InitVector<int>("xvu.b.soh.dummy", SM_STALE_NONE, 0, Percentage);  //(znams)
   /*std::vector<int> sohVectorTest = {125,122,125,122,119,119,120,122,117,117,118,118,118,115,118,114,117,114,113,114,114,112,117,115,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
                                       125,122,124,121,119,119,119,121,117,117,118,117,117,115,117,114,116,114,113,113,113,112,117,114,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
                                       125,121,124,121,119,119,120,122,118,117,118,118,117,115,117,114,116,113,115,113,114,112,117,114,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
@@ -274,7 +275,7 @@ void OvmsVehicleVWeUp::OBDInit()
                                       
                                       7d  79  7b  78  75  76  78  79  74  74  76  75  74  72  74  71  73  71  73  70  70  6f  74  70  ff  ff  ff  ff  ff  ff  ff  ff  ff  ff  ff  ff  ff  ff  ff  ff};
                                       125,121,123,120,117,118,120,121,116,116,118,117,116,114,116,113,115,113,115,112,112,111,116,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255  */  
-   /* int i;
+    int i;
     //int j;
     int value;
     std::vector<int> sohVector = {125,122,125,122,119,119,120,122,117,117,118,118,118,115,118,114,117,114,113,114,114,112,117,115,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
@@ -295,7 +296,7 @@ void OvmsVehicleVWeUp::OBDInit()
                                   125,121,123,121,117,117,120,120,116,116,117,116,116,113,115,113,115,112,114,112,112,112,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
                                   125,121,123,120,117,118,120,121,116,116,118,117,116,114,116,113,115,113,115,112,112,111,116,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255}; 
 
-    int sohIndex = 0;  // Track index for SOHHistory
+    int sohIndex = 0;  // Track index for SOHDummy
 
     for (auto it = sohVector.begin(); it != sohVector.end(); ) {
         *it = (*it * 100) / 125; 
@@ -303,10 +304,12 @@ void OvmsVehicleVWeUp::OBDInit()
         if (*it == 204) {  
             it = sohVector.erase(it);  // Remove invalid values
         } else {
-            SOHHistory->SetElemValue(sohIndex++, *it);  // Store valid values
+            SOHDummy->SetElemValue(sohIndex++, *it);  // Store valid values
             ++it;  // Move to next element
         }
-    }*/
+    }
+
+
 
 
     // Battery SOH:
