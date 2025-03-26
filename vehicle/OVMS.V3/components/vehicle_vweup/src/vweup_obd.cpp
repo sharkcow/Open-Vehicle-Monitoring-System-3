@@ -310,7 +310,7 @@ void OvmsVehicleVWeUp::OBDInit()
             ++it;  // Move to next element
         }
     }
-        
+      int j;
         // Compute statistics per battery pack
         for (int i = 0; i < 17; ++i) {
         int maxSOH = 0, minSOH = 100, sum = 0, count = 0;
