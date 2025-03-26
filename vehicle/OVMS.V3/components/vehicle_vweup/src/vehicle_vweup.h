@@ -432,6 +432,8 @@ protected:
   OvmsMetricVector<int> *SOHHistory;              // SOH history data (znams)
   OvmsMetricVector<int> *SOHStat;                 // SOH statistics data (znams)
   OvmsMetricVector<int> *SOHDummy;                // SOH Dummy data for testing (znams)
+  OvmsMetricVector<int> *SOHPerPackMax;           // SOH Dummy data for testing (znams)
+  OvmsMetricVector<int> *SOHPerPackMin;           // SOH Dummy data for testing (znams)
 
 
   OvmsMetricFloat *BatTempMax;
