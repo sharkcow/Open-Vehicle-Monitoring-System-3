@@ -324,9 +324,10 @@ void OvmsVehicleVWeUp::OBDInit()
                 sum += soh;
                 count++;
             }
+          SOHPerPackMax->SetElemValue(j, maxSOH);
+          SOHPerPackMin->SetElemValue(j, minSOH);
           } 
-        SOHPerPackMax->SetElemValue(j, maxSOH);
-        SOHPerPackMin->SetElemValue(j, minSOH);
+
         }
 
 
