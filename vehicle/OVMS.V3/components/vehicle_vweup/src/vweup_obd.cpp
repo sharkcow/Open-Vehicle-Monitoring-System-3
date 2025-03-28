@@ -195,9 +195,9 @@ void OvmsVehicleVWeUp::OBDInit()
     SOHHistory = MyMetrics.InitVector<int>("xvu.b.soh.hist", SM_STALE_NONE, 0, Percentage);  //(znams)
  //   SOHStat = MyMetrics.InitVector<int>("xvu.b.soh.stat", SM_STALE_NONE, 0, Percentage);  //(znams)
     SOHDummy = MyMetrics.InitVector<int>("xvu.b.soh.dummy", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerPackMax = MyMetrics.InitVector<int>("xvu.b.soh.perpackmax", SM_STALE_NONE, 0, Percentage);  //(znams)
+   // SOHPerPackMax = MyMetrics.InitVector<int>("xvu.b.soh.perpackmax", SM_STALE_NONE, 0, Percentage);  //(znams)
     SOHPerPackMin = MyMetrics.InitVector<int>("xvu.b.soh.perpackmin", SM_STALE_NONE, 0, Percentage);  //(znams)
-   // SOHPerPackAvg = MyMetrics.InitVector<double>("xvu.b.soh.perpackavg", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHPerPackAvg = MyMetrics.InitVector<double>("xvu.b.soh.perpackavg", SM_STALE_NONE, 0, Percentage);  //(znams)
   /*std::vector<int> sohVectorTest = {125,122,125,122,119,119,120,122,117,117,118,118,118,115,118,114,117,114,113,114,114,112,117,115,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
                                       125,122,124,121,119,119,119,121,117,117,118,117,117,115,117,114,116,114,113,113,113,112,117,114,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
                                       125,121,124,121,119,119,120,122,118,117,118,118,117,115,117,114,116,113,115,113,114,112,117,114,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
@@ -299,19 +299,6 @@ void OvmsVehicleVWeUp::OBDInit()
                                   125,121,123,121,117,117,120,120,116,116,117,116,116,113,115,113,115,112,114,112,112,112,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
                                   125,121,123,120,117,118,120,121,116,116,118,117,116,114,116,113,115,113,115,112,112,111,116,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255}; 
 
-    int sohIndex = 0;  // Track index for SOHDummy
-
-    for (auto it = sohVector.begin(); it != sohVector.end(); ) {
-        *it = (*it * 100) / 125; 
-
-        if (*it == 204) {  
-            it = sohVector.erase(it);  // Remove invalid values
-        } else {
-            SOHDummy->SetElemValue(sohIndex++, *it);  // Store valid values
-            ++it;  // Move to next element
-        }
-    }
-
         // Compute statistics per battery pack
         for (int i = 0; i < 17; ++i) {
         int maxSOH = 0, minSOH = 100, sum = 0, count = 0;
@@ -327,11 +314,27 @@ void OvmsVehicleVWeUp::OBDInit()
             }
 
           } 
-          SOHPerPackMax->SetElemValue(i, maxSOH);
+         // SOHPerPackMax->SetElemValue(i, maxSOH);
           SOHPerPackMin->SetElemValue(i, minSOH);
-         // double avgSOH = static_cast<double>(sum) / count;
-        //  SOHPerPackAvg->SetElemValue(i, avgSOH);
+          double avgSOH = static_cast<double>(sum) / count;
+          SOHPerPackAvg->SetElemValue(i, avgSOH);
         }
+
+
+    int sohIndex = 0;  // Track index for SOHDummy
+
+    for (auto it = sohVector.begin(); it != sohVector.end(); ) {
+        *it = (*it * 100) / 125; 
+
+        if (*it == 204) {  
+            it = sohVector.erase(it);  // Remove invalid values
+        } else {
+            SOHDummy->SetElemValue(sohIndex++, *it);  // Store valid values
+            ++it;  // Move to next element
+        }
+    }
+
+
 
 
 
