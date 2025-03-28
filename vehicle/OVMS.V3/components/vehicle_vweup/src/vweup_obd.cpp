@@ -299,6 +299,13 @@ void OvmsVehicleVWeUp::OBDInit()
                                   125,121,123,121,117,117,120,120,116,116,117,116,116,113,115,113,115,112,114,112,112,112,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
                                   125,121,123,120,117,118,120,121,116,116,118,117,116,114,116,113,115,113,115,112,112,111,116,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255}; 
 
+        // Precompute and normalize values
+      for (int i = 0; i < sohVector.size(); i++) {
+        if (sohVector[i] != 255) {
+            sohVector[i] = (sohVector[i] * 100) / 125; 
+            }
+      }
+
         // Compute statistics per battery pack
         for (int i = 0; i < 17; ++i) {
         int maxSOH = 0, minSOH = 100, sum = 0, count = 0;
@@ -323,10 +330,12 @@ void OvmsVehicleVWeUp::OBDInit()
 
     int sohIndex = 0;  // Track index for SOHDummy
 
-    for (auto it = sohVector.begin(); it != sohVector.end(); ) {
-        *it = (*it * 100) / 125; 
 
-        if (*it == 204) {  
+//Removing invalid values
+    for (auto it = sohVector.begin(); it != sohVector.end(); ) {
+       // *it = (*it * 100) / 125; 
+
+        if (*it == 255) {  
             it = sohVector.erase(it);  // Remove invalid values
         } else {
             SOHDummy->SetElemValue(sohIndex++, *it);  // Store valid values
