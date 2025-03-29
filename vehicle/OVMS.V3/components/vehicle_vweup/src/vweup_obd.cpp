@@ -195,7 +195,7 @@ void OvmsVehicleVWeUp::OBDInit()
     SOHHistory = MyMetrics.InitVector<int>("xvu.b.soh.hist", SM_STALE_NONE, 0, Percentage);  //(znams)
  //   SOHStat = MyMetrics.InitVector<int>("xvu.b.soh.stat", SM_STALE_NONE, 0, Percentage);  //(znams)
     SOHDummy = MyMetrics.InitVector<int>("xvu.b.soh.dummy", SM_STALE_NONE, 0, Percentage);  //(znams)
-   // SOHPerPackMax = MyMetrics.InitVector<int>("xvu.b.soh.perpackmax", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHPerPackMax = MyMetrics.InitVector<int>("xvu.b.soh.perpackmax", SM_STALE_NONE, 0, Percentage);  //(znams)
     SOHPerPackMin = MyMetrics.InitVector<int>("xvu.b.soh.perpackmin", SM_STALE_NONE, 0, Percentage);  //(znams)
     SOHPerPackAvg = MyMetrics.InitVector<double>("xvu.b.soh.perpackavg", SM_STALE_NONE, 0, Percentage);  //(znams)
   /*std::vector<int> sohVectorTest = {125,122,125,122,119,119,120,122,117,117,118,118,118,115,118,114,117,114,113,114,114,112,117,115,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
@@ -321,7 +321,7 @@ void OvmsVehicleVWeUp::OBDInit()
             }
 
           } 
-         // SOHPerPackMax->SetElemValue(i, maxSOH);
+          SOHPerPackMax->SetElemValue(i, maxSOH);
           SOHPerPackMin->SetElemValue(i, minSOH);
           double avgSOH = static_cast<double>(sum) / count;
           SOHPerPackAvg->SetElemValue(i, avgSOH);
