@@ -198,6 +198,9 @@ void OvmsVehicleVWeUp::OBDInit()
     SOHPerPackMax = MyMetrics.InitVector<int>("xvu.b.soh.perpackmax", SM_STALE_NONE, 0, Percentage);  //(znams)
     SOHPerPackMin = MyMetrics.InitVector<int>("xvu.b.soh.perpackmin", SM_STALE_NONE, 0, Percentage);  //(znams)
     SOHPerPackAvg = MyMetrics.InitVector<double>("xvu.b.soh.perpackavg", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHPerMeasureMax =
+    SOHPerMeasureMin =
+    SOHPerMeasureAvg =
   /*std::vector<int> sohVectorTest = {125,122,125,122,119,119,120,122,117,117,118,118,118,115,118,114,117,114,113,114,114,112,117,115,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
                                       125,122,124,121,119,119,119,121,117,117,118,117,117,115,117,114,116,114,113,113,113,112,117,114,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
                                       125,121,124,121,119,119,120,122,118,117,118,118,117,115,117,114,116,113,115,113,114,112,117,114,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
@@ -343,10 +346,28 @@ void OvmsVehicleVWeUp::OBDInit()
         }
     }
 
+// Valid amount of measurements
+  int numPacks = (vweup_modelyear > 2019) ? 14 : 17;
+  int numMeasurements = sohVector.length() / numPacks;
+ // Compute statistics per measurement index (across battery packs)
+ for (int j = 0; j < numMeasurements; ++j) {
+        int maxSOH = 0, minSOH = 100, sum = 0, count = 0;
+        for (int i = 0; i < 17; ++i) {
+            int index = i * numMeasurements + j;
+            int soh = sohVector[index];
 
-
-
-
+            if (soh != 255) {
+                maxSOH = std::max(maxSOH, soh);
+                minSOH = std::min(minSOH, soh);
+                sum += soh;
+                count++;
+            }
+        }
+          SOHPerMeasureMax->SetElemValue(j, maxSOH);
+          SOHPerMeasureMin->SetElemValue(j, minSOH);
+          double avgSOH = static_cast<double>(sum) / count;
+          SOHPerMeasureAvg->SetElemValue(j, avgSOH);
+    }
 
     // Battery SOH:
     //  . from ECU 8C PID 74 CB
