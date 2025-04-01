@@ -198,9 +198,9 @@ void OvmsVehicleVWeUp::OBDInit()
     SOHPerPackMax = MyMetrics.InitVector<int>("xvu.b.soh.perpackmax", SM_STALE_NONE, 0, Percentage);  //(znams)
     SOHPerPackMin = MyMetrics.InitVector<int>("xvu.b.soh.perpackmin", SM_STALE_NONE, 0, Percentage);  //(znams)
     SOHPerPackAvg = MyMetrics.InitVector<double>("xvu.b.soh.perpackavg", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerMeasureMax =
-    SOHPerMeasureMin =
-    SOHPerMeasureAvg =
+    SOHPerMeasureMax = MyMetrics.InitVector<int>("xvu.b.soh.permeasuremax", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHPerMeasureMin = MyMetrics.InitVector<int>("xvu.b.soh.permeasuremin", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHPerMeasureAvg = MyMetrics.InitVector<double>("xvu.b.soh.permeasureavg", SM_STALE_NONE, 0, Percentage);  //(znams)
   /*std::vector<int> sohVectorTest = {125,122,125,122,119,119,120,122,117,117,118,118,118,115,118,114,117,114,113,114,114,112,117,115,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
                                       125,122,124,121,119,119,119,121,117,117,118,117,117,115,117,114,116,114,113,113,113,112,117,114,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
                                       125,121,124,121,119,119,120,122,118,117,118,118,117,115,117,114,116,113,115,113,114,112,117,114,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,

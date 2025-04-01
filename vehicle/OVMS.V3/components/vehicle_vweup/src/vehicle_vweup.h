@@ -434,7 +434,11 @@ protected:
   OvmsMetricVector<int> *SOHDummy;                // SOH Dummy data for testing (znams)
   OvmsMetricVector<int> *SOHPerPackMax;           // SOH Dummy data for testing (znams)
   OvmsMetricVector<int> *SOHPerPackMin;           // SOH Dummy data for testing (znams)
-   OvmsMetricVector<double> *SOHPerPackAvg;           // SOH Dummy data for testing (znams)
+  OvmsMetricVector<double> *SOHPerPackAvg;           // SOH Dummy data for testing (znams)
+  OvmsMetricVector<int> *SOHPerMeasureMax;           // SOH Dummy data for testing (znams)
+  OvmsMetricVector<int> *SOHPerMeasureMin;           // SOH Dummy data for testing (znams)
+  OvmsMetricVector<double> *SOHPerMeasureAvg;           // SOH Dummy data for testing (znams)
+
 
 
   OvmsMetricFloat *BatTempMax;
