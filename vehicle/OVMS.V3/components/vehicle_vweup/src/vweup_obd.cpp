@@ -333,9 +333,23 @@ void OvmsVehicleVWeUp::OBDInit()
 
     int sohIndex = 0;  // Track index for SOHDummy
 
+
+
+//Removing invalid values
+    for (auto it = sohVector.begin(); it != sohVector.end(); ) {
+       // *it = (*it * 100) / 125; 
+
+        if (*it == 255) {  
+            it = sohVector.erase(it);  // Remove invalid values
+        } else {
+            SOHDummy->SetElemValue(sohIndex++, *it);  // Store valid values
+            ++it;  // Move to next element
+        }
+    }
+
 // Valid amount of measurements
-  int numPacks = (vweup_modelyear > 2019) ? 14 : 17;
-  int numMeasurements = sohVector.size() / numPacks;
+// int numPacks = (vweup_modelyear > 2019) ? 14 : 17;
+  int numMeasurements = sohVector.size() / 17;
  // Compute statistics per measurement index (across battery packs)
  for (int j = 0; j < numMeasurements; ++j) {
         int maxSOH = 0, minSOH = 100, sum = 0, count = 0;
@@ -355,19 +369,6 @@ void OvmsVehicleVWeUp::OBDInit()
           double avgSOH = static_cast<double>(sum) / count;
           SOHPerMeasureAvg->SetElemValue(j, avgSOH);
     }
-
-//Removing invalid values
-    for (auto it = sohVector.begin(); it != sohVector.end(); ) {
-       // *it = (*it * 100) / 125; 
-
-        if (*it == 255) {  
-            it = sohVector.erase(it);  // Remove invalid values
-        } else {
-            SOHDummy->SetElemValue(sohIndex++, *it);  // Store valid values
-            ++it;  // Move to next element
-        }
-    }
-
 
 
     // Battery SOH:
