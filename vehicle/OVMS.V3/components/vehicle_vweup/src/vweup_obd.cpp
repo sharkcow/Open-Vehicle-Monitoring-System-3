@@ -348,7 +348,7 @@ void OvmsVehicleVWeUp::OBDInit()
 
 // Valid amount of measurements
   int numPacks = (vweup_modelyear > 2019) ? 14 : 17;
-  int numMeasurements = sohVector.length() / numPacks;
+  int numMeasurements = sohVector.size() / numPacks;
  // Compute statistics per measurement index (across battery packs)
  for (int j = 0; j < numMeasurements; ++j) {
         int maxSOH = 0, minSOH = 100, sum = 0, count = 0;
