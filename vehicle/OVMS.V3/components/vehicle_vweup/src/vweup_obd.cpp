@@ -79,7 +79,7 @@ const OvmsPoller::poll_pid_t vweup_polls[] = {
   {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_TEMP,             {  0, 20, 20, 20}, 1, ISOTP_STD},
   {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_HIST18,           {  0, 20, 20, 20}, 1, ISOTP_STD},
   {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_CAC,          {  0, 20, 20, 20}, 1, ISOTP_STD},
-  {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0, 20, 20, 20}, 1, ISOTP_STD}, //(znams)
+ // {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0, 20, 20, 20}, 1, ISOTP_STD}, //(znams)
 
   {VWUP_CHG,      UDS_READ, VWUP_CHG_POWER_EFF,             {  0,  0, 10,  0}, 1, ISOTP_STD},
 
@@ -497,16 +497,16 @@ void OvmsVehicleVWeUp::OBDInit()
   m_last_soh_poll = MyConfig.GetParamValueInt("xvu", "last_soh_poll", 0);
   if (IsOn()) {
     const time_t quarterInterval = MyConfig.GetParamValueInt("xvu", "soh_interval", 7776000);
-    if ((now - m_last_soh_poll) >= quarterInterval)
-    {
+    if ((now - m_last_soh_poll) >= quarterInterval){
       m_poll_vector.insert(m_poll_vector.end(), {
         {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0, 0, 0, 1}, 1, ISOTP_STD},
       });
       m_last_soh_poll = now;
+      MyConfig.GetParamValueInt("xvu", "last_soh_poll", m_last_soh_poll);
     }
     ESP_LOGD(TAG, "Current time in seconds: %ld", now);
     ESP_LOGD(TAG, "Current time (date format): %s", ctime(&now));
-    ESP_LOGD(TAG, "Time of the last SOH poll in seconds: %i", m_last_soh_poll);
+    ESP_LOGD(TAG, "Time of the last SOH poll in seconds: %ld", m_last_soh_poll);
   }
 
   // Add BMS cell PIDs if enabled:
