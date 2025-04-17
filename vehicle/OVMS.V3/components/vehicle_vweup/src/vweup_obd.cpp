@@ -491,6 +491,24 @@ void OvmsVehicleVWeUp::OBDInit()
     });
   }
 
+  // Add SoH Hsitory PID with a useful update structure (when the car is on and once in a quarter) (znams)
+  // If the car is on and the previous poll was three months ago
+  time_t now = time(NULL);
+  m_last_soh_poll = MyConfig.GetParamValueInt("xvu", "last_soh_poll", 0);
+  if (IsOn()) {
+    const time_t quarterInterval = MyConfig.GetParamValueInt("xvu", "soh_interval", 7776000);
+    if ((now - m_last_soh_poll) >= quarterInterval)
+    {
+      m_poll_vector.insert(m_poll_vector.end(), {
+        {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0, 0, 0, 1}, 1, ISOTP_STD},
+      });
+      m_last_soh_poll = now;
+    }
+    ESP_LOGD(TAG, "Current time in seconds: %ld", now);
+    ESP_LOGD(TAG, "Current time (date format): %s", ctime(&now));
+    ESP_LOGD(TAG, "Time of the last SOH poll in seconds: %i", m_last_soh_poll);
+  }
+
   // Add BMS cell PIDs if enabled:
   if (m_cfg_cell_interval_drv || m_cfg_cell_interval_chg || m_cfg_cell_interval_awk)
   {

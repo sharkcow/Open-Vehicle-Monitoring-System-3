@@ -486,6 +486,7 @@ protected:
   int                 m_cfg_dc_interval;          // Interval for DC fast charge test/log PIDs
 
   int                 m_chg_ctp_car;              // Charge time prediction by car
+  time_t              m_last_soh_poll;            // Timestamp of last successful poll for SOH history (znams)
 
 private:
   PollReplyHelper     PollReply;
