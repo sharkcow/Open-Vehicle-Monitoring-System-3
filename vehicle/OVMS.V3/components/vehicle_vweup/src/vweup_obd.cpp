@@ -189,7 +189,7 @@ void OvmsVehicleVWeUp::OBDInit()
     m_chg_ccs_voltage = MyMetrics.InitFloat("xvu.c.ccs.u", SM_STALE_MIN, 0, Volts);
     m_chg_ccs_current = MyMetrics.InitFloat("xvu.c.ccs.i", SM_STALE_MIN, 0, Amps);
     m_chg_ccs_power   = MyMetrics.InitFloat("xvu.c.ccs.p", SM_STALE_MIN, 0, kW);
-    CurrentTime = MyMetrics.InitInt("xvu.t.time.current", SM_STALE_NONE, 0, ms);
+   // CurrentTime = MyMetrics.InitInt("xvu.t.time.current", SM_STALE_NONE, 0, ms);
 
     ServiceDays =  MyMetrics.InitInt("xvu.e.serv.days", SM_STALE_NONE, 0);
     TPMSDiffusion = MyMetrics.InitVector<float>("xvu.v.t.diff", SM_STALE_NONE, 0);
@@ -302,8 +302,8 @@ void OvmsVehicleVWeUp::OBDInit()
           SOHPerMeasureAvgFake->SetElemValue(j, avgSOH);
     }  
 
-  time_t now = time(NULL);
-  CurrentTime->
+ /* time_t now = time(NULL);
+  CurrentTime->*/
 
     // Battery SOH:
     //  . from ECU 8C PID 74 CB
