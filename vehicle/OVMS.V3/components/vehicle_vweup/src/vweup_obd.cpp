@@ -205,13 +205,13 @@ void OvmsVehicleVWeUp::OBDInit()
     SOHPerMeasureAvg = MyMetrics.InitVector<double>("xvu.b.soh.permeasureavg", SM_STALE_NONE, 0, Percentage);  //(znams)
 
     //Simulating fake SOH data and storing in the metrics
-    SOHDummyFake = MyMetrics.InitVector<int>("xvu.b.soh.dummy", SM_STALE_NONE, 0, Percentage);  //(znams) 
-    SOHPerPackMaxFake = MyMetrics.InitVector<int>("xvu.b.soh.perpackmax", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerPackMinFake = MyMetrics.InitVector<int>("xvu.b.soh.perpackmin", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerPackAvgFake = MyMetrics.InitVector<double>("xvu.b.soh.perpackavg", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerMeasureMaxFake = MyMetrics.InitVector<int>("xvu.b.soh.permeasuremax", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerMeasureMinFake = MyMetrics.InitVector<int>("xvu.b.soh.permeasuremin", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerMeasureAvgFake = MyMetrics.InitVector<double>("xvu.b.soh.permeasureavg", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHDummyFake = MyMetrics.InitVector<int>("xvu.b.soh.dummy.fake", SM_STALE_NONE, 0, Percentage);  //(znams) 
+    SOHPerPackMaxFake = MyMetrics.InitVector<int>("xvu.b.soh.perpackmax.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHPerPackMinFake = MyMetrics.InitVector<int>("xvu.b.soh.perpackmin.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHPerPackAvgFake = MyMetrics.InitVector<double>("xvu.b.soh.perpackavg.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHPerMeasureMaxFake = MyMetrics.InitVector<int>("xvu.b.soh.permeasuremax.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHPerMeasureMinFake = MyMetrics.InitVector<int>("xvu.b.soh.permeasuremin.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHPerMeasureAvgFake = MyMetrics.InitVector<double>("xvu.b.soh.permeasureavg.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
  
     //int i;
     //int j;
