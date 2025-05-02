@@ -229,6 +229,7 @@ public:
   int vweup_con;                // 0: none, 1: only T26, 2: only OBD2; 3: both
   int vweup_modelyear;
   uint8_t climit_max;
+  string resultSohF;            //(znams)
   
 private:
   use_phase_t m_use_phase;
