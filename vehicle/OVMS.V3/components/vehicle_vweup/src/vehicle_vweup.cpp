@@ -157,7 +157,7 @@ OvmsVehicleVWeUp::OvmsVehicleVWeUp()
 void OvmsVehicleVWeUp::znams_test(int verbosity, OvmsWriter* writer, OvmsCommand* cmd, int argc, const char* const* argv)
 {
   ESP_LOGD(TAG,"This is a test log message from znams");
-  ESP_LOGD(TAG, "SOH_history_from_74CC: %s", resultSohF.c_str());
+//  ESP_LOGD(TAG, "SOH_history_from_74CC: %s", resultSohF.c_str());
 }
 
 OvmsVehicleVWeUp::~OvmsVehicleVWeUp()

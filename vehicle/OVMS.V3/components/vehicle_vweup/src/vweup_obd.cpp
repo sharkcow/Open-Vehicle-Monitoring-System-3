@@ -305,6 +305,7 @@ void OvmsVehicleVWeUp::OBDInit()
           SOHPerMeasureMinFake->SetElemValue(j, minSOH);
           double avgSOH = static_cast<double>(sum) / count;
           SOHPerMeasureAvgFake->SetElemValue(j, avgSOH);
+          MyNotify.NotifyStringf("info", "soh.stat", "SoH statistic data is available.");
     }  
 
   /* time_t now = time(NULL);
