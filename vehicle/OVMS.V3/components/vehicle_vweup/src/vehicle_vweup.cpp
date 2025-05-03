@@ -1152,7 +1152,3 @@ void OvmsVehicleVWeUp::UpdateChargeTimes()
   else
     StdMetrics.ms_v_charge_mode->SetValue("standard");
 }
-
-void OvmsVehicleVWeUp::UpdateChargeTimes(){
-
-}
