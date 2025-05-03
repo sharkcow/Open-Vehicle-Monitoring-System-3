@@ -158,6 +158,9 @@ void OvmsVehicleVWeUp::znams_test(int verbosity, OvmsWriter* writer, OvmsCommand
 {
   ESP_LOGD(TAG,"This is a test log message from znams");
 //  ESP_LOGD(TAG, "SOH_history_from_74CC: %s", resultSohF.c_str());
+  bool newTimerMode = StdMetrics.ms_v_charge_timermode->AsBool();
+  ESP_LOGD(TAG, "New Timer Mode set: %s", newTimerMode ? "yes" : "no");
+
 }
 
 OvmsVehicleVWeUp::~OvmsVehicleVWeUp()
@@ -1148,4 +1151,8 @@ void OvmsVehicleVWeUp::UpdateChargeTimes()
     StdMetrics.ms_v_charge_mode->SetValue("range");
   else
     StdMetrics.ms_v_charge_mode->SetValue("standard");
+}
+
+void OvmsVehicleVWeUp::UpdateChargeTimes(){
+
 }
