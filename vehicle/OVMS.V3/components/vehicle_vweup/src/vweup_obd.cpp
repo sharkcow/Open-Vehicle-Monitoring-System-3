@@ -245,7 +245,8 @@ void OvmsVehicleVWeUp::OBDInit()
             resultSohF += bufferF;
             resultSohF += " ";
       }
-
+      CalculateStatsSOH(sohVector);
+      /*
         // Compute statistics per battery pack
         for (int i = 0; i < 17; ++i) {
         int maxSOH = 0, minSOH = 100, sum = 0, count = 0;
@@ -307,6 +308,8 @@ void OvmsVehicleVWeUp::OBDInit()
           SOHPerMeasureAvgFake->SetElemValue(j, avgSOH);
           MyNotify.NotifyStringf("info", "soh.stat", "SoH statistic data is available.");
     }  
+
+      */
 
   /* time_t now = time(NULL);
   CurrentTime->*/
@@ -1747,4 +1750,68 @@ void OvmsVehicleVWeUp::UpdateChargeCap(bool charging)
     // Update metrics:
     m_bat_soh_charge->SetValue(soh);
   }
+}
+
+void OvmsVehicleVWeUp::CalculateStatsSOH(vector sohVectorHistory){
+        // Compute statistics per battery pack
+        for (int i = 0; i < 17; ++i) {
+          int maxSOH = 0, minSOH = 100, sum = 0, count = 0;
+            for (int j = 0; j < 40; ++j) {
+              int index = i * 40 + j;
+              int soh = sohVector[index];
+  
+              if (soh != 255) {
+                  maxSOH = std::max(maxSOH, soh);
+                  minSOH = std::min(minSOH, soh);
+                  sum += soh;
+                  count++;
+              }
+  
+            } 
+            SOHPerPackMaxFake->SetElemValue(i, maxSOH);
+            SOHPerPackMinFake->SetElemValue(i, minSOH);
+            double avgSOH = static_cast<double>(sum) / count;
+            SOHPerPackAvgFake->SetElemValue(i, avgSOH);
+          }
+  
+  
+      int sohIndex = 0;  // Track index for SOHDummy
+  
+  
+  
+  //Removing invalid values
+      for (auto it = sohVector.begin(); it != sohVector.end(); ) {
+         // *it = (*it * 100) / 125; 
+  
+          if (*it == 255) {  
+              it = sohVector.erase(it);  // Remove invalid values
+          } else {
+              SOHDummyFake->SetElemValue(sohIndex++, *it);  // Store valid values
+              ++it;  // Move to next element
+          }
+      }
+  
+  // Valid amount of measurements
+  // int numPacks = (vweup_modelyear > 2019) ? 14 : 17;
+    int numMeasurements = sohVector.size() / 17;
+   // Compute statistics per measurement index (across battery packs)
+   for (int j = 0; j < numMeasurements; ++j) {
+          int maxSOH = 0, minSOH = 100, sum = 0, count = 0;
+          for (int i = 0; i < 17; ++i) {
+              int index = i * numMeasurements + j;
+              int soh = sohVector[index];
+  
+              if (soh != 255) {
+                  maxSOH = std::max(maxSOH, soh);
+                  minSOH = std::min(minSOH, soh);
+                  sum += soh;
+                  count++;
+              }
+          }
+            SOHPerMeasureMaxFake->SetElemValue(j, maxSOH);
+            SOHPerMeasureMinFake->SetElemValue(j, minSOH);
+            double avgSOH = static_cast<double>(sum) / count;
+            SOHPerMeasureAvgFake->SetElemValue(j, avgSOH);
+            MyNotify.NotifyStringf("info", "soh.stat", "SoH statistic data is available.");
+      }  
 }

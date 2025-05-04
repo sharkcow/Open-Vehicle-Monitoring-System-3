@@ -394,6 +394,7 @@ protected:
 protected:
   void UpdateChargePower(float power_kw);
   void UpdateChargeCap(bool charging);
+  void CalculateStatsSOH(vector sohVectorHistory); //(znams)
 
 public:
   static void ShellPollControl(int verbosity, OvmsWriter* writer, OvmsCommand* cmd, int argc, const char* const* argv);
