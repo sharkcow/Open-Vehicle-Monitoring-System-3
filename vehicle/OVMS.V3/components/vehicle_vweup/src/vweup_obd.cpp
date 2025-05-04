@@ -245,8 +245,8 @@ void OvmsVehicleVWeUp::OBDInit()
             resultSohF += bufferF;
             resultSohF += " ";
       }
-      CalculateStatsSOH(sohVector);
-      /*
+     // CalculateStatsSOH(sohVector);
+      
         // Compute statistics per battery pack
         for (int i = 0; i < 17; ++i) {
         int maxSOH = 0, minSOH = 100, sum = 0, count = 0;
@@ -309,7 +309,7 @@ void OvmsVehicleVWeUp::OBDInit()
           MyNotify.NotifyStringf("info", "soh.stat", "SoH statistic data is available.");
     }  
 
-      */
+      
 
   /* time_t now = time(NULL);
   CurrentTime->*/
@@ -1751,7 +1751,7 @@ void OvmsVehicleVWeUp::UpdateChargeCap(bool charging)
     m_bat_soh_charge->SetValue(soh);
   }
 }
-
+/*
 void OvmsVehicleVWeUp::CalculateStatsSOH(vector<int> sohVectorHistory){
         // Compute statistics per battery pack
         std::vector<int> sohVector;
@@ -1815,4 +1815,4 @@ void OvmsVehicleVWeUp::CalculateStatsSOH(vector<int> sohVectorHistory){
             SOHPerMeasureAvgFake->SetElemValue(j, avgSOH);
             MyNotify.NotifyStringf("info", "soh.stat", "SoH statistic data is available.");
       }  
-}
+}*/
