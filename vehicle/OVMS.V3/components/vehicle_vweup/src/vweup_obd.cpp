@@ -1754,6 +1754,7 @@ void OvmsVehicleVWeUp::UpdateChargeCap(bool charging)
 
 void OvmsVehicleVWeUp::CalculateStatsSOH(vector<int> sohVectorHistory){
         // Compute statistics per battery pack
+        std::vector<int> sohVector;
         for (int i = 0; i < 17; ++i) {
           int maxSOH = 0, minSOH = 100, sum = 0, count = 0;
             for (int j = 0; j < 40; ++j) {
