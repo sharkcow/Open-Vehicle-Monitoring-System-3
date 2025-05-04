@@ -159,8 +159,9 @@ void OvmsVehicleVWeUp::znams_test(int verbosity, OvmsWriter* writer, OvmsCommand
   ESP_LOGD(TAG,"This is a test log message from znams");
 //  ESP_LOGD(TAG, "SOH_history_from_74CC: %s", resultSohF.c_str());
   bool newTimerMode = StdMetrics.ms_v_charge_timermode->AsBool();
+  int64_t TimeNow = StdMetrics.ms_m_timeutc->AsInt();
   ESP_LOGD(TAG, "New Timer Mode set: %s", newTimerMode ? "yes" : "no");
-
+  ESP_LOGD(TAG, "Current time now is: %u", TimeNow);
 }
 
 OvmsVehicleVWeUp::~OvmsVehicleVWeUp()
