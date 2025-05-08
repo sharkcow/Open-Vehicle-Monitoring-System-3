@@ -162,6 +162,9 @@ void OvmsVehicleVWeUp::znams_test(int verbosity, OvmsWriter* writer, OvmsCommand
   int64_t TimeNow = StdMetrics.ms_m_timeutc->AsInt();
   ESP_LOGD(TAG, "New Timer Mode set: %s", newTimerMode ? "yes" : "no");
   ESP_LOGD(TAG, "Current time now is: %lld", TimeNow);
+  eup->UpdateChargeTimes();
+  ESP_LOGD(TAG, "Estimated duration (SOC limit): %d min", StdMetrics.ms_v_charge_duration_soc->AsInt());
+  ESP_LOGD(TAG, "Estimated duration (full): %d min", StdMetrics.ms_v_charge_duration_full->AsInt());
 }
 
 OvmsVehicleVWeUp::~OvmsVehicleVWeUp()
