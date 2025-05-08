@@ -167,6 +167,7 @@ protected:
   void NotifiedVehicleChargeState(const char* s);
   int CalcChargeTime(float capacity, float max_pwr, int from_soc, int to_soc);
   void UpdateChargeTimes();
+  void NotifySohHistoryChange();
 
 protected:
   void ResetTripCounters();
