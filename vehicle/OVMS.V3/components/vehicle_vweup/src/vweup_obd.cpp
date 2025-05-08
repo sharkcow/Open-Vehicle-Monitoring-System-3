@@ -212,6 +212,7 @@ void OvmsVehicleVWeUp::OBDInit()
     SOHPerMeasureMaxFake = MyMetrics.InitVector<int>("xvu.b.soh.permeasuremax.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
     SOHPerMeasureMinFake = MyMetrics.InitVector<int>("xvu.b.soh.permeasuremin.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
     SOHPerMeasureAvgFake = MyMetrics.InitVector<double>("xvu.b.soh.permeasureavg.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHVectorSizeFake = MyMetrics.InitInt("xvu.b.soh.vectorsize.fake", SM_STALE_NONE, 0); //(znams)
  
     //int i;
     //int j;
@@ -284,6 +285,8 @@ void OvmsVehicleVWeUp::OBDInit()
             ++it;  // Move to next element
         }
     }
+    int SOHVectorSize = sohVector.size();
+    SOHVectorSizeFake->SetValue(SOHVectorSize);
 
 // Valid amount of measurements
 // int numPacks = (vweup_modelyear > 2019) ? 14 : 17;
