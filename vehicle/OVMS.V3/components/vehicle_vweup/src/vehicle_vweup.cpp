@@ -162,7 +162,7 @@ void OvmsVehicleVWeUp::znams_test(int verbosity, OvmsWriter* writer, OvmsCommand
   int64_t TimeNow = StdMetrics.ms_m_timeutc->AsInt();
   ESP_LOGD(TAG, "New Timer Mode set: %s", newTimerMode ? "yes" : "no");
   ESP_LOGD(TAG, "Current time now is: %lld", TimeNow);
-  NotifySohHistoryChange();
+  OvmsVehicleVWeUp::GetInstance(writer)->NotifySohHistoryChange();
 }
 
 OvmsVehicleVWeUp::~OvmsVehicleVWeUp()
