@@ -451,6 +451,7 @@ protected:
   OvmsMetricVector<int> *SOHPerMeasureMinFake;        // SOH Dummy data for testing (znams)
   OvmsMetricVector<double> *SOHPerMeasureAvgFake;     // SOH Dummy data for testing (znams)
   OvmsMetricInt *SOHVectorSizeFake;                   // SOH Dummy data for testing (znams)
+  OvmsMetricVector<float> *SOHPerPackStdDevFake;      // SOH Dummy data for testing (znams)
 
 
 

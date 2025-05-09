@@ -213,6 +213,7 @@ void OvmsVehicleVWeUp::OBDInit()
     SOHPerMeasureMinFake = MyMetrics.InitVector<int>("xvu.b.soh.permeasuremin.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
     SOHPerMeasureAvgFake = MyMetrics.InitVector<double>("xvu.b.soh.permeasureavg.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
     SOHVectorSizeFake = MyMetrics.InitInt("xvu.b.soh.vectorsize.fake", SM_STALE_NONE, 0); //(znams)
+    SOHPerPackStdDevFake = MyMetrics.InitVector<float>("xvu.b.soh.standev.fake", SM_STALE_NONE, 0, Percentage) //(znams)
  
     //int i;
     //int j;
@@ -251,6 +252,7 @@ void OvmsVehicleVWeUp::OBDInit()
         // Compute statistics per battery pack
         for (int i = 0; i < 17; ++i) {
         int maxSOH = 0, minSOH = 100, sum = 0, count = 0;
+        std::vector<int> validSOHValues;
           for (int j = 0; j < 40; ++j) {
             int index = i * 40 + j;
             int soh = sohVector[index];
@@ -260,6 +262,7 @@ void OvmsVehicleVWeUp::OBDInit()
                 minSOH = std::min(minSOH, soh);
                 sum += soh;
                 count++;
+                validSOHValues.push_back(soh);
             }
 
           } 
@@ -267,6 +270,15 @@ void OvmsVehicleVWeUp::OBDInit()
           SOHPerPackMinFake->SetElemValue(i, minSOH);
           double avgSOH = static_cast<double>(sum) / count;
           SOHPerPackAvgFake->SetElemValue(i, avgSOH);
+
+          //Standard deviation calculation
+          double variance = 0.0;
+            for (int val : validSOHValues) {
+              variance += (val - avgSOH) * (val - avgSOH);
+              }
+          variance /= count;
+          double stdDev = std::sqrt(variance);
+          SOHPerPackStdDevFake->SetElemValue(i, stdDev);
         }
 
 
