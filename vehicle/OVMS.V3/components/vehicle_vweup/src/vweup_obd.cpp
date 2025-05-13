@@ -205,12 +205,12 @@ void OvmsVehicleVWeUp::OBDInit()
     SOHPerMeasureAvg = MyMetrics.InitVector<double>("xvu.b.soh.permeasureavg", SM_STALE_NONE, 0, Percentage);  //(znams)
 
     //Simulating fake SOH data and storing in the metrics
-    SOHDummyFake = MyMetrics.InitVector<int>("xvu.b.soh.dummy.fake", SM_STALE_NONE, 0, Percentage);  //(znams) 
-    SOHPerPackMaxFake = MyMetrics.InitVector<int>("xvu.b.soh.perpackmax.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerPackMinFake = MyMetrics.InitVector<int>("xvu.b.soh.perpackmin.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHDummyFake = MyMetrics.InitVector<float>("xvu.b.soh.dummy.fake", SM_STALE_NONE, 0, Percentage);  //(znams) 
+    SOHPerPackMaxFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackmax.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHPerPackMinFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackmin.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
     SOHPerPackAvgFake = MyMetrics.InitVector<double>("xvu.b.soh.perpackavg.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerMeasureMaxFake = MyMetrics.InitVector<int>("xvu.b.soh.permeasuremax.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerMeasureMinFake = MyMetrics.InitVector<int>("xvu.b.soh.permeasuremin.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHPerMeasureMaxFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremax.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHPerMeasureMinFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremin.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
     SOHPerMeasureAvgFake = MyMetrics.InitVector<double>("xvu.b.soh.permeasureavg.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
     SOHVectorSizeFake = MyMetrics.InitInt("xvu.b.soh.vectorsize.fake", SM_STALE_NONE, 0); //(znams)
     SOHPerPackStdDevFake = MyMetrics.InitVector<float>("xvu.b.soh.standev.fake", SM_STALE_NONE, 0, Percentage); //(znams)
@@ -218,7 +218,7 @@ void OvmsVehicleVWeUp::OBDInit()
     //int i;
     //int j;
     //int value;
-    std::vector<int> sohVector = {125,122,125,122,119,119,120,122,117,117,118,118,118,115,118,114,117,114,113,114,114,112,117,115,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+    std::vector<float> sohVector = {125,122,125,122,119,119,120,122,117,117,118,118,118,115,118,114,117,114,113,114,114,112,117,115,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
                                   125,122,124,121,119,119,119,121,117,117,118,117,117,115,117,114,116,114,113,113,113,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
                                   125,121,124,121,119,119,120,122,118,117,118,118,117,115,117,114,116,113,115,113,114,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
                                   125,121,124,122,118,119,120,121,117,117,118,118,117,115,116,114,116,113,114,113,112,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
@@ -251,11 +251,11 @@ void OvmsVehicleVWeUp::OBDInit()
       
         // Compute statistics per battery pack
         for (int i = 0; i < 17; ++i) {
-        int maxSOH = 0, minSOH = 100, sum = 0, count = 0;
-        std::vector<int> validSOHValues;
+        float maxSOH = 0, minSOH = 100, sum = 0, count = 0;
+        std::vector<float> validSOHValues;
           for (int j = 0; j < 40; ++j) {
             int index = i * 40 + j;
-            int soh = sohVector[index];
+            float soh = sohVector[index];
 
             if (soh != 255) {
                 maxSOH = std::max(maxSOH, soh);
@@ -268,16 +268,16 @@ void OvmsVehicleVWeUp::OBDInit()
           } 
           SOHPerPackMaxFake->SetElemValue(i, maxSOH);
           SOHPerPackMinFake->SetElemValue(i, minSOH);
-          double avgSOH = static_cast<double>(sum) / count;
+          float avgSOH = sum / count;
           SOHPerPackAvgFake->SetElemValue(i, avgSOH);
 
           //Standard deviation calculation
-          double variance = 0.0;
+          float variance = 0.0;
             for (int val : validSOHValues) {
               variance += (val - avgSOH) * (val - avgSOH);
               }
           variance /= count;
-          double stdDev = std::sqrt(variance);
+          float stdDev = std::sqrt(variance);
           SOHPerPackStdDevFake->SetElemValue(i, stdDev);
         }
 
@@ -305,10 +305,10 @@ void OvmsVehicleVWeUp::OBDInit()
   int numMeasurements = sohVector.size() / 17;
  // Compute statistics per measurement index (across battery packs)
  for (int j = 0; j < numMeasurements; ++j) {
-        int maxSOH = 0, minSOH = 100, sum = 0, count = 0;
+        float maxSOH = 0, minSOH = 100, sum = 0, count = 0;
         for (int i = 0; i < 17; ++i) {
             int index = i * numMeasurements + j;
-            int soh = sohVector[index];
+            float soh = sohVector[index];
 
             if (soh != 255) {
                 maxSOH = std::max(maxSOH, soh);
@@ -319,7 +319,7 @@ void OvmsVehicleVWeUp::OBDInit()
         }
           SOHPerMeasureMaxFake->SetElemValue(j, maxSOH);
           SOHPerMeasureMinFake->SetElemValue(j, minSOH);
-          double avgSOH = static_cast<double>(sum) / count;
+          float avgSOH = sum / count;
           SOHPerMeasureAvgFake->SetElemValue(j, avgSOH);
           MyNotify.NotifyStringf("info", "soh.stat", "SoH statistic data is available.");
     }  

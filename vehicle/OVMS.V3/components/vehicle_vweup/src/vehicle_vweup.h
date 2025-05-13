@@ -443,13 +443,13 @@ protected:
   OvmsMetricVector<double> *SOHPerMeasureAvg;           // SOH Dummy data for testing (znams)
 
   //Metrics for fake SoH data
-  OvmsMetricVector<int> *SOHDummyFake;                // SOH Dummy data for testing (znams)
-  OvmsMetricVector<int> *SOHPerPackMaxFake;           // SOH Dummy data for testing (znams)
-  OvmsMetricVector<int> *SOHPerPackMinFake;           // SOH Dummy data for testing (znams)
-  OvmsMetricVector<double> *SOHPerPackAvgFake;        // SOH Dummy data for testing (znams)
-  OvmsMetricVector<int> *SOHPerMeasureMaxFake;        // SOH Dummy data for testing (znams)
-  OvmsMetricVector<int> *SOHPerMeasureMinFake;        // SOH Dummy data for testing (znams)
-  OvmsMetricVector<double> *SOHPerMeasureAvgFake;     // SOH Dummy data for testing (znams)
+  OvmsMetricVector<float> *SOHDummyFake;                // SOH Dummy data for testing (znams)
+  OvmsMetricVector<float> *SOHPerPackMaxFake;           // SOH Dummy data for testing (znams)
+  OvmsMetricVector<float> *SOHPerPackMinFake;           // SOH Dummy data for testing (znams)
+  OvmsMetricVector<float> *SOHPerPackAvgFake;        // SOH Dummy data for testing (znams)
+  OvmsMetricVector<float> *SOHPerMeasureMaxFake;        // SOH Dummy data for testing (znams)
+  OvmsMetricVector<float> *SOHPerMeasureMinFake;        // SOH Dummy data for testing (znams)
+  OvmsMetricVector<float> *SOHPerMeasureAvgFake;     // SOH Dummy data for testing (znams)
   OvmsMetricInt *SOHVectorSizeFake;                   // SOH Dummy data for testing (znams)
   OvmsMetricVector<float> *SOHPerPackStdDevFake;      // SOH Dummy data for testing (znams)
 
