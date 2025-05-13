@@ -709,7 +709,7 @@ void OvmsVehicleVWeUp::Ticker60(uint32_t ticker)
   if (HasNoOBD()) {
     UpdateChargeTimes();
   }
-  NotifySohHistoryChange();
+  NotifySohHistoryChange(); //(znams)
 }
 
 
