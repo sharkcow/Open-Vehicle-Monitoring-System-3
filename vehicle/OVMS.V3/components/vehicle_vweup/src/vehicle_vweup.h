@@ -429,6 +429,8 @@ protected:
   OvmsMetricFloat     *m_chg_ccs_current;         // CCS Charger supplied current [A]
   OvmsMetricFloat     *m_chg_ccs_power;           // CCS Charger supplied power [kW]
 
+  OvmsMetricInt64     *m_last_soh_poll_time;      //Time of the last SOH history polling (znams)
+
   OvmsMetricInt *ServiceDays;                     // Days until next scheduled maintenance/service
   OvmsMetricVector<float> *TPMSDiffusion;         // TPMS Indicator for Pressure Diffusion
   OvmsMetricVector<float> *TPMSEmergency;         // TPMS Indicator for Tyre Emergency
@@ -500,7 +502,7 @@ protected:
   int                 m_cfg_dc_interval;          // Interval for DC fast charge test/log PIDs
 
   int                 m_chg_ctp_car;              // Charge time prediction by car
-  time_t              m_last_soh_poll;            // Timestamp of last successful poll for SOH history (znams)
+ // time_t              m_last_soh_poll;            // Timestamp of last successful poll for SOH history (znams)
 
 private:
   PollReplyHelper     PollReply;
