@@ -1188,8 +1188,8 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
             ++it;  // Move to next element
         }
       }
-      int SOHVectorSize = sohArray.size();
-      SOHVectorSize->SetValue(SOHVectorSize);
+      int SOHArraySize = sohArray.size();
+      SOHVectorSize->SetValue(SOHArraySize);
 
         // Valid amount of measurements
          int numPacks = (vweup_modelyear > 2019) ? 14 : 17;
