@@ -1804,7 +1804,7 @@ bool OvmsVehicleVWeUp::RemovePollPid(uint8_t moduleid, uint16_t pid)    //(znams
 
 bool OvmsVehicleVWeUp::ShouldPollSOH()        //(znams)
 {
-  int64_t now = MyMetrics.m_time_utc->AsInt();       
+  int64_t now = MyMetrics.m.time.utc->AsInt();       
   int64_t last = m_last_soh_poll_time->AsInt();        
 
   const int64_t interval = 7889400;  // 3-months interval
