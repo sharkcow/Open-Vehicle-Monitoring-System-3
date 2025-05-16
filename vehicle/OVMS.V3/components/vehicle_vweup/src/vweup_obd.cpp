@@ -1784,7 +1784,7 @@ void OvmsVehicleVWeUp::UpdateChargeCap(bool charging)
   }
 }
 
-
+/*
 bool OvmsVehicleVWeUp::RemovePollPid(uint8_t moduleid, uint16_t pid)    //(znams)
 {
   auto it = std::remove_if(m_poll_vector.begin(), m_poll_vector.end(),
@@ -1810,4 +1810,4 @@ bool OvmsVehicleVWeUp::ShouldPollSOH()        //(znams)
   const int64_t interval = 7889400;  // 3-months interval
 
   return (last == 0 || (now - last) >= interval);
-}
+}*/
