@@ -297,7 +297,7 @@ void OvmsVehicleVWeUp::OBDInit()
         if (*it == 255) {  
             it = sohVector.erase(it);  // Remove invalid values
         } else {
-            SOHDummyFake->SetElemValue(sohIndex++, *it);  // Store valid values
+            SOHDummyFake->SetElemValue(sohIndexF++, *it);  // Store valid values
             ++it;  // Move to next element
         }
     }
@@ -1148,6 +1148,7 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
         // Compute statistics per battery pack
         for (int i = 0; i < 17; ++i) {
         float maxSOH = 0, minSOH = 100, sum = 0, count = 0;
+        std::vector<float> validSOHValues;
           for (int j = 0; j < 40; ++j) {
             int index = i * 40 + j;
             float soh = sohArray[index];
@@ -1157,6 +1158,7 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
                 minSOH = std::min(minSOH, soh);
                 sum += soh;
                 count++;
+                validSOHValues.push_back(soh);
             }
           } 
           SOHPerPackMax->SetElemValue(i, maxSOH);
