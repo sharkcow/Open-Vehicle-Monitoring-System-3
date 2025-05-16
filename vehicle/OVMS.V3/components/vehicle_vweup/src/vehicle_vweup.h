@@ -392,6 +392,9 @@ protected:
 
   void IncomingPollReply(const OvmsPoller::poll_job_t &job, uint8_t* data, uint8_t length) override;
 
+  bool ShouldPollSOH();   //(znams)
+  bool RemovePollPid(uint8_t moduleid, uint16_t pid); //(znams)
+
 protected:
   void UpdateChargePower(float power_kw);
   void UpdateChargeCap(bool charging);
@@ -434,15 +437,15 @@ protected:
   OvmsMetricInt *ServiceDays;                     // Days until next scheduled maintenance/service
   OvmsMetricVector<float> *TPMSDiffusion;         // TPMS Indicator for Pressure Diffusion
   OvmsMetricVector<float> *TPMSEmergency;         // TPMS Indicator for Tyre Emergency
-  OvmsMetricVector<int> *SOHHistory;              // SOH history data (znams)
-  OvmsMetricVector<int> *SOHStat;                 // SOH statistics data (znams)
-  OvmsMetricVector<int> *SOHDummy;                // SOH Dummy data for testing (znams)
-  OvmsMetricVector<int> *SOHPerPackMax;           // SOH Dummy data for testing (znams)
-  OvmsMetricVector<int> *SOHPerPackMin;           // SOH Dummy data for testing (znams)
-  OvmsMetricVector<double> *SOHPerPackAvg;           // SOH Dummy data for testing (znams)
-  OvmsMetricVector<int> *SOHPerMeasureMax;           // SOH Dummy data for testing (znams)
-  OvmsMetricVector<int> *SOHPerMeasureMin;           // SOH Dummy data for testing (znams)
-  OvmsMetricVector<double> *SOHPerMeasureAvg;           // SOH Dummy data for testing (znams)
+  OvmsMetricVector<float> *SOHHistory;              // SOH history data (znams)
+ // OvmsMetricVector<int> *SOHStat;                 // SOH statistics data (znams)
+  OvmsMetricVector<float> *SOHDummy;                // SOH Dummy data for testing (znams)
+  OvmsMetricVector<float> *SOHPerPackMax;           // SOH Dummy data for testing (znams)
+  OvmsMetricVector<float> *SOHPerPackMin;           // SOH Dummy data for testing (znams)
+  OvmsMetricVector<float> *SOHPerPackAvg;           // SOH Dummy data for testing (znams)
+  OvmsMetricVector<float> *SOHPerMeasureMax;           // SOH Dummy data for testing (znams)
+  OvmsMetricVector<float> *SOHPerMeasureMin;           // SOH Dummy data for testing (znams)
+  OvmsMetricVector<float> *SOHPerMeasureAvg;           // SOH Dummy data for testing (znams)
 
   //Metrics for fake SoH data
   OvmsMetricVector<float> *SOHDummyFake;                // SOH Dummy data for testing (znams)
@@ -503,6 +506,7 @@ protected:
 
   int                 m_chg_ctp_car;              // Charge time prediction by car
  // time_t              m_last_soh_poll;            // Timestamp of last successful poll for SOH history (znams)
+  bool                m_soh_poll_active = false;  //(znams)
 
 private:
   PollReplyHelper     PollReply;

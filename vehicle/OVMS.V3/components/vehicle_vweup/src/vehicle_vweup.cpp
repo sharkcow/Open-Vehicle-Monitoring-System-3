@@ -163,7 +163,7 @@ void OvmsVehicleVWeUp::znams_test(int verbosity, OvmsWriter* writer, OvmsCommand
   ESP_LOGD(TAG, "New Timer Mode set: %s", newTimerMode ? "yes" : "no");
   ESP_LOGD(TAG, "Current time now is: %lld", TimeNow);
   OvmsVehicleVWeUp::GetInstance(writer)->NotifySohHistoryChange();
-  ESP_LOGD(TAG, "Poll vector: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());
+  //ESP_LOGD(TAG, "Poll vector: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());
 }
 
 OvmsVehicleVWeUp::~OvmsVehicleVWeUp()
@@ -710,7 +710,7 @@ void OvmsVehicleVWeUp::Ticker60(uint32_t ticker)
   if (HasNoOBD()) {
     UpdateChargeTimes();
   }
-  NotifySohHistoryChange(); //(znams)
+ // NotifySohHistoryChange(); //(znams)
 }
 
 
