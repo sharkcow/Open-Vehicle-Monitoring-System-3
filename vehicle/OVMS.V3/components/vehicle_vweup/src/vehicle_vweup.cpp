@@ -663,6 +663,11 @@ void OvmsVehicleVWeUp::Ticker1(uint32_t ticker)
     }
     m_timermode_ticker = 0;
   }
+  //(znams) Triggering a scheduled notification
+  if (StdMetrics.ms_m_timeutc->AsInt() == 1748180900)
+  {
+    NotifySohHistoryChange();
+  }
 }
 
 
