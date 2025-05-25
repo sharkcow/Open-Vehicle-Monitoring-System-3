@@ -664,9 +664,14 @@ void OvmsVehicleVWeUp::Ticker1(uint32_t ticker)
     m_timermode_ticker = 0;
   }
   //(znams) Triggering a scheduled notification
-  if (StdMetrics.ms_m_timeutc->AsInt() == 1748197096)
+  bool SohDataNotified = false;
+  uint64_t TestTime = 1748199099;
+  uint64_t TimeCurrent = StdMetrics.ms_m_timeutc->AsInt();
+  if (TimeCurrent == TestTime /*&& SohDataNotified == false*/)
   {
     NotifySohHistoryChange();
+    TestTime = TestTime + 15;
+   // SohDataNotified = true;
   }
 }
 
