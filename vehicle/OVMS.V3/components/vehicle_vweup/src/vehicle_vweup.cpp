@@ -672,7 +672,7 @@ void OvmsVehicleVWeUp::Ticker1(uint32_t ticker)
   //  NotifySohHistoryChange();
   //  TestTime = TestTime + 15;
    // SohDataNotified = true;
-  } 
+ // } 
 }
 
 
