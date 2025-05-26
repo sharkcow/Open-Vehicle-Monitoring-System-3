@@ -664,15 +664,15 @@ void OvmsVehicleVWeUp::Ticker1(uint32_t ticker)
     m_timermode_ticker = 0;
   }
   //(znams) Triggering a scheduled notification
-  bool SohDataNotified = false;
-  uint64_t TestTime = 1748199099;
-  uint64_t TimeCurrent = StdMetrics.ms_m_timeutc->AsInt();
-  if (TimeCurrent == TestTime /*&& SohDataNotified == false*/)
-  {
-    NotifySohHistoryChange();
-    TestTime = TestTime + 15;
+  //bool SohDataNotified = false;
+  //uint64_t TestTime = 1748199099;
+  //uint64_t TimeCurrent = StdMetrics.ms_m_timeutc->AsInt();
+  //if (TimeCurrent == TestTime /*&& SohDataNotified == false*/)
+  //{
+  //  NotifySohHistoryChange();
+  //  TestTime = TestTime + 15;
    // SohDataNotified = true;
-  }
+  } 
 }
 
 
@@ -721,6 +721,18 @@ void OvmsVehicleVWeUp::Ticker60(uint32_t ticker)
     UpdateChargeTimes();
   }
  // NotifySohHistoryChange(); //(znams)
+
+   //(znams) Triggering a scheduled notification
+  //bool SohDataNotified = false;
+  uint64_t TimeCurrent = StdMetrics.ms_m_timeutc->AsInt();
+  std::time_t time_cast = static_cast<std::time_t>(TimeCurrent);
+  std::tm* utc_tm = std::gmtime(&time_cast);
+  int month = utc_tm->tm_mon + 1;
+  if (month == 5 /*&& SohDataNotified == false*/)
+  {
+    NotifySohHistoryChange();
+    //SohDataNotified = true;
+  }
 }
 
 
