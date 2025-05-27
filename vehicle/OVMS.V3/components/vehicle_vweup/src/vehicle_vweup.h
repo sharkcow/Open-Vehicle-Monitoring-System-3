@@ -149,6 +149,7 @@ protected:
   void Ticker1(uint32_t ticker) override;
   void Ticker10(uint32_t ticker) override;
   void Ticker60(uint32_t ticker) override;
+  void Ticker300(uint32_t ticker) override; //(znams)
 
 public:
   vehicle_command_t CommandHomelink(int button, int durationms = 1000) override;

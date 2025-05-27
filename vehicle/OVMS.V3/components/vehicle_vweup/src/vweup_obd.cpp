@@ -1784,6 +1784,12 @@ void OvmsVehicleVWeUp::UpdateChargeCap(bool charging)
   }
 }
 
+void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) //(znams) Testing new Ticker300 and filling the m_poll_vector
+{
+    m_poll_vector.insert(m_poll_vector.end(), {
+    {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0, 20, 20, 20}, 1, ISOTP_STD},
+  });
+}
 /*
 bool OvmsVehicleVWeUp::RemovePollPid(uint8_t moduleid, uint16_t pid)    //(znams)
 {
