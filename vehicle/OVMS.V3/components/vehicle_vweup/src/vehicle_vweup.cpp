@@ -714,24 +714,23 @@ void OvmsVehicleVWeUp::Ticker10(uint32_t ticker)
   }
 }
 
-
+ bool SohDataNotified = false;
 void OvmsVehicleVWeUp::Ticker60(uint32_t ticker)
 {
   if (HasNoOBD()) {
     UpdateChargeTimes();
   }
- // NotifySohHistoryChange(); //(znams)
 
    //(znams) Triggering a scheduled notification
-  //bool SohDataNotified = false;
+ 
   uint64_t TimeCurrent = StdMetrics.ms_m_timeutc->AsInt();
   std::time_t time_cast = static_cast<std::time_t>(TimeCurrent);
   std::tm* utc_tm = std::gmtime(&time_cast);
   int month = utc_tm->tm_mon + 1;
-  if (month == 4 /*&& SohDataNotified == false*/)
+  if (month == 5 && SohDataNotified == false)
   {
     NotifySohHistoryChange();
-    //SohDataNotified = true;
+    SohDataNotified = true;
   }
 }
 
