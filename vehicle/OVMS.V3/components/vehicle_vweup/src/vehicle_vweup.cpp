@@ -715,7 +715,7 @@ void OvmsVehicleVWeUp::Ticker10(uint32_t ticker)
   }
 }
 
- bool SohDataNotified = false;
+
 void OvmsVehicleVWeUp::Ticker60(uint32_t ticker)
 {
   if (HasNoOBD()) {
