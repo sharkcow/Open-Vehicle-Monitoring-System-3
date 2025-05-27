@@ -162,7 +162,9 @@ void OvmsVehicleVWeUp::znams_test(int verbosity, OvmsWriter* writer, OvmsCommand
   int64_t TimeNow = StdMetrics.ms_m_timeutc->AsInt();
   ESP_LOGD(TAG, "New Timer Mode set: %s", newTimerMode ? "yes" : "no");
   ESP_LOGD(TAG, "Current time now is: %lld", TimeNow);
-  ESP_LOGD(TAG, "Was the SOH history notified: %d\n", SohDataNotified);
+  ESP_LOGD(TAG, "Was the SOH history notified: %s", SohDataNotified ? "true" : "false");
+  ESP_LOGD(TAG, "vweup_enable_obd is: %s", vweup_enable_obd ? "true" : "false");
+  
   //OvmsVehicleVWeUp::GetInstance(writer)->NotifySohHistoryChange();
   //ESP_LOGD(TAG, "Poll vector: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());
 }
