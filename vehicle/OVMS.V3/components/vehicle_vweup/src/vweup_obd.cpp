@@ -1791,7 +1791,7 @@ void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) //(znams) Testing new Ticker30
   });
 }
 
-void OvmsVehicleVWeUp::Ticker600(uint32_t ticker)
+void OvmsVehicleVWeUp::Ticker3600(uint32_t ticker)
 {
   m_poll_vector.erase(
     std::remove_if(m_poll_vector.begin(), m_poll_vector.end(),
