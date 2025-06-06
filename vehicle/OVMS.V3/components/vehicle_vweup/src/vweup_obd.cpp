@@ -1791,15 +1791,20 @@ void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) //(znams) Testing new Ticker30
   });
 }
 
+void OvmsVehicleVWeUp::Ticker600(uint32_t ticker)
+{
+  OBDDeInit();
+}
+
 void OvmsVehicleVWeUp::Ticker3600(uint32_t ticker)
 {
-  m_poll_vector.erase(
+  /*m_poll_vector.erase(
     std::remove_if(m_poll_vector.begin(), m_poll_vector.end(),
         [](const OvmsPoller::poll_pid_t& poll) {
             // condition: remove if pid matches this value
             return poll.pid == VWUP_BAT_MGMT_SOH_HIST;
         }),
-    m_poll_vector.end());
+    m_poll_vector.end());*/
 }
 /*
 bool OvmsVehicleVWeUp::RemovePollPid(uint8_t moduleid, uint16_t pid)    //(znams)
