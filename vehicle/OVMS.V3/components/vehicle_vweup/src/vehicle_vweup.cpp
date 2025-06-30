@@ -714,11 +714,14 @@ void OvmsVehicleVWeUp::Ticker10(uint32_t ticker)
       last_soc = StdMetrics.ms_v_bat_soc->AsFloat();
     }
   }
+  //(znams) Test log messages
+  /*
   ESP_LOGD(TAG, "Was the SOH history notified: %s", SohDataNotified ? "true" : "false");
   ESP_LOGD(TAG, "vweup_enable_obd is: %s", vweup_enable_obd ? "true" : "false");
   ESP_LOGD(TAG, "Poll vector: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());
   ESP_LOGD(TAG, "Model year of VW eUp = %d", vweup_modelyear);
   ESP_LOGD(TAG, "Enable T26: %s", vweup_enable_t26 ? "true" : "false");
+  */
 }
 
 
@@ -729,7 +732,7 @@ void OvmsVehicleVWeUp::Ticker60(uint32_t ticker)
   }
 
    //(znams) Triggering a scheduled notification
- 
+ /*
   uint64_t TimeCurrent = StdMetrics.ms_m_timeutc->AsInt();
   std::time_t time_cast = static_cast<std::time_t>(TimeCurrent);
   std::tm* utc_tm = std::gmtime(&time_cast);
@@ -738,7 +741,7 @@ void OvmsVehicleVWeUp::Ticker60(uint32_t ticker)
   {
     NotifySohHistoryChange();
     SohDataNotified = true;
-  }
+  } */
 }
 
 
@@ -1185,7 +1188,7 @@ void OvmsVehicleVWeUp::UpdateChargeTimes()
     StdMetrics.ms_v_charge_mode->SetValue("standard");
 }
 
-void OvmsVehicleVWeUp::NotifySohHistoryChange()
+void OvmsVehicleVWeUp::NotifySohHistoryChange() //(znams)
   {
   MyNotify.NotifyString("info","sohhistory.changed", "The SoH history is updated.");
   }

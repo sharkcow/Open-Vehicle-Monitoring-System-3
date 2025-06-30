@@ -80,7 +80,7 @@ const OvmsPoller::poll_pid_t vweup_polls[] = {
   {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_TEMP,             {  0, 20, 20, 20}, 1, ISOTP_STD},
   {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_HIST18,           {  0, 20, 20, 20}, 1, ISOTP_STD},
   {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_CAC,          {  0, 20, 20, 20}, 1, ISOTP_STD},
- // {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0, 20, 20, 20}, 1, ISOTP_STD}, //(znams)
+  {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0, 20, 20, 20}, 1, ISOTP_STD}, //(znams)
 
   {VWUP_CHG,      UDS_READ, VWUP_CHG_POWER_EFF,             {  0,  0, 10,  0}, 1, ISOTP_STD},
 
@@ -1784,6 +1784,7 @@ void OvmsVehicleVWeUp::UpdateChargeCap(bool charging)
   }
 }
 
+/*
 void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) //(znams) Testing new Ticker300 and filling the m_poll_vector
 {
     m_poll_vector.insert(m_poll_vector.end(), {
@@ -1798,14 +1799,16 @@ void OvmsVehicleVWeUp::Ticker600(uint32_t ticker)
 
 void OvmsVehicleVWeUp::Ticker3600(uint32_t ticker)
 {
-  /*m_poll_vector.erase(
+  m_poll_vector.erase(
     std::remove_if(m_poll_vector.begin(), m_poll_vector.end(),
         [](const OvmsPoller::poll_pid_t& poll) {
             // condition: remove if pid matches this value
             return poll.pid == VWUP_BAT_MGMT_SOH_HIST;
         }),
-    m_poll_vector.end());*/
-}
+    m_poll_vector.end());
+} 
+*/
+
 /*
 bool OvmsVehicleVWeUp::RemovePollPid(uint8_t moduleid, uint16_t pid)    //(znams)
 {
