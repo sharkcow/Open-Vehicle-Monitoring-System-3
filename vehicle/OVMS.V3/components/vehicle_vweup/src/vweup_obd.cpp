@@ -1790,7 +1790,7 @@ void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) //(znams) Testing new Ticker30
   m_poll_vector.insert(m_poll_vector.end(), {
     {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0, 20, 20, 20}, 1, ISOTP_STD},
   });
-  ESP_LOGD(TAG, "OBDSetState: %s", GetOBDStateName(m_obd_state));
+  //ESP_LOGD(TAG, "OBDSetState: %s", GetOBDStateName(m_obd_state));
 }
 
 void OvmsVehicleVWeUp::Ticker600(uint32_t ticker)
