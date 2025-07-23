@@ -722,6 +722,7 @@ void OvmsVehicleVWeUp::Ticker10(uint32_t ticker)
   ESP_LOGD(TAG, "Model year of VW eUp = %d", vweup_modelyear);
   ESP_LOGD(TAG, "Enable T26: %s", vweup_enable_t26 ? "true" : "false");
   ESP_LOGD(TAG, "OBDSetState: %s", GetOBDStateName(m_obd_state));
+  ESP_LOGD(TAG, "PollSetState: %s", GetPollStateName(m_poll_state));
   
 }
 
