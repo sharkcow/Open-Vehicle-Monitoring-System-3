@@ -235,6 +235,7 @@ public:
   uint8_t climit_max;
   string resultSohF;            //(znams)
   bool SohDataNotified;        //(znams)
+  bool m_autonotifications_VW; //(znams)
   
 private:
   use_phase_t m_use_phase;

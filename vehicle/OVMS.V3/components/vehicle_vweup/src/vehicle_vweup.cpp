@@ -122,6 +122,8 @@ OvmsVehicleVWeUp::OvmsVehicleVWeUp()
   m_tripfrac_reftime = 0;
   m_tripfrac_refspeed = 0;
 
+  m_autonotifications_VW = true;  //(znams)
+
   // Init metrics:
   m_version = MyMetrics.InitString("xvu.m.version", 0, VERSION " " __DATE__ " " __TIME__);
 
@@ -734,16 +736,18 @@ void OvmsVehicleVWeUp::Ticker60(uint32_t ticker)
   }
 
    //(znams) Triggering a scheduled notification
- /*
+ 
   uint64_t TimeCurrent = StdMetrics.ms_m_timeutc->AsInt();
   std::time_t time_cast = static_cast<std::time_t>(TimeCurrent);
   std::tm* utc_tm = std::gmtime(&time_cast);
   int month = utc_tm->tm_mon + 1;
-  if (month == 5 && SohDataNotified == false)
+  if (month == 7 && SohDataNotified == false)
   {
-    NotifySohHistoryChange();
-    SohDataNotified = true;
-  } */
+    if (m_autonotifications_VW) {
+      NotifySohHistoryChange();
+      SohDataNotified = true;
+    }
+  } 
 }
 
 
