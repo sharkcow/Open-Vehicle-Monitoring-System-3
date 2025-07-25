@@ -166,7 +166,7 @@ void OvmsVehicleVWeUp::znams_test(int verbosity, OvmsWriter* writer, OvmsCommand
   ESP_LOGD(TAG, "Current time now is: %lld", TimeNow);
 
 
-  ESP_LOGD(TAG, "The SoH history was updated on: %lld. The next update is expected on: %d", TimeNow);
+  //ESP_LOGD(TAG, "The SoH history was updated on: %lld. The next update is expected on: %d", TimeNow);
 
   
   OvmsVehicleVWeUp::GetInstance(writer)->NotifySohHistoryChange();
