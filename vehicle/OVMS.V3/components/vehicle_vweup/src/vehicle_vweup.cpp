@@ -165,6 +165,9 @@ void OvmsVehicleVWeUp::znams_test(int verbosity, OvmsWriter* writer, OvmsCommand
   ESP_LOGD(TAG, "New Timer Mode set: %s", newTimerMode ? "yes" : "no");
   ESP_LOGD(TAG, "Current time now is: %lld", TimeNow);
 
+
+  ESP_LOGD(TAG, "The SoH history was updated on: %lld. The next update is expected on: %d", TimeNow);
+
   
   OvmsVehicleVWeUp::GetInstance(writer)->NotifySohHistoryChange();
   //ESP_LOGD(TAG, "Poll vector: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());
@@ -741,11 +744,11 @@ void OvmsVehicleVWeUp::Ticker60(uint32_t ticker)
   std::time_t time_cast = static_cast<std::time_t>(TimeCurrent);
   std::tm* utc_tm = std::gmtime(&time_cast);
   int month = utc_tm->tm_mon + 1;
-  if (month == 7 && SohDataNotified == false)
+  if (month == 7 /*&& SohDataNotified == false*/)
   {
     if (m_autonotifications_VW) {
       NotifySohHistoryChange();
-      SohDataNotified = true;
+      //SohDataNotified = true;
     }
   } 
 }
