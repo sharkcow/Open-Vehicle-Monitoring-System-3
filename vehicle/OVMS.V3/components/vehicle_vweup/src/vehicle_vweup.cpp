@@ -166,7 +166,7 @@ void OvmsVehicleVWeUp::znams_test(int verbosity, OvmsWriter* writer, OvmsCommand
   ESP_LOGD(TAG, "Current time now is: %lld", TimeNow);
 
   
-  //OvmsVehicleVWeUp::GetInstance(writer)->NotifySohHistoryChange();
+  OvmsVehicleVWeUp::GetInstance(writer)->NotifySohHistoryChange();
   //ESP_LOGD(TAG, "Poll vector: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());
 }
 
