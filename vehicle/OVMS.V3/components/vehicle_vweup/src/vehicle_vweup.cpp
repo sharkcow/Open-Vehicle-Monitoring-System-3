@@ -165,9 +165,14 @@ void OvmsVehicleVWeUp::znams_test(int verbosity, OvmsWriter* writer, OvmsCommand
   ESP_LOGD(TAG, "New Timer Mode set: %s", newTimerMode ? "yes" : "no");
   ESP_LOGD(TAG, "Current time now is: %lld", TimeNow);
 
-
-  //ESP_LOGD(TAG, "The SoH history was updated on: %lld. The next update is expected on: %d", TimeNow);
-
+  uint64_t TimeCurrent = StdMetrics.ms_m_timeutc->AsInt();
+  std::time_t time_cast = static_cast<std::time_t>(TimeCurrent);
+  std::tm* utc_tm = std::gmtime(&time_cast);
+  int month = utc_tm->tm_mon + 1;
+  int nextUpdateMonth = (month == 10) ? 1 : (month + 3);
+  if (month == 1 || month == 4 || month == 7 || month == 10){
+  ESP_LOGD(TAG, "The SoH history was updated on: %d. The next update is expected on: %d", month, nextUpdateMonth);
+  }
   
   OvmsVehicleVWeUp::GetInstance(writer)->NotifySohHistoryChange();
   //ESP_LOGD(TAG, "Poll vector: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());
