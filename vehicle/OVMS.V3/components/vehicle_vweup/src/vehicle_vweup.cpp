@@ -745,7 +745,7 @@ void OvmsVehicleVWeUp::Ticker60(uint32_t ticker)
   }
 
    //(znams) Triggering a scheduled notification
- 
+  size_t m_client_cnt;
   uint64_t TimeCurrent = StdMetrics.ms_m_timeutc->AsInt();
   std::time_t time_cast = static_cast<std::time_t>(TimeCurrent);
   std::tm* utc_tm = std::gmtime(&time_cast);
