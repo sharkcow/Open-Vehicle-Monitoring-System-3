@@ -749,13 +749,15 @@ void OvmsVehicleVWeUp::Ticker60(uint32_t ticker)
   std::time_t time_cast = static_cast<std::time_t>(TimeCurrent);
   std::tm* utc_tm = std::gmtime(&time_cast);
   int month = utc_tm->tm_mon + 1;
-  if (month == 7 /*&& SohDataNotified == false*/)
+  if (month == 7 && SohDataNotified == false)
   {
     if (m_autonotifications_VW) {
       NotifySohHistoryChange();
-      //SohDataNotified = true;
+      SohDataNotified = true;
     }
-  } 
+  } else {
+    SohDataNotified = false;
+  }
 }
 
 
