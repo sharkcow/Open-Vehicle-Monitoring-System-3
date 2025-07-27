@@ -42,6 +42,7 @@ static const char *TAG = "v-vweup";
 #include "metrics_standard.h"
 #include "ovms_notify.h"
 #include "string_writer.h"
+#include "ovms_webserver.h"   //(znams) Including the webserver library to check if the websocket client is open and send the SoH notfication
 
 #include "vehicle_vweup.h"
 
@@ -749,7 +750,7 @@ void OvmsVehicleVWeUp::Ticker60(uint32_t ticker)
   std::time_t time_cast = static_cast<std::time_t>(TimeCurrent);
   std::tm* utc_tm = std::gmtime(&time_cast);
   int month = utc_tm->tm_mon + 1;
-  if (month == 7 && SohDataNotified == false)
+  if (month == 7 && SohDataNotified == false && m_client_cnt == 1)
   {
     if (m_autonotifications_VW) {
       NotifySohHistoryChange();
