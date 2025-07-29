@@ -79,7 +79,7 @@ const OvmsPoller::poll_pid_t vweup_polls[] = {
 
   {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_TEMP,             {  0, 20, 20, 20}, 1, ISOTP_STD},
   {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_HIST18,           {  0, 20, 20, 20}, 1, ISOTP_STD},
-  {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_CAC,          {  0, 20, 20, 20}, 1, ISOTP_STD},
+  {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_CAC,          {  40, 20, 20, 20}, 1, ISOTP_STD}, //(znams) Remove 40, set to 0 after testing!!!
  // {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0, 20, 20, 20}, 1, ISOTP_STD}, //(znams)
 
   {VWUP_CHG,      UDS_READ, VWUP_CHG_POWER_EFF,             {  0,  0, 10,  0}, 1, ISOTP_STD},
@@ -1791,6 +1791,7 @@ void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) //(znams) Testing new Ticker30
     {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0, 20, 20, 20}, 1, ISOTP_STD},
   });
   //ESP_LOGD(TAG, "OBDSetState: %s", GetOBDStateName(m_obd_state));
+  ESP_LOGD(TAG, "IncomingPollReply: Received %d bytes for PID 0x%02X", length, job.pid);
 }
 
 void OvmsVehicleVWeUp::Ticker600(uint32_t ticker)
