@@ -124,6 +124,7 @@ OvmsVehicleVWeUp::OvmsVehicleVWeUp()
   m_tripfrac_refspeed = 0;
 
   m_autonotifications_VW = true;  //(znams)
+  SohDataNotified = false;        //(znams)
 
   // Init metrics:
   m_version = MyMetrics.InitString("xvu.m.version", 0, VERSION " " __DATE__ " " __TIME__);
@@ -1208,5 +1209,5 @@ void OvmsVehicleVWeUp::UpdateChargeTimes()
 
 void OvmsVehicleVWeUp::NotifySohHistoryChange() //(znams)
   {
-  MyNotify.NotifyString("info","sohhistory.changed", "The SoH history is updated.");
+  MyNotify.NotifyString("info","sohhistory.changed", "The SoH history was updated at the beginning of this month.");
   }

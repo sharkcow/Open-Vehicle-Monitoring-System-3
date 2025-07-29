@@ -234,7 +234,7 @@ public:
   int vweup_modelyear;
   uint8_t climit_max;
   string resultSohF;            //(znams)
-  bool SohDataNotified = false;        //(znams) later remove false
+  bool SohDataNotified;        //(znams) 
   bool m_autonotifications_VW; //(znams)
   
 private:
