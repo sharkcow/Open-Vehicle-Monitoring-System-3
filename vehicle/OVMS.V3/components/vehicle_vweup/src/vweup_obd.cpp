@@ -722,6 +722,7 @@ void OvmsVehicleVWeUp::PollerStateTicker(canbus *bus)
 
 void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint8_t* data, uint8_t length)
 {
+  ESP_LOGI(TAG, "IncomingPollReply: Received %d bytes for PID 0x%02X", length, job.pid); //(znams) Remove after testing!!!
   if (m_obd_state != OBDS_Run)
     return;
 
@@ -1791,7 +1792,7 @@ void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) //(znams) Testing new Ticker30
     {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0, 20, 20, 20}, 1, ISOTP_STD},
   });
   //ESP_LOGD(TAG, "OBDSetState: %s", GetOBDStateName(m_obd_state));
-  ESP_LOGD(TAG, "IncomingPollReply: Received %d bytes for PID 0x%02X", length, job.pid);
+  //ESP_LOGD(TAG, "IncomingPollReply: Received %d bytes for PID 0x%02X", length, job.pid);
 }
 
 void OvmsVehicleVWeUp::Ticker600(uint32_t ticker)
