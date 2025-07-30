@@ -722,7 +722,8 @@ void OvmsVehicleVWeUp::PollerStateTicker(canbus *bus)
 
 void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint8_t* data, uint8_t length)
 {
-  ESP_LOGI(TAG, "IncomingPollReply: Received %d bytes for PID 0x%02X", length, job.pid); //(znams) Remove after testing!!!
+  ESP_LOGI(TAG, "IncomingPollReply: PID 0x%02X, received %d bytes from ECU 0x%03X (expected: 0x%03X)",
+         job.pid, length, job.moduleid_rec, job.entry.rxmoduleid);            //(znams) Remove after testing!!!
   if (m_obd_state != OBDS_Run)
     return;
 
@@ -1785,6 +1786,27 @@ void OvmsVehicleVWeUp::UpdateChargeCap(bool charging)
   }
 }
 
+void OvmsVehicleVWeUp::TestIncomingPollReply()      //(znams)
+{
+  OvmsPoller::poll_job_t job = {};
+
+  // Simulate the actual module that responded
+  job.moduleid_rec = 0x7E8;
+
+  // Simulate the poll list entry (PID and expected ECU)
+  job.pid = 0x02;  // Example PID
+  job.entry.pid = 0x02;
+  job.entry.rxmoduleid = 0x7E8;
+
+  // Simulate some response data (change as needed)
+  uint8_t fake_data[] = { 0x62, 0x02, 0x12, 0x34, 0x56, 0x78, 0x9A };
+  uint8_t length = sizeof(fake_data);
+
+  // Call the real function with the simulated job and data
+  IncomingPollReply(job, fake_data, length);
+}
+
+
 
 void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) //(znams) Testing new Ticker300 and filling the m_poll_vector
 {
@@ -1793,6 +1815,7 @@ void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) //(znams) Testing new Ticker30
   });
   //ESP_LOGD(TAG, "OBDSetState: %s", GetOBDStateName(m_obd_state));
   //ESP_LOGD(TAG, "IncomingPollReply: Received %d bytes for PID 0x%02X", length, job.pid);
+  TestIncomingPollReply();
 }
 
 void OvmsVehicleVWeUp::Ticker600(uint32_t ticker)
