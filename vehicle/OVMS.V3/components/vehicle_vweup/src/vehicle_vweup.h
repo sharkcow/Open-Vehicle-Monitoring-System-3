@@ -396,6 +396,7 @@ protected:
   void PollerStateTicker(canbus *bus) override;
 
   void IncomingPollReply(const OvmsPoller::poll_job_t &job, uint8_t* data, uint8_t length) override;
+  void TestIncomingPollReply(); //(znams)
 
   bool ShouldPollSOH();   //(znams)
   bool RemovePollPid(uint8_t moduleid, uint16_t pid); //(znams)
