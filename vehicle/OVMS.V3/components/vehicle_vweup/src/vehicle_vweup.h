@@ -445,7 +445,7 @@ protected:
   OvmsMetricVector<float> *TPMSEmergency;         // TPMS Indicator for Tyre Emergency
   OvmsMetricVector<float> *SOHHistory;              // SOH history data (znams)
  // OvmsMetricVector<int> *SOHStat;                 // SOH statistics data (znams)
-  OvmsMetricVector<float> *SOHDummy;                // SOH Dummy data for testing (znams)
+  OvmsMetricVector<float> *SOHValidValues;                // SOH Dummy data for testing (znams)
   OvmsMetricVector<float> *SOHPerPackMax;           // SOH Dummy data for testing (znams)
   OvmsMetricVector<float> *SOHPerPackMin;           // SOH Dummy data for testing (znams)
   OvmsMetricVector<float> *SOHPerPackAvg;           // SOH Dummy data for testing (znams)
@@ -456,7 +456,7 @@ protected:
   OvmsMetricVector<float> *SOHPerPackStdDev;      // SOH Dummy data for testing (znams)
 
   //Metrics for fake SoH data
-  OvmsMetricVector<float> *SOHValidValues;                // SOH Dummy data for testing (znams)
+  OvmsMetricVector<float> *SOHDummyFake;                // SOH Dummy data for testing (znams)
   OvmsMetricVector<float> *SOHPerPackMaxFake;           // SOH Dummy data for testing (znams)
   OvmsMetricVector<float> *SOHPerPackMinFake;           // SOH Dummy data for testing (znams)
   OvmsMetricVector<float> *SOHPerPackAvgFake;        // SOH Dummy data for testing (znams)

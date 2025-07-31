@@ -196,7 +196,7 @@ void OvmsVehicleVWeUp::OBDInit()
     ServiceDays =  MyMetrics.InitInt("xvu.e.serv.days", SM_STALE_NONE, 0);
     TPMSDiffusion = MyMetrics.InitVector<float>("xvu.v.t.diff", SM_STALE_NONE, 0);
     TPMSEmergency = MyMetrics.InitVector<float>("xvu.v.t.emgcy", SM_STALE_NONE, 0);
-    SOHHistory = MyMetrics.InitVector<float>("xvu.b.soh.hist", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHHistory = MyMetrics.InitVector<float>("xvu.b.soh.hist", SM_STALE_NONE, 0, Percentage, true);  //(znams)
  //   SOHStat = MyMetrics.InitVector<int>("xvu.b.soh.stat", SM_STALE_NONE, 0, Percentage);  //(znams)
     SOHValidValues = MyMetrics.InitVector<float>("xvu.b.soh.dummy", SM_STALE_NONE, 0, Percentage, true);  //(znams)
     SOHPerPackMax = MyMetrics.InitVector<float>("xvu.b.soh.perpackmax", SM_STALE_NONE, 0, Percentage, true);  //(znams)
@@ -205,7 +205,7 @@ void OvmsVehicleVWeUp::OBDInit()
     SOHPerMeasureMax = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremax", SM_STALE_NONE, 0, Percentage, true);  //(znams)
     SOHPerMeasureMin = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremin", SM_STALE_NONE, 0, Percentage, true);  //(znams)
     SOHPerMeasureAvg = MyMetrics.InitVector<float>("xvu.b.soh.permeasureavg", SM_STALE_NONE, 0, Percentage, true);  //(znams)
-    SOHVectorSize = MyMetrics.InitInt("xvu.b.soh.vectorsize", SM_STALE_NONE, 0, true); //(znams)
+    SOHVectorSize = MyMetrics.InitInt("xvu.b.soh.vectorsize", SM_STALE_NONE, 0); //(znams)
     SOHPerPackStdDev = MyMetrics.InitVector<float>("xvu.b.soh.standev", SM_STALE_NONE, 0, Percentage, true); //(znams)
 
     //Simulating fake SOH data and storing in the metrics
@@ -216,7 +216,7 @@ void OvmsVehicleVWeUp::OBDInit()
     SOHPerMeasureMaxFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremax.fake", SM_STALE_NONE, 0, Percentage, true);  //(znams)
     SOHPerMeasureMinFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremin.fake", SM_STALE_NONE, 0, Percentage, true);  //(znams)
     SOHPerMeasureAvgFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasureavg.fake", SM_STALE_NONE, 0, Percentage, true);  //(znams)
-    SOHVectorSizeFake = MyMetrics.InitInt("xvu.b.soh.vectorsize.fake", SM_STALE_NONE, 0, true); //(znams)
+    SOHVectorSizeFake = MyMetrics.InitInt("xvu.b.soh.vectorsize.fake", SM_STALE_NONE, 0); //(znams)
     SOHPerPackStdDevFake = MyMetrics.InitVector<float>("xvu.b.soh.standev.fake", SM_STALE_NONE, 0, Percentage, true); //(znams)
  
     //int i;
