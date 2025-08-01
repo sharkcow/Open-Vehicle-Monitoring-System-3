@@ -514,7 +514,8 @@ protected:
 
   int                 m_chg_ctp_car;              // Charge time prediction by car
  // time_t              m_last_soh_poll;            // Timestamp of last successful poll for SOH history (znams)
-  bool                m_soh_poll_active = false;  //(znams)
+  //bool                m_soh_poll_active = false;  //(znams)
+  bool                WasSoHHistoryPolled;        //(znams) 
 
 private:
   PollReplyHelper     PollReply;

@@ -365,6 +365,8 @@ void OvmsVehicleVWeUp::OBDInit()
     RegisterCanBus(1, CAN_MODE_ACTIVE, CAN_SPEED_500KBPS);
   }
 
+  WasSoHHistoryPolled = false;    //(znams)
+
   //
   // Init/reconfigure poller
   //
@@ -1215,6 +1217,16 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
           float avgSOH = sum / count;
           SOHPerMeasureAvg->SetElemValue(j, avgSOH);
         } 
+
+        // Removing SoH history PID from the m_poll_vector and reseting the poll list after receiving the SoH history data
+        m_poll_vector.erase(
+        std::remove_if(m_poll_vector.begin(), m_poll_vector.end(),
+        [](const OvmsPoller::poll_pid_t& poll) {
+            // condition: remove if pid matches this value
+            return poll.pid == VWUP_BAT_MGMT_SOH_HIST;
+        }),
+        m_poll_vector.end());
+        PollSetPidList(m_can1, m_poll_vector.data());
       }
       break; 
 
@@ -1810,15 +1822,28 @@ void OvmsVehicleVWeUp::TestIncomingPollReply()      //(znams)
 
 void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) //(znams) Testing new Ticker300 and filling the m_poll_vector
 {
-  m_poll_vector.insert(m_poll_vector.end(), {
-    {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0, 20, 20, 20}, 1, ISOTP_STD},
-  });
+  uint64_t TimeCurrent = StdMetrics.ms_m_timeutc->AsInt();
+  std::time_t time_cast = static_cast<std::time_t>(TimeCurrent);
+  std::tm* utc_tm = std::gmtime(&time_cast);
+  int month = utc_tm->tm_mon + 1;
+  if ((month == 1 || month == 4 || month == 7 || month == 10 || month == 8) && WasSoHHistoryPolled == false)
+  {
+    m_poll_vector.insert(m_poll_vector.end(), {
+    {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  30, 20, 20, 20}, 1, ISOTP_STD},
+    });
+    PollSetPidList(m_can1, m_poll_vector.data());
+    WasSoHHistoryPolled = true;
+  } else if (month != 1 && month != 4 && month != 7 && month != 10 && month != 8)
+    {
+      WasSoHHistoryPolled = false;
+    }
+
   //ESP_LOGD(TAG, "OBDSetState: %s", GetOBDStateName(m_obd_state));
   //ESP_LOGD(TAG, "IncomingPollReply: Received %d bytes for PID 0x%02X", length, job.pid);
-  TestIncomingPollReply();
+  //TestIncomingPollReply();
 }
 
-void OvmsVehicleVWeUp::Ticker600(uint32_t ticker)
+/*void OvmsVehicleVWeUp::Ticker600(uint32_t ticker)
 {
   m_poll_vector.erase(
     std::remove_if(m_poll_vector.begin(), m_poll_vector.end(),
@@ -1828,7 +1853,7 @@ void OvmsVehicleVWeUp::Ticker600(uint32_t ticker)
         }),
     m_poll_vector.end());
   //OBDDeInit();
-}
+}*/
 /*
 void OvmsVehicleVWeUp::Ticker3600(uint32_t ticker)
 {
