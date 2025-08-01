@@ -1828,6 +1828,9 @@ void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) //(znams) Testing new Ticker30
   int month = utc_tm->tm_mon + 1;
   if ((month == 1 || month == 4 || month == 7 || month == 10 || month == 8) && WasSoHHistoryPolled == false)
   {
+    if (!m_poll_vector.empty() && m_poll_vector.back() == POLL_LIST_END) {
+      m_poll_vector.pop_back();
+    }
     m_poll_vector.insert(m_poll_vector.end(), {
     {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  30, 20, 20, 20}, 1, ISOTP_STD},
     });
