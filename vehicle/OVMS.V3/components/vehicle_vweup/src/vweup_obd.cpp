@@ -1822,16 +1822,20 @@ void OvmsVehicleVWeUp::TestIncomingPollReply()      //(znams)
 
 void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) //(znams) Testing new Ticker300 and filling the m_poll_vector
 {
-  static const OvmsPoller::poll_pid_t poll_list_end = POLL_LIST_END;
   uint64_t TimeCurrent = StdMetrics.ms_m_timeutc->AsInt();
   std::time_t time_cast = static_cast<std::time_t>(TimeCurrent);
   std::tm* utc_tm = std::gmtime(&time_cast);
   int month = utc_tm->tm_mon + 1;
   if ((month == 1 || month == 4 || month == 7 || month == 10 || month == 8) && WasSoHHistoryPolled == false)
-  {
-    if (!m_poll_vector.empty() && m_poll_vector.back() == poll_list_end) {
-      m_poll_vector.pop_back();
-    }
+    {
+      m_poll_vector.erase(
+      std::remove_if(m_poll_vector.begin(), m_poll_vector.end(),
+      [](const OvmsPoller::poll_pid_t& poll) {
+            // condition: remove if pid matches this value
+            return poll.pid == 0x00;
+        }),
+        m_poll_vector.end());
+
     m_poll_vector.insert(m_poll_vector.end(), {
     {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  30, 20, 20, 20}, 1, ISOTP_STD},
     });
