@@ -209,15 +209,15 @@ void OvmsVehicleVWeUp::OBDInit()
     SOHPerPackStdDev = MyMetrics.InitVector<float>("xvu.b.soh.standev", SM_STALE_NONE, 0, Percentage, true); //(znams)
 
     //Simulating fake SOH data and storing in the metrics
-    SOHDummyFake = MyMetrics.InitVector<float>("xvu.b.soh.dummy.fake", SM_STALE_NONE, 0, Percentage, true);  //(znams) 
-    SOHPerPackMaxFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackmax.fake", SM_STALE_NONE, 0, Percentage, true);  //(znams)
-    SOHPerPackMinFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackmin.fake", SM_STALE_NONE, 0, Percentage, true);  //(znams)
-    SOHPerPackAvgFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackavg.fake", SM_STALE_NONE, 0, Percentage, true);  //(znams)
-    SOHPerMeasureMaxFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremax.fake", SM_STALE_NONE, 0, Percentage, true);  //(znams)
-    SOHPerMeasureMinFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremin.fake", SM_STALE_NONE, 0, Percentage, true);  //(znams)
-    SOHPerMeasureAvgFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasureavg.fake", SM_STALE_NONE, 0, Percentage, true);  //(znams)
+    SOHDummyFake = MyMetrics.InitVector<float>("xvu.b.soh.dummy.fake", SM_STALE_NONE, 0, Percentage);  //(znams) 
+    SOHPerPackMaxFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackmax.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHPerPackMinFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackmin.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHPerPackAvgFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackavg.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHPerMeasureMaxFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremax.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHPerMeasureMinFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremin.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHPerMeasureAvgFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasureavg.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
     SOHVectorSizeFake = MyMetrics.InitInt("xvu.b.soh.vectorsize.fake", SM_STALE_NONE, 0); //(znams)
-    SOHPerPackStdDevFake = MyMetrics.InitVector<float>("xvu.b.soh.standev.fake", SM_STALE_NONE, 0, Percentage, true); //(znams)
+    SOHPerPackStdDevFake = MyMetrics.InitVector<float>("xvu.b.soh.standev.fake", SM_STALE_NONE, 0, Percentage); //(znams)
  
     //int i;
     //int j;
@@ -1840,7 +1840,7 @@ void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) //(znams) Testing new Ticker30
         m_poll_vector.end());
         ESP_LOGD(TAG, "Poll vector AFTER deleting a Terminating Poll Line: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());  // expected size 141
     m_poll_vector.insert(m_poll_vector.end(), {
-    {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  5, 1, 1, 1}, 1, ISOTP_STD},
+    {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0, 1, 1, 1}, 1, ISOTP_STD},
     });
     m_poll_vector.push_back(POLL_LIST_END);
     ESP_LOGD(TAG, "Poll vector AFTER adding the SOH PID and the Terminating Poll Line: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());  // expected size 143
