@@ -150,7 +150,7 @@ protected:
   void Ticker10(uint32_t ticker) override;
   void Ticker60(uint32_t ticker) override;
   void Ticker300(uint32_t ticker) override; //(znams)
-  void Ticker600(uint32_t ticker) override; //(znams)
+ // void Ticker600(uint32_t ticker) override; //(znams)
  // void Ticker3600(uint32_t ticker) override; //(znams)
 
 public:
