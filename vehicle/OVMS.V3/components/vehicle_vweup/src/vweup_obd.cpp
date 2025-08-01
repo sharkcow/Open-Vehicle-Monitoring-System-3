@@ -1124,7 +1124,6 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
       break;
 
     case VWUP_BAT_MGMT_SOH_HIST: // (znams) Testing the reply from the PID 74CC
-
       if (PollReply.FromUint8Mod("VWUP_BAT_MGMT_SOH_HIST", value, 4)) {
         int i;    //Number of cell pack
         int totalBytes = (vweup_modelyear > 2019) ? 560 : 680;
@@ -1218,6 +1217,7 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
           SOHPerMeasureAvg->SetElemValue(j, avgSOH);
         } 
 
+      }
         // Removing SoH history PID from the m_poll_vector and reseting the poll list after receiving the SoH history data
         m_poll_vector.erase(
         std::remove_if(m_poll_vector.begin(), m_poll_vector.end(),
@@ -1227,7 +1227,6 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
         }),
         m_poll_vector.end());
         PollSetPidList(m_can1, m_poll_vector.data());
-      }
       break; 
 
     case VWUP1_CHG_AC_U:
