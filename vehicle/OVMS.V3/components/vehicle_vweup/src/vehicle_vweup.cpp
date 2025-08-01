@@ -729,12 +729,12 @@ void OvmsVehicleVWeUp::Ticker10(uint32_t ticker)
   //(znams) Test log messages
   
   ESP_LOGD(TAG, "Was the SOH history notified: %s", SohDataNotified ? "true" : "false");
-  ESP_LOGD(TAG, "vweup_enable_obd is: %s", vweup_enable_obd ? "true" : "false");
+ /* ESP_LOGD(TAG, "vweup_enable_obd is: %s", vweup_enable_obd ? "true" : "false");
   ESP_LOGD(TAG, "Poll vector: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());
   ESP_LOGD(TAG, "Model year of VW eUp = %d", vweup_modelyear);
   ESP_LOGD(TAG, "Enable T26: %s", vweup_enable_t26 ? "true" : "false");
   ESP_LOGD(TAG, "OBDSetState: %s", GetOBDStateName(m_obd_state));
-  ESP_LOGD(TAG, "PollSetState: %s", GetPollStateName(m_poll_state));
+  ESP_LOGD(TAG, "PollSetState: %s", GetPollStateName(m_poll_state));  */
   
 }
 
@@ -751,13 +751,13 @@ void OvmsVehicleVWeUp::Ticker60(uint32_t ticker)
   std::time_t time_cast = static_cast<std::time_t>(TimeCurrent);
   std::tm* utc_tm = std::gmtime(&time_cast);
   int month = utc_tm->tm_mon + 1;
-  if ((month == 1 || month == 4 || month == 7 || month == 10) && SohDataNotified == false && MyWebServer.m_client_cnt >= 1)
+  if ((month == 1 || month == 4 || month == 7 || month == 10 || month == 8) && SohDataNotified == false && MyWebServer.m_client_cnt >= 1)
   {
     if (m_autonotifications_VW) {
       NotifySohHistoryChange();
       SohDataNotified = true;
     }
-  } else if (month != 1 && month != 4 && month != 7 && month != 10)
+  } else if (month != 1 && month != 4 && month != 7 && month != 10 && month != 8)
     {
       SohDataNotified = false;
     }

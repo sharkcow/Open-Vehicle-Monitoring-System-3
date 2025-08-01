@@ -79,7 +79,7 @@ const OvmsPoller::poll_pid_t vweup_polls[] = {
 
   {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_TEMP,             {  0, 20, 20, 20}, 1, ISOTP_STD},
   {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_HIST18,           {  0, 20, 20, 20}, 1, ISOTP_STD},
-  {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_CAC,          {  40, 20, 20, 20}, 1, ISOTP_STD}, //(znams) Remove 40, set to 0 after testing!!!
+  {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_CAC,          {  0, 20, 20, 20}, 1, ISOTP_STD}, 
  // {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0, 20, 20, 20}, 1, ISOTP_STD}, //(znams)
 
   {VWUP_CHG,      UDS_READ, VWUP_CHG_POWER_EFF,             {  0,  0, 10,  0}, 1, ISOTP_STD},
@@ -1124,6 +1124,7 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
       break;
 
     case VWUP_BAT_MGMT_SOH_HIST: // (znams) Testing the reply from the PID 74CC
+    ESP_LOGD(TAG, "Poll vector before receiving a Poll Reply: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity()); // Expected size 143
       if (PollReply.FromUint8Mod("VWUP_BAT_MGMT_SOH_HIST", value, 4)) {
         int i;    //Number of cell pack
         int totalBytes = (vweup_modelyear > 2019) ? 560 : 680;
@@ -1217,7 +1218,6 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
           SOHPerMeasureAvg->SetElemValue(j, avgSOH);
         } 
 
-      }
         // Removing SoH history PID from the m_poll_vector and reseting the poll list after receiving the SoH history data
         m_poll_vector.erase(
         std::remove_if(m_poll_vector.begin(), m_poll_vector.end(),
@@ -1227,6 +1227,8 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
         }),
         m_poll_vector.end());
         PollSetPidList(m_can1, m_poll_vector.data());
+        ESP_LOGD(TAG, "Poll vector after receiving a Poll Reply: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity()); //Expected size 142
+      }
       break; 
 
     case VWUP1_CHG_AC_U:
@@ -1827,6 +1829,8 @@ void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) //(znams) Testing new Ticker30
   int month = utc_tm->tm_mon + 1;
   if ((month == 1 || month == 4 || month == 7 || month == 10 || month == 8) && WasSoHHistoryPolled == false)
     {
+      ESP_LOGD(TAG, "Poll vector BEFORE deleting a Terminating Poll Line: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());  // expected size 142
+      // deleting a Terminating Poll Line
       m_poll_vector.erase(
       std::remove_if(m_poll_vector.begin(), m_poll_vector.end(),
       [](const OvmsPoller::poll_pid_t& poll) {
@@ -1834,11 +1838,12 @@ void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) //(znams) Testing new Ticker30
             return poll.pid == 0x00;
         }),
         m_poll_vector.end());
-
+        ESP_LOGD(TAG, "Poll vector AFTER deleting a Terminating Poll Line: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());  // expected size 141
     m_poll_vector.insert(m_poll_vector.end(), {
-    {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  30, 20, 20, 20}, 1, ISOTP_STD},
+    {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0, 1, 1, 1}, 1, ISOTP_STD},
     });
     m_poll_vector.push_back(POLL_LIST_END);
+    ESP_LOGD(TAG, "Poll vector AFTER adding the SOH PID and the Terminating Poll Line: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());  // expected size 143
     PollSetPidList(m_can1, m_poll_vector.data());
     WasSoHHistoryPolled = true;
   } else if (month != 1 && month != 4 && month != 7 && month != 10 && month != 8)
