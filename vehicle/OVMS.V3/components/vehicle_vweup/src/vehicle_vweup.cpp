@@ -124,7 +124,7 @@ OvmsVehicleVWeUp::OvmsVehicleVWeUp()
   m_tripfrac_refspeed = 0;
 
   m_autonotifications_VW = true;  //(znams)
-  SohDataNotified = false;        //(znams)
+  SohDataNotified = false;        //(znams) true
 
   // Init metrics:
   m_version = MyMetrics.InitString("xvu.m.version", 0, VERSION " " __DATE__ " " __TIME__);
@@ -751,13 +751,13 @@ void OvmsVehicleVWeUp::Ticker60(uint32_t ticker)
   std::time_t time_cast = static_cast<std::time_t>(TimeCurrent);
   std::tm* utc_tm = std::gmtime(&time_cast);
   int month = utc_tm->tm_mon + 1;
-  if ((month == 1 || month == 4 || month == 7 || month == 10 || month == 8) && SohDataNotified == false && MyWebServer.m_client_cnt >= 1)
+  if ((month == 1 || month == 4 || month == 7 || month == 10 || month == 9) && SohDataNotified == false && MyWebServer.m_client_cnt >= 1)
   {
     if (m_autonotifications_VW) {
       NotifySohHistoryChange();
       SohDataNotified = true;
     }
-  } else if (month != 1 && month != 4 && month != 7 && month != 10 && month != 8)
+  } else if (month != 1 && month != 4 && month != 7 && month != 10 && month != 9)
     {
       SohDataNotified = false;
     }

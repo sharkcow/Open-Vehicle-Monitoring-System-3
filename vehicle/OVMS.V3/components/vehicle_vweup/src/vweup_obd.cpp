@@ -196,7 +196,7 @@ void OvmsVehicleVWeUp::OBDInit()
     ServiceDays =  MyMetrics.InitInt("xvu.e.serv.days", SM_STALE_NONE, 0);
     TPMSDiffusion = MyMetrics.InitVector<float>("xvu.v.t.diff", SM_STALE_NONE, 0);
     TPMSEmergency = MyMetrics.InitVector<float>("xvu.v.t.emgcy", SM_STALE_NONE, 0);
- /*   SOHHistory = MyMetrics.InitVector<float>("xvu.b.soh.hist", SM_STALE_NONE, 0, Percentage, true);  //(znams)
+    SOHHistory = MyMetrics.InitVector<float>("xvu.b.soh.hist", SM_STALE_NONE, 0, Percentage, true);  //(znams)
  //   SOHStat = MyMetrics.InitVector<int>("xvu.b.soh.stat", SM_STALE_NONE, 0, Percentage);  //(znams)
     SOHValidValues = MyMetrics.InitVector<float>("xvu.b.soh.dummy", SM_STALE_NONE, 0, Percentage, true);  //(znams)
     SOHPerPackMax = MyMetrics.InitVector<float>("xvu.b.soh.perpackmax", SM_STALE_NONE, 0, Percentage, true);  //(znams)
@@ -206,18 +206,18 @@ void OvmsVehicleVWeUp::OBDInit()
     SOHPerMeasureMin = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremin", SM_STALE_NONE, 0, Percentage, true);  //(znams)
     SOHPerMeasureAvg = MyMetrics.InitVector<float>("xvu.b.soh.permeasureavg", SM_STALE_NONE, 0, Percentage, true);  //(znams)
     SOHVectorSize = MyMetrics.InitInt("xvu.b.soh.vectorsize", SM_STALE_NONE, 0); //(znams)
-    SOHPerPackStdDev = MyMetrics.InitVector<float>("xvu.b.soh.standev", SM_STALE_NONE, 0, Percentage, true); //(znams)  */
+    SOHPerPackStdDev = MyMetrics.InitVector<float>("xvu.b.soh.standev", SM_STALE_NONE, 0, Percentage, true); //(znams)  
 
     //Simulating fake SOH data and storing in the metrics
-    SOHDummyFake = MyMetrics.InitVector<float>("xvu.b.soh.values", SM_STALE_NONE, 0, Percentage, true);  //(znams) 
-    SOHPerPackMaxFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackmax", SM_STALE_NONE, 0, Percentage, true);  //(znams)
-    SOHPerPackMinFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackmin", SM_STALE_NONE, 0, Percentage, true);  //(znams)
-    SOHPerPackAvgFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackavg", SM_STALE_NONE, 0, Percentage, true);  //(znams)
+    SOHDummyFake = MyMetrics.InitVector<float>("xvu.b.soh.values", SM_STALE_NONE, 0, Percentage);  //(znams) 
+    SOHPerPackMaxFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackmax", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHPerPackMinFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackmin", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHPerPackAvgFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackavg", SM_STALE_NONE, 0, Percentage);  //(znams)
     SOHPerMeasureMaxFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremax", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerMeasureMinFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremin", SM_STALE_NONE, 0, Percentage, true);  //(znams)
-    SOHPerMeasureAvgFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasureavg", SM_STALE_NONE, 0, Percentage, true);  //(znams)
+    SOHPerMeasureMinFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremin", SM_STALE_NONE, 0, Percentage);  //(znams)
+    SOHPerMeasureAvgFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasureavg", SM_STALE_NONE, 0, Percentage);  //(znams)
     SOHVectorSizeFake = MyMetrics.InitInt("xvu.b.soh.vectorsize", SM_STALE_NONE, 0); //(znams)
-    SOHPerPackStdDevFake = MyMetrics.InitVector<float>("xvu.b.soh.standev", SM_STALE_NONE, 0, Percentage, true); //(znams)
+    SOHPerPackStdDevFake = MyMetrics.InitVector<float>("xvu.b.soh.standev", SM_STALE_NONE, 0, Percentage); //(znams)
  
     //int i;
     //int j;
@@ -1827,7 +1827,7 @@ void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) //(znams) Testing new Ticker30
   std::time_t time_cast = static_cast<std::time_t>(TimeCurrent);
   std::tm* utc_tm = std::gmtime(&time_cast);
   int month = utc_tm->tm_mon + 1;
-  if ((month == 1 || month == 4 || month == 7 || month == 10 || month == 8) && WasSoHHistoryPolled == false)
+  if ((month == 1 || month == 4 || month == 7 || month == 10 || month == 9) && WasSoHHistoryPolled == false)
     {
       ESP_LOGD(TAG, "Poll vector BEFORE deleting a Terminating Poll Line: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());  // expected size 142
       // deleting a Terminating Poll Line
