@@ -746,7 +746,7 @@ void OvmsVehicleVWeUp::Ticker60(uint32_t ticker)
   }
 
    //(znams) Triggering a scheduled notification
-  
+  /*
   uint64_t TimeCurrent = StdMetrics.ms_m_timeutc->AsInt();
   std::time_t time_cast = static_cast<std::time_t>(TimeCurrent);
   std::tm* utc_tm = std::gmtime(&time_cast);
@@ -760,7 +760,7 @@ void OvmsVehicleVWeUp::Ticker60(uint32_t ticker)
   } else if (month != 1 && month != 4 && month != 7 && month != 10 && month != 9)
     {
       SohDataNotified = false;
-    }
+    }*/
 }
 
 

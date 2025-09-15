@@ -1829,7 +1829,8 @@ void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) //(znams) Testing new Ticker30
   std::time_t time_cast = static_cast<std::time_t>(TimeCurrent);
   std::tm* utc_tm = std::gmtime(&time_cast);
   int month = utc_tm->tm_mon + 1;
-  if ((month == 1 || month == 4 || month == 7 || month == 10 || month == 9) && WasSoHHistoryPolled == false)
+  bool WasSoHHistoryUpdated = m_was_soh_polled->AsBool();
+  if ((month == 1 || month == 4 || month == 7 || month == 10 || month == 9) && /*WasSoHHistoryPolled == false*/ WasSoHHistoryUpdated == false)
     {
       ESP_LOGD(TAG, "Poll vector BEFORE deleting a Terminating Poll Line: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());  // expected size 142
       // deleting a Terminating Poll Line
@@ -1847,10 +1848,12 @@ void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) //(znams) Testing new Ticker30
     m_poll_vector.push_back(POLL_LIST_END);
     ESP_LOGD(TAG, "Poll vector AFTER adding the SOH PID and the Terminating Poll Line: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());  // expected size 143
     PollSetPidList(m_can1, m_poll_vector.data());
-    WasSoHHistoryPolled = true;
-  } else if (month != 1 && month != 4 && month != 7 && month != 10 && month != 8)
+    WasSoHHistoryUpdated = true;
+    m_was_soh_polled->SetValue(WasSoHHistoryUpdated);
+    MyNotify.NotifyString("info","sohhistory.changed", "The SoH history was updated at the beginning of this month. (Fixed notification)");
+  } else if (month != 1 && month != 4 && month != 7 && month != 10 && month != 9)
     {
-      WasSoHHistoryPolled = false;
+       m_was_soh_polled->SetValue(false);
     }
 
   //ESP_LOGD(TAG, "OBDSetState: %s", GetOBDStateName(m_obd_state));
