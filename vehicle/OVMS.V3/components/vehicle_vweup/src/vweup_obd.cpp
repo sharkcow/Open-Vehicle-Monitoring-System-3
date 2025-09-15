@@ -207,8 +207,8 @@ void OvmsVehicleVWeUp::OBDInit()
     SOHPerMeasureAvg = MyMetrics.InitVector<float>("xvu.b.soh.permeasureavg", SM_STALE_NONE, 0, Percentage, true);  //(znams)
     SOHVectorSize = MyMetrics.InitInt("xvu.b.soh.vectorsize", SM_STALE_NONE, 0); //(znams)
     SOHPerPackStdDev = MyMetrics.InitVector<float>("xvu.b.soh.standev", SM_STALE_NONE, 0, Percentage, true); //(znams)  
-    
-    m_was_soh_polled = MyMetrics.InitBool("xvu.b.soh.wasupdated",SM_STALE_MAX, false, yesOrNo, true); //(znams)
+
+    m_was_soh_polled = MyMetrics.InitBool("xvu.b.soh.wasupdated",SM_STALE_MAX, false, Other, true); //(znams)
 
     //Simulating fake SOH data and storing in the metrics
     SOHDummyFake = MyMetrics.InitVector<float>("xvu.b.soh.values", SM_STALE_NONE, 0, Percentage);  //(znams) 
