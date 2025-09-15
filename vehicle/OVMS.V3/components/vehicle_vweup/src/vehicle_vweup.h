@@ -454,6 +454,8 @@ protected:
   OvmsMetricVector<float> *SOHPerMeasureAvg;           // SOH Dummy data for testing (znams)
   OvmsMetricInt *SOHVectorSize;                   // SOH Dummy data for testing (znams)
   OvmsMetricVector<float> *SOHPerPackStdDev;      // SOH Dummy data for testing (znams)
+  
+  OvmsMetricBool          *m_was_soh_polled;      // Flag checking SoH history update (znams)
 
   //Metrics for fake SoH data
   OvmsMetricVector<float> *SOHDummyFake;                // SOH Dummy data for testing (znams)
