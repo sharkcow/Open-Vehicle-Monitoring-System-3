@@ -32,10 +32,6 @@ static const char *TAG = "v-vweup";
 #include <iomanip>
 #include <algorithm>
 #include <cmath>
-//#include <array>    //(znams)
-//#include <sstream>  //(znams)
-//#include <cstdio>   //(znams)
-//#include <ctime>    //(znams)
 
 #include "pcp.h"
 #include "ovms_metrics.h"
