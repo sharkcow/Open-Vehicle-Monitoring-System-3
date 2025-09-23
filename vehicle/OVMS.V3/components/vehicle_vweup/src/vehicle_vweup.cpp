@@ -42,7 +42,6 @@ static const char *TAG = "v-vweup";
 #include "metrics_standard.h"
 #include "ovms_notify.h"
 #include "string_writer.h"
-#include "ovms_webserver.h"   //(znams) Including the webserver library to check if the websocket client is open and send the SoH notfication
 
 #include "vehicle_vweup.h"
 
@@ -123,8 +122,6 @@ OvmsVehicleVWeUp::OvmsVehicleVWeUp()
   m_tripfrac_reftime = 0;
   m_tripfrac_refspeed = 0;
 
-  m_autonotifications_VW = true;  //(znams)
-  SohDataNotified = false;        //(znams) true
 
   // Init metrics:
   m_version = MyMetrics.InitString("xvu.m.version", 0, VERSION " " __DATE__ " " __TIME__);
@@ -147,8 +144,6 @@ OvmsVehicleVWeUp::OvmsVehicleVWeUp()
   cmd->RegisterCommand("read", "Show current contents", CommandReadProfile0);
   cmd->RegisterCommand("reset", "Reset to default values", CommandResetProfile0);
 
-  cmd = cmd_xvu->RegisterCommand("znams", "Testing log message");
-  cmd->RegisterCommand("test", "bla-bla sub command", znams_test);
 
   // Load initial config:
   ConfigChanged(NULL);
@@ -158,27 +153,6 @@ OvmsVehicleVWeUp::OvmsVehicleVWeUp()
 #endif
 }
 
-void OvmsVehicleVWeUp::znams_test(int verbosity, OvmsWriter* writer, OvmsCommand* cmd, int argc, const char* const* argv)
-{
-  ESP_LOGD(TAG,"This is a test log message from znams");
-//  ESP_LOGD(TAG, "SOH_history_from_74CC: %s", resultSohF.c_str());
-  bool newTimerMode = StdMetrics.ms_v_charge_timermode->AsBool();
-  int64_t TimeNow = StdMetrics.ms_m_timeutc->AsInt();
-  ESP_LOGD(TAG, "New Timer Mode set: %s", newTimerMode ? "yes" : "no");
-  ESP_LOGD(TAG, "Current time now is: %lld", TimeNow);
-
-  uint64_t TimeCurrent = StdMetrics.ms_m_timeutc->AsInt();
-  std::time_t time_cast = static_cast<std::time_t>(TimeCurrent);
-  std::tm* utc_tm = std::gmtime(&time_cast);
-  int month = utc_tm->tm_mon + 1;
-  int nextUpdateMonth = (month == 10) ? 1 : (month + 3);
-  if (month == 1 || month == 4 || month == 7 || month == 10){
-  ESP_LOGD(TAG, "The SoH history was updated on: %d. The next update is expected on: %d", month, nextUpdateMonth);
-  }
-  
-  OvmsVehicleVWeUp::GetInstance(writer)->NotifySohHistoryChange();
-  //ESP_LOGD(TAG, "Poll vector: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());
-}
 
 OvmsVehicleVWeUp::~OvmsVehicleVWeUp()
 {
@@ -677,16 +651,6 @@ void OvmsVehicleVWeUp::Ticker1(uint32_t ticker)
     }
     m_timermode_ticker = 0;
   }
-  //(znams) Triggering a scheduled notification
-  //bool SohDataNotified = false;
-  //uint64_t TestTime = 1748199099;
-  //uint64_t TimeCurrent = StdMetrics.ms_m_timeutc->AsInt();
-  //if (TimeCurrent == TestTime /*&& SohDataNotified == false*/)
-  //{
-  //  NotifySohHistoryChange();
-  //  TestTime = TestTime + 15;
-   // SohDataNotified = true;
- // } 
 }
 
 
@@ -726,16 +690,6 @@ void OvmsVehicleVWeUp::Ticker10(uint32_t ticker)
       last_soc = StdMetrics.ms_v_bat_soc->AsFloat();
     }
   }
-  //(znams) Test log messages
-  
-  //ESP_LOGD(TAG, "Was the SOH history notified: %s", SohDataNotified ? "true" : "false");
-  //ESP_LOGD(TAG, "vweup_enable_obd is: %s", vweup_enable_obd ? "true" : "false");
-  //ESP_LOGD(TAG, "Ticker10() Poll vector: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());
-  /*ESP_LOGD(TAG, "Model year of VW eUp = %d", vweup_modelyear);
-  ESP_LOGD(TAG, "Enable T26: %s", vweup_enable_t26 ? "true" : "false");
-  ESP_LOGD(TAG, "OBDSetState: %s", GetOBDStateName(m_obd_state));
-  ESP_LOGD(TAG, "PollSetState: %s", GetPollStateName(m_poll_state));  */
-  
 }
 
 
@@ -744,23 +698,6 @@ void OvmsVehicleVWeUp::Ticker60(uint32_t ticker)
   if (HasNoOBD()) {
     UpdateChargeTimes();
   }
-
-   //(znams) Triggering a scheduled notification
-  /*
-  uint64_t TimeCurrent = StdMetrics.ms_m_timeutc->AsInt();
-  std::time_t time_cast = static_cast<std::time_t>(TimeCurrent);
-  std::tm* utc_tm = std::gmtime(&time_cast);
-  int month = utc_tm->tm_mon + 1;
-  if ((month == 1 || month == 4 || month == 7 || month == 10 || month == 9) && SohDataNotified == false && MyWebServer.m_client_cnt >= 1)
-  {
-    if (m_autonotifications_VW) {
-      NotifySohHistoryChange();
-      SohDataNotified = true;
-    }
-  } else if (month != 1 && month != 4 && month != 7 && month != 10 && month != 9)
-    {
-      SohDataNotified = false;
-    }*/
 }
 
 
@@ -1206,8 +1143,3 @@ void OvmsVehicleVWeUp::UpdateChargeTimes()
   else
     StdMetrics.ms_v_charge_mode->SetValue("standard");
 }
-
-void OvmsVehicleVWeUp::NotifySohHistoryChange() //(znams)
-  {
-  MyNotify.NotifyString("info","sohhistory.changed", "The SoH history was updated at the beginning of this month.");
-  }

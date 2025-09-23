@@ -149,9 +149,7 @@ protected:
   void Ticker1(uint32_t ticker) override;
   void Ticker10(uint32_t ticker) override;
   void Ticker60(uint32_t ticker) override;
-  void Ticker300(uint32_t ticker) override; //(znams)
- // void Ticker600(uint32_t ticker) override; //(znams)
- // void Ticker3600(uint32_t ticker) override; //(znams)
+  void Ticker3600(uint32_t ticker) override; //(znams) Used to initiate SoH history update
 
 public:
   vehicle_command_t CommandHomelink(int button, int durationms = 1000) override;
@@ -170,7 +168,6 @@ protected:
   void NotifiedVehicleChargeState(const char* s);
   int CalcChargeTime(float capacity, float max_pwr, int from_soc, int to_soc);
   void UpdateChargeTimes();
-  void NotifySohHistoryChange();
 
 protected:
   void ResetTripCounters();
@@ -233,9 +230,7 @@ public:
   int vweup_con;                // 0: none, 1: only T26, 2: only OBD2; 3: both
   int vweup_modelyear;
   uint8_t climit_max;
-  string resultSohF;            //(znams)
-  bool SohDataNotified;        //(znams) 
-  bool m_autonotifications_VW; //(znams)
+
   
 private:
   use_phase_t m_use_phase;
@@ -396,21 +391,16 @@ protected:
   void PollerStateTicker(canbus *bus) override;
 
   void IncomingPollReply(const OvmsPoller::poll_job_t &job, uint8_t* data, uint8_t length) override;
-  void TestIncomingPollReply(); //(znams)
 
-  bool ShouldPollSOH();   //(znams)
-  bool RemovePollPid(uint8_t moduleid, uint16_t pid); //(znams)
 
 protected:
   void UpdateChargePower(float power_kw);
   void UpdateChargeCap(bool charging);
-  //void CalculateStatsSOH(vector<int> sohVectorHistory); //(znams)
 
 public:
   static void ShellPollControl(int verbosity, OvmsWriter* writer, OvmsCommand* cmd, int argc, const char* const* argv);
   static void CommandReadProfile0(int verbosity, OvmsWriter* writer, OvmsCommand* cmd, int argc, const char* const* argv);
   static void CommandResetProfile0(int verbosity, OvmsWriter* writer, OvmsCommand* cmd, int argc, const char* const* argv);
-  static void znams_test(int verbosity, OvmsWriter* writer, OvmsCommand* cmd, int argc, const char* const* argv); //(znams)
 
 protected:
   OvmsMetricFloat *MotElecSoCAbs;                 // Absolute SoC of main battery from motor electrics ECU
@@ -438,35 +428,24 @@ protected:
   OvmsMetricFloat     *m_chg_ccs_current;         // CCS Charger supplied current [A]
   OvmsMetricFloat     *m_chg_ccs_power;           // CCS Charger supplied power [kW]
 
-  OvmsMetricInt64     *m_last_soh_poll_time;      //Time of the last SOH history polling (znams)
 
   OvmsMetricInt *ServiceDays;                     // Days until next scheduled maintenance/service
   OvmsMetricVector<float> *TPMSDiffusion;         // TPMS Indicator for Pressure Diffusion
   OvmsMetricVector<float> *TPMSEmergency;         // TPMS Indicator for Tyre Emergency
-  OvmsMetricVector<float> *SOHHistory;              // SOH history data (znams)
- // OvmsMetricVector<int> *SOHStat;                 // SOH statistics data (znams)
-  OvmsMetricVector<float> *SOHValidValues;                // SOH Dummy data for testing (znams)
-  OvmsMetricVector<float> *SOHPerPackMax;           // SOH Dummy data for testing (znams)
-  OvmsMetricVector<float> *SOHPerPackMin;           // SOH Dummy data for testing (znams)
-  OvmsMetricVector<float> *SOHPerPackAvg;           // SOH Dummy data for testing (znams)
-  OvmsMetricVector<float> *SOHPerMeasureMax;           // SOH Dummy data for testing (znams)
-  OvmsMetricVector<float> *SOHPerMeasureMin;           // SOH Dummy data for testing (znams)
-  OvmsMetricVector<float> *SOHPerMeasureAvg;           // SOH Dummy data for testing (znams)
-  OvmsMetricInt *SOHVectorSize;                   // SOH Dummy data for testing (znams)
-  OvmsMetricVector<float> *SOHPerPackStdDev;      // SOH Dummy data for testing (znams)
+
+  OvmsMetricVector<float> *SOHHistory;              // SOH history full vector including invalid values 255 (znams)
+  OvmsMetricVector<float> *SOHValidValues;          // SOH history vector with valid percentages (znams)
+  OvmsMetricVector<float> *SOHPerPackMax;           // SOH history maximum per cell pack (znams)
+  OvmsMetricVector<float> *SOHPerPackMin;           // SOH history minimum per cell pack (znams)
+  OvmsMetricVector<float> *SOHPerPackAvg;           // SOH history average per cell pack (znams)
+  OvmsMetricVector<float> *SOHPerMeasureMax;           // SOH history maximum per quarter update (znams)
+  OvmsMetricVector<float> *SOHPerMeasureMin;           // SOH history minimum per querter update  (znams)
+  OvmsMetricVector<float> *SOHPerMeasureAvg;           // SOH history average per quarter update  (znams)
+  OvmsMetricInt *SOHVectorSize;                   // SOH history vector size (znams)
+  OvmsMetricVector<float> *SOHPerPackStdDev;      // SOH calculated standard deviations per cell pack (znams)
   
   OvmsMetricBool          *m_was_soh_polled;      // Flag checking SoH history update (znams)
 
-  //Metrics for fake SoH data
-  OvmsMetricVector<float> *SOHDummyFake;                // SOH Dummy data for testing (znams)
-  OvmsMetricVector<float> *SOHPerPackMaxFake;           // SOH Dummy data for testing (znams)
-  OvmsMetricVector<float> *SOHPerPackMinFake;           // SOH Dummy data for testing (znams)
-  OvmsMetricVector<float> *SOHPerPackAvgFake;        // SOH Dummy data for testing (znams)
-  OvmsMetricVector<float> *SOHPerMeasureMaxFake;        // SOH Dummy data for testing (znams)
-  OvmsMetricVector<float> *SOHPerMeasureMinFake;        // SOH Dummy data for testing (znams)
-  OvmsMetricVector<float> *SOHPerMeasureAvgFake;     // SOH Dummy data for testing (znams)
-  OvmsMetricInt *SOHVectorSizeFake;                   // SOH Dummy data for testing (znams)
-  OvmsMetricVector<float> *SOHPerPackStdDevFake;      // SOH Dummy data for testing (znams)
 
 
 
@@ -515,13 +494,10 @@ protected:
   int                 m_cfg_dc_interval;          // Interval for DC fast charge test/log PIDs
 
   int                 m_chg_ctp_car;              // Charge time prediction by car
- // time_t              m_last_soh_poll;            // Timestamp of last successful poll for SOH history (znams)
-  //bool                m_soh_poll_active = false;  //(znams)
-  bool                WasSoHHistoryPolled;        //(znams) 
+
 
 private:
   PollReplyHelper     PollReply;
-  PollReplyHelper     ReplyFromStore;   //(znams)
 
   float               BatMgmtCellMax;             // Maximum cell voltage
   float               BatMgmtCellMin;             // Minimum cell voltage

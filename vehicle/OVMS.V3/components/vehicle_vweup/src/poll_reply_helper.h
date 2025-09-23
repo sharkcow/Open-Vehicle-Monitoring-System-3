@@ -49,12 +49,6 @@ public:
   bool FromInt32(const std::string &info, float &value, uint8_t bytesToSkip = 0);
   bool FromInt16(const std::string &info, float &value, uint8_t bytesToSkip = 0);
   bool FromInt8(const std::string &info, int &value, uint8_t bytesToSkip = 0);
-  std::string GetStoreContent() const{  //(znams)
-    return Store;
-  }
-  size_t GetStoreSize() const{
-    return Store.size();
-  }
 
 private:
   string Store;

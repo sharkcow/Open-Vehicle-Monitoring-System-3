@@ -32,10 +32,10 @@ static const char *TAG = "v-vweup";
 #include <iomanip>
 #include <algorithm>
 #include <cmath>
-#include <array>    //(znams)
-#include <sstream>  //(znams)
-#include <cstdio>   //(znams)
-#include <ctime>    //(znams)
+//#include <array>    //(znams)
+//#include <sstream>  //(znams)
+//#include <cstdio>   //(znams)
+//#include <ctime>    //(znams)
 
 #include "pcp.h"
 #include "ovms_metrics.h"
@@ -80,7 +80,8 @@ const OvmsPoller::poll_pid_t vweup_polls[] = {
   {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_TEMP,             {  0, 20, 20, 20}, 1, ISOTP_STD},
   {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_HIST18,           {  0, 20, 20, 20}, 1, ISOTP_STD},
   {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_CAC,          {  0, 20, 20, 20}, 1, ISOTP_STD}, 
- // {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0, 20, 20, 20}, 1, ISOTP_STD}, //(znams)
+  // {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0, 20, 20, 20}, 1, ISOTP_STD}, 
+  //(znams) Needed only to retrieve SoH history for the first time
 
   {VWUP_CHG,      UDS_READ, VWUP_CHG_POWER_EFF,             {  0,  0, 10,  0}, 1, ISOTP_STD},
 
@@ -189,15 +190,13 @@ void OvmsVehicleVWeUp::OBDInit()
     m_chg_ccs_voltage = MyMetrics.InitFloat("xvu.c.ccs.u", SM_STALE_MIN, 0, Volts);
     m_chg_ccs_current = MyMetrics.InitFloat("xvu.c.ccs.i", SM_STALE_MIN, 0, Amps);
     m_chg_ccs_power   = MyMetrics.InitFloat("xvu.c.ccs.p", SM_STALE_MIN, 0, kW);
-   // CurrentTime = MyMetrics.InitInt("xvu.t.time.current", SM_STALE_NONE, 0, ms);
 
-   m_last_soh_poll_time = MyMetrics.InitInt64("xvu.b.soh.lastsohpolltime", SM_STALE_NONE, 0); //(znams)
 
     ServiceDays =  MyMetrics.InitInt("xvu.e.serv.days", SM_STALE_NONE, 0);
     TPMSDiffusion = MyMetrics.InitVector<float>("xvu.v.t.diff", SM_STALE_NONE, 0);
     TPMSEmergency = MyMetrics.InitVector<float>("xvu.v.t.emgcy", SM_STALE_NONE, 0);
+
     SOHHistory = MyMetrics.InitVector<float>("xvu.b.soh.hist", SM_STALE_NONE, 0, Percentage, true);  //(znams)
- //   SOHStat = MyMetrics.InitVector<int>("xvu.b.soh.stat", SM_STALE_NONE, 0, Percentage);  //(znams)
     SOHValidValues = MyMetrics.InitVector<float>("xvu.b.soh.dummy", SM_STALE_NONE, 0, Percentage, true);  //(znams)
     SOHPerPackMax = MyMetrics.InitVector<float>("xvu.b.soh.perpackmax", SM_STALE_NONE, 0, Percentage, true);  //(znams)
     SOHPerPackMin = MyMetrics.InitVector<float>("xvu.b.soh.perpackmin", SM_STALE_NONE, 0, Percentage, true);  //(znams)
@@ -205,136 +204,12 @@ void OvmsVehicleVWeUp::OBDInit()
     SOHPerMeasureMax = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremax", SM_STALE_NONE, 0, Percentage, true);  //(znams)
     SOHPerMeasureMin = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremin", SM_STALE_NONE, 0, Percentage, true);  //(znams)
     SOHPerMeasureAvg = MyMetrics.InitVector<float>("xvu.b.soh.permeasureavg", SM_STALE_NONE, 0, Percentage, true);  //(znams)
-    SOHVectorSize = MyMetrics.InitInt("xvu.b.soh.vectorsize", SM_STALE_NONE, 0); //(znams)
+    SOHVectorSize = MyMetrics.InitInt("xvu.b.soh.vectorsize", SM_STALE_NONE, 0, Other, true); //(znams)
     SOHPerPackStdDev = MyMetrics.InitVector<float>("xvu.b.soh.standev", SM_STALE_NONE, 0, Percentage, true); //(znams)  
 
     m_was_soh_polled = MyMetrics.InitBool("xvu.b.soh.wasupdated",SM_STALE_MAX, false, Other, true); //(znams)
 
-    //Simulating fake SOH data and storing in the metrics
-  /*  SOHDummyFake = MyMetrics.InitVector<float>("xvu.b.soh.values", SM_STALE_NONE, 0, Percentage);  //(znams) 
-    SOHPerPackMaxFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackmax", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerPackMinFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackmin", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerPackAvgFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackavg", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerMeasureMaxFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremax", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerMeasureMinFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremin", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerMeasureAvgFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasureavg", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHVectorSizeFake = MyMetrics.InitInt("xvu.b.soh.vectorsize", SM_STALE_NONE, 0); //(znams)
-    SOHPerPackStdDevFake = MyMetrics.InitVector<float>("xvu.b.soh.standev", SM_STALE_NONE, 0, Percentage); //(znams)*/
  
-    //int i;
-    //int j;
-    //int value;
-    std::vector<float> sohVector = {125,122,125,122,119,119,120,122,117,117,118,118,118,115,118,114,117,114,113,114,114,112,117,115,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,122,124,121,119,119,119,121,117,117,118,117,117,115,117,114,116,114,113,113,113,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,124,121,119,119,120,122,118,117,118,118,117,115,117,114,116,113,115,113,114,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,124,122,118,119,120,121,117,117,118,118,117,115,116,114,116,113,114,113,112,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,122,124,121,119,119,120,121,117,117,118,118,117,115,117,114,117,113,114,113,112,113,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,122,124,121,119,119,120,122,118,117,118,118,118,115,117,114,117,113,114,113,114,113,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,124,121,118,118,120,121,117,116,118,117,117,115,116,114,115,112,115,112,113,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,120,118,118,119,121,117,116,117,117,116,114,116,114,115,113,114,112,111,111,116,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,122,123,121,118,118,120,121,117,116,117,117,117,114,116,114,115,113,113,113,112,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,120,117,118,120,121,116,116,117,117,116,114,116,113,115,113,114,112,111,111,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,120,117,117,118,120,116,116,117,116,116,113,115,113,114,112,115,112,111,111,116,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,120,117,118,120,120,116,116,117,116,116,114,115,113,114,113,115,112,112,111,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,121,118,118,120,120,116,116,118,117,116,114,116,113,115,113,113,112,112,112,116,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,121,118,118,120,121,117,116,117,117,116,114,116,113,116,113,114,112,112,112,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,124,121,118,118,119,121,117,116,118,117,116,114,116,114,115,113,114,112,113,111,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,121,117,117,120,120,116,116,117,116,116,113,115,113,115,112,114,112,112,112,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,120,117,118,120,121,116,116,118,117,116,114,116,113,115,113,115,112,112,111,116,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255}; 
-
-        // Precompute and normalize values
-     // std::string resultSohF = "";
-      for (int i = 0; i < sohVector.size(); i++) {
-        if (sohVector[i] != 255) {
-            sohVector[i] = (sohVector[i] * 100) / 125; 
-            }
-            char bufferF[12];
-            snprintf(bufferF, sizeof(bufferF), "%f", sohVector[i]);
-            resultSohF += bufferF;
-            resultSohF += " ";
-      }
-     // CalculateStatsSOH(sohVector);
-      
-        // Compute statistics per battery pack
-        for (int i = 0; i < 17; ++i) {
-        float maxSOHF = 0, minSOHF = 100, sumF = 0, countF = 0;
-        std::vector<float> validSOHValuesF;
-          for (int j = 0; j < 40; ++j) {
-            int indexF = i * 40 + j;
-            float sohF = sohVector[indexF];
-
-            if (sohF != 255) {
-                maxSOHF = std::max(maxSOHF, sohF);
-                minSOHF = std::min(minSOHF, sohF);
-                sumF += sohF;
-                countF++;
-                validSOHValuesF.push_back(sohF);
-            }
-
-          } 
-          SOHPerPackMaxFake->SetElemValue(i, maxSOHF);
-          SOHPerPackMinFake->SetElemValue(i, minSOHF);
-          float avgSOHF = sumF / countF;
-          SOHPerPackAvgFake->SetElemValue(i, avgSOHF);
-
-          //Standard deviation calculation
-          float varianceF = 0.0;
-            for (int valF : validSOHValuesF) {
-              varianceF += (valF - avgSOHF) * (valF - avgSOHF);
-              }
-          varianceF /= countF;
-          float stdDevF = std::sqrt(varianceF);
-          SOHPerPackStdDevFake->SetElemValue(i, stdDevF);
-        }
-
-
-    int sohIndexF = 0;  // Track index for SOHDummyFake
-
-
-
-//Removing invalid values
-    for (auto it = sohVector.begin(); it != sohVector.end(); ) {
-       // *it = (*it * 100) / 125; 
-
-        if (*it == 255) {  
-            it = sohVector.erase(it);  // Remove invalid values
-        } else {
-            SOHDummyFake->SetElemValue(sohIndexF++, *it);  // Store valid values
-            ++it;  // Move to next element
-        }
-    }
-    int SOHVectorSizeF = sohVector.size();
-    SOHVectorSizeFake->SetValue(SOHVectorSizeF);
-
-// Valid amount of measurements
-// int numPacks = (vweup_modelyear > 2019) ? 14 : 17;
-  int numMeasurementsF = sohVector.size() / 17;
- // Compute statistics per measurement index (across battery packs)
- for (int j = 0; j < numMeasurementsF; ++j) {
-        float maxSOHF = 0, minSOHF = 100, sumF = 0, countF = 0;
-        for (int i = 0; i < 17; ++i) {
-            int index = i * numMeasurementsF + j;
-            float sohF = sohVector[index];
-
-            if (sohF != 255) {
-                maxSOHF = std::max(maxSOHF, sohF);
-                minSOHF = std::min(minSOHF, sohF);
-                sumF += sohF;
-                countF++;
-            }
-        }
-          SOHPerMeasureMaxFake->SetElemValue(j, maxSOHF);
-          SOHPerMeasureMinFake->SetElemValue(j, minSOHF);
-          float avgSOHF = sumF / countF;
-          SOHPerMeasureAvgFake->SetElemValue(j, avgSOHF);
-          //MyNotify.NotifyStringf("info", "soh.stat", "SoH statistic data is available.");
-    }  
-
-      
-
-  /* time_t now = time(NULL);
-  CurrentTime->*/
-
     // Battery SOH:
     //  . from ECU 8C PID 74 CB
     //  - from MFD range estimation
@@ -367,7 +242,6 @@ void OvmsVehicleVWeUp::OBDInit()
     RegisterCanBus(1, CAN_MODE_ACTIVE, CAN_SPEED_500KBPS);
   }
 
-  WasSoHHistoryPolled = false;    //(znams)
 
   //
   // Init/reconfigure poller
@@ -457,23 +331,6 @@ void OvmsVehicleVWeUp::OBDInit()
     });
   }
 
-  // Add SoH Hsitory PID with a useful update structure (when the car is on and once in a quarter) (znams)
-  // If the car is on and the previous poll was three months ago
- /* time_t now = time(NULL);
-  m_last_soh_poll = MyConfig.GetParamValueInt("xvu", "last_soh_poll", 0);
-  if (IsOn()) {
-    const time_t quarterInterval = MyConfig.GetParamValueInt("xvu", "soh_interval", 7776000);
-    if ((now - m_last_soh_poll) >= quarterInterval){
-      m_poll_vector.insert(m_poll_vector.end(), {
-        {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0, 0, 0, 1}, 1, ISOTP_STD},
-      });
-      m_last_soh_poll = now;
-      MyConfig.GetParamValueInt("xvu", "last_soh_poll", m_last_soh_poll);
-    }
-    ESP_LOGD(TAG, "Current time in seconds: %ld", now);
-    ESP_LOGD(TAG, "Current time (date format): %s", ctime(&now));
-    ESP_LOGD(TAG, "Time of the last SOH poll in seconds: %ld", m_last_soh_poll);
-  }*/
 
   // Add BMS cell PIDs if enabled:
   if (m_cfg_cell_interval_drv || m_cfg_cell_interval_chg || m_cfg_cell_interval_awk)
@@ -726,8 +583,6 @@ void OvmsVehicleVWeUp::PollerStateTicker(canbus *bus)
 
 void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint8_t* data, uint8_t length)
 {
-  ESP_LOGI(TAG, "IncomingPollReply: PID 0x%02X, received %d bytes from ECU 0x%03X (expected: 0x%03X)",
-         job.pid, length, job.moduleid_rec, job.entry.rxmoduleid);            //(znams) Remove after testing!!!
   if (m_obd_state != OBDS_Run)
     return;
 
@@ -1126,25 +981,22 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
       break;
 
     case VWUP_BAT_MGMT_SOH_HIST: // (znams) Testing the reply from the PID 74CC
-    ESP_LOGD(TAG, "Poll vector before receiving a Poll Reply: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity()); // Expected size 143
+    // ESP_LOGD(TAG, "Poll vector before receiving a Poll Reply: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity()); // Expected size 143
       if (PollReply.FromUint8Mod("VWUP_BAT_MGMT_SOH_HIST", value, 4)) {
-        int i;    //Number of cell pack
+        int i;    //Number of byte
         int totalBytes = (vweup_modelyear > 2019) ? 560 : 680;
         int byteCounter = 4; // Starting position of the first byte
         std::vector<float> sohArray(totalBytes);
-        std::string resultSoh = "";
          for(i = 0; i < totalBytes; i++){
               PollReply.FromUint8Mod("VWUP_BAT_MGMT_SOH_HIST", value, byteCounter);
               sohArray[i] = value;
-              char buffer[12];
-              snprintf(buffer, sizeof(buffer), "%f", sohArray[i]);
-              resultSoh += buffer;
-              resultSoh += " ";
               SOHHistory->SetElemValue(i,value);
               byteCounter++;
           }
 
-        ESP_LOGD(TAG, "SOH_history_from_74CC: %s", resultSoh.c_str());
+        int SOHArraySize = sohArray.size();
+        SOHVectorSize->SetValue(SOHArraySize); // Vector size must be 560 or 680
+        
         // Precompute and normalize values
         for (int i = 0; i < sohArray.size(); i++) {
            if (sohArray[i] != 255) {
@@ -1183,9 +1035,9 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
         }
         
         int sohIndex = 0;  // Track index for SOHValidValues
+
       //Removing invalid values
       for (auto it = sohArray.begin(); it != sohArray.end(); ) {
-       // *it = (*it * 100) / 125; 
 
         if (*it == 255) {  
             it = sohArray.erase(it);  // Remove invalid values
@@ -1194,8 +1046,6 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
             ++it;  // Move to next element
         }
       }
-      int SOHArraySize = sohArray.size();
-      SOHVectorSize->SetValue(SOHArraySize);
 
         // Valid amount of measurements
          int numPacks = (vweup_modelyear > 2019) ? 14 : 17;
@@ -1229,7 +1079,7 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
         }),
         m_poll_vector.end());
         PollSetPidList(m_can1, m_poll_vector.data());
-        ESP_LOGD(TAG, "Poll vector after receiving a Poll Reply: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity()); //Expected size 142
+      //  ESP_LOGD(TAG, "Poll vector after receiving a Poll Reply: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity()); //Expected size 142
       }
       break; 
 
@@ -1801,38 +1651,17 @@ void OvmsVehicleVWeUp::UpdateChargeCap(bool charging)
   }
 }
 
-void OvmsVehicleVWeUp::TestIncomingPollReply()      //(znams)
-{
-  OvmsPoller::poll_job_t job = {};
 
-  // Simulate the actual module that responded
-  job.moduleid_rec = 0x7E8;
-
-  // Simulate the poll list entry (PID and expected ECU)
-  job.pid = 0x02;  // Example PID
-  job.entry.pid = 0x02;
-  job.entry.rxmoduleid = 0x7E8;
-
-  // Simulate some response data (change as needed)
-  uint8_t fake_data[] = { 0x62, 0x02, 0x12, 0x34, 0x56, 0x78, 0x9A };
-  uint8_t length = sizeof(fake_data);
-
-  // Call the real function with the simulated job and data
-  IncomingPollReply(job, fake_data, length);
-}
-
-
-
-void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) //(znams) Testing new Ticker300 and filling the m_poll_vector
+void OvmsVehicleVWeUp::Ticker3600(uint32_t ticker) //(znams) Testing new Ticker300 and filling the m_poll_vector
 {
   uint64_t TimeCurrent = StdMetrics.ms_m_timeutc->AsInt();
   std::time_t time_cast = static_cast<std::time_t>(TimeCurrent);
   std::tm* utc_tm = std::gmtime(&time_cast);
   int month = utc_tm->tm_mon + 1;
   bool WasSoHHistoryUpdated = m_was_soh_polled->AsBool();
-  if ((month == 1 || month == 4 || month == 7 || month == 10 || month == 9) && /*WasSoHHistoryPolled == false*/ WasSoHHistoryUpdated == false)
+  if ((month == 1 || month == 4 || month == 7 || month == 10) && WasSoHHistoryUpdated == false)
     {
-      ESP_LOGD(TAG, "Poll vector BEFORE deleting a Terminating Poll Line: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());  // expected size 142
+    //  ESP_LOGD(TAG, "Poll vector BEFORE deleting a Terminating Poll Line: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());  // expected size 142
       // deleting a Terminating Poll Line
       m_poll_vector.erase(
       std::remove_if(m_poll_vector.begin(), m_poll_vector.end(),
@@ -1841,74 +1670,18 @@ void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) //(znams) Testing new Ticker30
             return poll.pid == 0x00;
         }),
         m_poll_vector.end());
-        ESP_LOGD(TAG, "Poll vector AFTER deleting a Terminating Poll Line: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());  // expected size 141
+      //  ESP_LOGD(TAG, "Poll vector AFTER deleting a Terminating Poll Line: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());  // expected size 141
     m_poll_vector.insert(m_poll_vector.end(), {
     {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0, 1, 1, 1}, 1, ISOTP_STD},
     });
     m_poll_vector.push_back(POLL_LIST_END);
-    ESP_LOGD(TAG, "Poll vector AFTER adding the SOH PID and the Terminating Poll Line: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());  // expected size 143
+    // ESP_LOGD(TAG, "Poll vector AFTER adding the SOH PID and the Terminating Poll Line: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());  // expected size 143
     PollSetPidList(m_can1, m_poll_vector.data());
     WasSoHHistoryUpdated = true;
     m_was_soh_polled->SetValue(WasSoHHistoryUpdated);
-    MyNotify.NotifyString("info","sohhistory.changed", "The SoH history was updated at the beginning of this month. (Fixed notification)");
-  } else if (month != 1 && month != 4 && month != 7 && month != 10 && month != 9)
+    MyNotify.NotifyString("info","sohhistory.changed", "The SoH history was updated at the beginning of this month.");
+  } else if (month != 1 && month != 4 && month != 7 && month != 10)
     {
        m_was_soh_polled->SetValue(false);
     }
-
-  //ESP_LOGD(TAG, "OBDSetState: %s", GetOBDStateName(m_obd_state));
-  //ESP_LOGD(TAG, "IncomingPollReply: Received %d bytes for PID 0x%02X", length, job.pid);
-  //TestIncomingPollReply();
 }
-
-/*void OvmsVehicleVWeUp::Ticker600(uint32_t ticker)
-{
-  m_poll_vector.erase(
-    std::remove_if(m_poll_vector.begin(), m_poll_vector.end(),
-        [](const OvmsPoller::poll_pid_t& poll) {
-            // condition: remove if pid matches this value
-            return poll.pid == VWUP_BAT_MGMT_SOH_HIST;
-        }),
-    m_poll_vector.end());
-  //OBDDeInit();
-}*/
-/*
-void OvmsVehicleVWeUp::Ticker3600(uint32_t ticker)
-{
-  m_poll_vector.erase(
-    std::remove_if(m_poll_vector.begin(), m_poll_vector.end(),
-        [](const OvmsPoller::poll_pid_t& poll) {
-            // condition: remove if pid matches this value
-            return poll.pid == VWUP_BAT_MGMT_SOH_HIST;
-        }),
-    m_poll_vector.end());
-} 
-*/
-
-/*
-bool OvmsVehicleVWeUp::RemovePollPid(uint8_t moduleid, uint16_t pid)    //(znams)
-{
-  auto it = std::remove_if(m_poll_vector.begin(), m_poll_vector.end(),
-    [moduleid, pid](const OvmsPoller::poll_pid_t& entry) {
-      return entry.moduleid == moduleid && entry.pid == pid;
-    });
-
-  if (it != m_poll_vector.end()) {
-    m_poll_vector.erase(it, m_poll_vector.end());
-    ESP_LOGD(TAG, "Removed poll PID 0x%04X from module 0x%02X", pid, moduleid);
-    return true;
-  }
-
-  ESP_LOGD(TAG, "Poll PID 0x%04X from module 0x%02X not found", pid, moduleid);
-  return false;
-}
-
-bool OvmsVehicleVWeUp::ShouldPollSOH()        //(znams)
-{
-  int64_t now = MyMetrics.m.time.utc->AsInt();       
-  int64_t last = m_last_soh_poll_time->AsInt();        
-
-  const int64_t interval = 7889400;  // 3-months interval
-
-  return (last == 0 || (now - last) >= interval);
-}*/
