@@ -1651,15 +1651,15 @@ void OvmsVehicleVWeUp::UpdateChargeCap(bool charging)
   }
 }
 
-
-void OvmsVehicleVWeUp::Ticker3600(uint32_t ticker) //(znams) Testing new Ticker300 and filling the m_poll_vector
+//(znams) Ticker3600 triggers the polling updates for SoH history at the beginning of a quarter and filling the m_poll_vector
+void OvmsVehicleVWeUp::Ticker3600(uint32_t ticker) 
 {
   uint64_t TimeCurrent = StdMetrics.ms_m_timeutc->AsInt();
   std::time_t time_cast = static_cast<std::time_t>(TimeCurrent);
   std::tm* utc_tm = std::gmtime(&time_cast);
   int month = utc_tm->tm_mon + 1;
   bool WasSoHHistoryUpdated = m_was_soh_polled->AsBool();
-  if ((month == 1 || month == 4 || month == 7 || month == 10) && WasSoHHistoryUpdated == false)
+  if ((month == 1 || month == 4 || month == 7 || month == 10 || month == 9) && WasSoHHistoryUpdated == false)
     {
     //  ESP_LOGD(TAG, "Poll vector BEFORE deleting a Terminating Poll Line: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());  // expected size 142
       // deleting a Terminating Poll Line
@@ -1680,7 +1680,7 @@ void OvmsVehicleVWeUp::Ticker3600(uint32_t ticker) //(znams) Testing new Ticker3
     WasSoHHistoryUpdated = true;
     m_was_soh_polled->SetValue(WasSoHHistoryUpdated);
     MyNotify.NotifyString("info","sohhistory.changed", "The SoH history was updated at the beginning of this month.");
-  } else if (month != 1 && month != 4 && month != 7 && month != 10)
+  } else if (month != 1 && month != 4 && month != 7 && month != 10 && month != 9)
     {
        m_was_soh_polled->SetValue(false);
     }
