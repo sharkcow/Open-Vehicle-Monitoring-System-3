@@ -193,7 +193,7 @@ void OvmsVehicleVWeUp::OBDInit()
     TPMSEmergency = MyMetrics.InitVector<float>("xvu.v.t.emgcy", SM_STALE_NONE, 0);
 
     SOHHistory = MyMetrics.InitVector<float>("xvu.b.soh.hist", SM_STALE_NONE, 0, Percentage, true);  //(znams)
-    SOHValidValues = MyMetrics.InitVector<float>("xvu.b.soh.dummy", SM_STALE_NONE, 0, Percentage, true);  //(znams)
+    SOHValidValues = MyMetrics.InitVector<float>("xvu.b.soh.values", SM_STALE_NONE, 0, Percentage, true);  //(znams)
     SOHPerPackMax = MyMetrics.InitVector<float>("xvu.b.soh.perpackmax", SM_STALE_NONE, 0, Percentage, true);  //(znams)
     SOHPerPackMin = MyMetrics.InitVector<float>("xvu.b.soh.perpackmin", SM_STALE_NONE, 0, Percentage, true);  //(znams)
     SOHPerPackAvg = MyMetrics.InitVector<float>("xvu.b.soh.perpackavg", SM_STALE_NONE, 0, Percentage, true);  //(znams)
