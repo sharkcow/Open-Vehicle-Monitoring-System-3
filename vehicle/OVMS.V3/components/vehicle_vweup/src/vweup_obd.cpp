@@ -1648,7 +1648,7 @@ void OvmsVehicleVWeUp::UpdateChargeCap(bool charging)
 }
 
 //(znams) Ticker3600 triggers the polling updates for SoH history at the beginning of a quarter and filling the m_poll_vector
-void OvmsVehicleVWeUp::Ticker3600(uint32_t ticker) 
+void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) 
 {
   uint64_t TimeCurrent = StdMetrics.ms_m_timeutc->AsInt();
   std::time_t time_cast = static_cast<std::time_t>(TimeCurrent);
