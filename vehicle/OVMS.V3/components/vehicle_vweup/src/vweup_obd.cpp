@@ -1798,6 +1798,6 @@ void OvmsVehicleVWeUp::Ticker10(uint32_t ticker){
           SOHPerMeasureMinFake->SetElemValue(j, minSOHF);
           float avgSOHF = sumF / countF;
           SOHPerMeasureAvgFake->SetElemValue(j, avgSOHF);
-          //MyNotify.NotifyStringf("info", "soh.stat", "SoH statistic data is available.");
+          MyNotify.NotifyStringf("info", "soh.stat", "Notification from Ticker.");
     }  
   }
