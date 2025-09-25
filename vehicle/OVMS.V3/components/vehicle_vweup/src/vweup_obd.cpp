@@ -206,121 +206,17 @@ void OvmsVehicleVWeUp::OBDInit()
     m_was_soh_polled = MyMetrics.InitBool("xvu.b.soh.wasupdated",SM_STALE_MAX, false, Other, true); //(znams)
 
         //Simulating fake SOH data and storing in the metrics
-    SOHDummyFake = MyMetrics.InitVector<float>("xvu.b.soh.values.fake", SM_STALE_NONE, 0, Percentage);  //(znams) 
-    SOHPerPackMaxFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackmax.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerPackMinFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackmin.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerPackAvgFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackavg.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerMeasureMaxFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremax.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerMeasureMinFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremin.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerMeasureAvgFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasureavg.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHVectorSizeFake = MyMetrics.InitInt("xvu.b.soh.vectorsize.fake", SM_STALE_NONE, 0); //(znams)
-    SOHPerPackStdDevFake = MyMetrics.InitVector<float>("xvu.b.soh.standev.fake", SM_STALE_NONE, 0, Percentage); //(znams)
-
-        std::vector<float> sohVector = {125,122,125,122,119,119,120,122,117,117,118,118,118,115,118,114,117,114,113,114,114,112,117,115,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,122,124,121,119,119,119,121,117,117,118,117,117,115,117,114,116,114,113,113,113,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,124,121,119,119,120,122,118,117,118,118,117,115,117,114,116,113,115,113,114,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,124,122,118,119,120,121,117,117,118,118,117,115,116,114,116,113,114,113,112,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,122,124,121,119,119,120,121,117,117,118,118,117,115,117,114,117,113,114,113,112,113,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,122,124,121,119,119,120,122,118,117,118,118,118,115,117,114,117,113,114,113,114,113,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,124,121,118,118,120,121,117,116,118,117,117,115,116,114,115,112,115,112,113,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,120,118,118,119,121,117,116,117,117,116,114,116,114,115,113,114,112,111,111,116,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,122,123,121,118,118,120,121,117,116,117,117,117,114,116,114,115,113,113,113,112,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,120,117,118,120,121,116,116,117,117,116,114,116,113,115,113,114,112,111,111,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,120,117,117,118,120,116,116,117,116,116,113,115,113,114,112,115,112,111,111,116,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,120,117,118,120,120,116,116,117,116,116,114,115,113,114,113,115,112,112,111,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,121,118,118,120,120,116,116,118,117,116,114,116,113,115,113,113,112,112,112,116,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,121,118,118,120,121,117,116,117,117,116,114,116,113,116,113,114,112,112,112,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,124,121,118,118,119,121,117,116,118,117,116,114,116,114,115,113,114,112,113,111,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,121,117,117,120,120,116,116,117,116,116,113,115,113,115,112,114,112,112,112,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,120,117,118,120,121,116,116,118,117,116,114,116,113,115,113,115,112,112,111,116,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255}; 
-
-        // Precompute and normalize values
-     // std::string resultSohF = "";
-      for (int i = 0; i < sohVector.size(); i++) {
-        if (sohVector[i] != 255) {
-            sohVector[i] = (sohVector[i] * 100) / 125; 
-            }
-          //  char bufferF[12];
-          //  snprintf(bufferF, sizeof(bufferF), "%f", sohVector[i]);
-          //  resultSohF += bufferF;
-          //  resultSohF += " ";
-      }
-     // CalculateStatsSOH(sohVector);
-      
-        // Compute statistics per battery pack
-        for (int i = 0; i < 17; ++i) {
-        float maxSOHF = 0, minSOHF = 100, sumF = 0, countF = 0;
-        std::vector<float> validSOHValuesF;
-          for (int j = 0; j < 40; ++j) {
-            int indexF = i * 40 + j;
-            float sohF = sohVector[indexF];
-
-            if (sohF != 255) {
-                maxSOHF = std::max(maxSOHF, sohF);
-                minSOHF = std::min(minSOHF, sohF);
-                sumF += sohF;
-                countF++;
-                validSOHValuesF.push_back(sohF);
-            }
-
-          } 
-          SOHPerPackMaxFake->SetElemValue(i, maxSOHF);
-          SOHPerPackMinFake->SetElemValue(i, minSOHF);
-          float avgSOHF = sumF / countF;
-          SOHPerPackAvgFake->SetElemValue(i, avgSOHF);
-
-          //Standard deviation calculation
-          float varianceF = 0.0;
-            for (int valF : validSOHValuesF) {
-              varianceF += (valF - avgSOHF) * (valF - avgSOHF);
-              }
-          varianceF /= countF;
-          float stdDevF = std::sqrt(varianceF);
-          SOHPerPackStdDevFake->SetElemValue(i, stdDevF);
-        }
+    SOHDummyFake = MyMetrics.InitVector<float>("xvu.b.soh.values.fake", SM_STALE_NONE, 0, Percentage, true);  //(znams) 
+    SOHPerPackMaxFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackmax.fake", SM_STALE_NONE, 0, Percentage, true);  //(znams)
+    SOHPerPackMinFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackmin.fake", SM_STALE_NONE, 0, Percentage, true);  //(znams)
+    SOHPerPackAvgFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackavg.fake", SM_STALE_NONE, 0, Percentage, true);  //(znams)
+    SOHPerMeasureMaxFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremax.fake", SM_STALE_NONE, 0, Percentage, true);  //(znams)
+    SOHPerMeasureMinFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremin.fake", SM_STALE_NONE, 0, Percentage, true);  //(znams)
+    SOHPerMeasureAvgFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasureavg.fake", SM_STALE_NONE, 0, Percentage, true);  //(znams)
+    SOHVectorSizeFake = MyMetrics.InitInt("xvu.b.soh.vectorsize.fake", SM_STALE_NONE, 0, Other, true); //(znams)
+    SOHPerPackStdDevFake = MyMetrics.InitVector<float>("xvu.b.soh.standev.fake", SM_STALE_NONE, 0, Percentage, true); //(znams)
 
 
-    int sohIndexF = 0;  // Track index for SOHDummyFake
-
-
-
-//Removing invalid values
-    for (auto it = sohVector.begin(); it != sohVector.end(); ) {
-       // *it = (*it * 100) / 125; 
-
-        if (*it == 255) {  
-            it = sohVector.erase(it);  // Remove invalid values
-        } else {
-            SOHDummyFake->SetElemValue(sohIndexF++, *it);  // Store valid values
-            ++it;  // Move to next element
-        }
-    }
-    int SOHVectorSizeF = sohVector.size();
-    SOHVectorSizeFake->SetValue(SOHVectorSizeF);
-
-// Valid amount of measurements
-// int numPacks = (vweup_modelyear > 2019) ? 14 : 17;
-  int numMeasurementsF = sohVector.size() / 17;
- // Compute statistics per measurement index (across battery packs)
- for (int j = 0; j < numMeasurementsF; ++j) {
-        float maxSOHF = 0, minSOHF = 100, sumF = 0, countF = 0;
-        for (int i = 0; i < 17; ++i) {
-            int index = i * numMeasurementsF + j;
-            float sohF = sohVector[index];
-
-            if (sohF != 255) {
-                maxSOHF = std::max(maxSOHF, sohF);
-                minSOHF = std::min(minSOHF, sohF);
-                sumF += sohF;
-                countF++;
-            }
-        }
-          SOHPerMeasureMaxFake->SetElemValue(j, maxSOHF);
-          SOHPerMeasureMinFake->SetElemValue(j, minSOHF);
-          float avgSOHF = sumF / countF;
-          SOHPerMeasureAvgFake->SetElemValue(j, avgSOHF);
-          //MyNotify.NotifyStringf("info", "soh.stat", "SoH statistic data is available.");
-    }  
  
     // Battery SOH:
     //  . from ECU 8C PID 74 CB
@@ -1797,3 +1693,111 @@ void OvmsVehicleVWeUp::Ticker300(uint32_t ticker)
        m_was_soh_polled->SetValue(false);
     }
 }
+
+void OvmsVehicleVWeUp::Ticker600(uint32_t ticker){
+        std::vector<float> sohVector = {125,122,125,122,119,119,120,122,117,117,118,118,118,115,118,114,117,114,113,114,114,112,117,115,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+                                  125,122,124,121,119,119,119,121,117,117,118,117,117,115,117,114,116,114,113,113,113,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+                                  125,121,124,121,119,119,120,122,118,117,118,118,117,115,117,114,116,113,115,113,114,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+                                  125,121,124,122,118,119,120,121,117,117,118,118,117,115,116,114,116,113,114,113,112,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+                                  125,122,124,121,119,119,120,121,117,117,118,118,117,115,117,114,117,113,114,113,112,113,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+                                  125,122,124,121,119,119,120,122,118,117,118,118,118,115,117,114,117,113,114,113,114,113,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+                                  125,121,124,121,118,118,120,121,117,116,118,117,117,115,116,114,115,112,115,112,113,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+                                  125,121,123,120,118,118,119,121,117,116,117,117,116,114,116,114,115,113,114,112,111,111,116,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+                                  125,122,123,121,118,118,120,121,117,116,117,117,117,114,116,114,115,113,113,113,112,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+                                  125,121,123,120,117,118,120,121,116,116,117,117,116,114,116,113,115,113,114,112,111,111,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+                                  125,121,123,120,117,117,118,120,116,116,117,116,116,113,115,113,114,112,115,112,111,111,116,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+                                  125,121,123,120,117,118,120,120,116,116,117,116,116,114,115,113,114,113,115,112,112,111,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+                                  125,121,123,121,118,118,120,120,116,116,118,117,116,114,116,113,115,113,113,112,112,112,116,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+                                  125,121,123,121,118,118,120,121,117,116,117,117,116,114,116,113,116,113,114,112,112,112,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+                                  125,121,124,121,118,118,119,121,117,116,118,117,116,114,116,114,115,113,114,112,113,111,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+                                  125,121,123,121,117,117,120,120,116,116,117,116,116,113,115,113,115,112,114,112,112,112,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+                                  125,121,123,120,117,118,120,121,116,116,118,117,116,114,116,113,115,113,115,112,112,111,116,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255}; 
+
+        // Precompute and normalize values
+     // std::string resultSohF = "";
+      for (int i = 0; i < sohVector.size(); i++) {
+        if (sohVector[i] != 255) {
+            sohVector[i] = (sohVector[i] * 100) / 125; 
+            }
+          //  char bufferF[12];
+          //  snprintf(bufferF, sizeof(bufferF), "%f", sohVector[i]);
+          //  resultSohF += bufferF;
+          //  resultSohF += " ";
+      }
+     // CalculateStatsSOH(sohVector);
+      
+        // Compute statistics per battery pack
+        for (int i = 0; i < 17; ++i) {
+        float maxSOHF = 0, minSOHF = 100, sumF = 0, countF = 0;
+        std::vector<float> validSOHValuesF;
+          for (int j = 0; j < 40; ++j) {
+            int indexF = i * 40 + j;
+            float sohF = sohVector[indexF];
+
+            if (sohF != 255) {
+                maxSOHF = std::max(maxSOHF, sohF);
+                minSOHF = std::min(minSOHF, sohF);
+                sumF += sohF;
+                countF++;
+                validSOHValuesF.push_back(sohF);
+            }
+
+          } 
+          SOHPerPackMaxFake->SetElemValue(i, maxSOHF);
+          SOHPerPackMinFake->SetElemValue(i, minSOHF);
+          float avgSOHF = sumF / countF;
+          SOHPerPackAvgFake->SetElemValue(i, avgSOHF);
+
+          //Standard deviation calculation
+          float varianceF = 0.0;
+            for (int valF : validSOHValuesF) {
+              varianceF += (valF - avgSOHF) * (valF - avgSOHF);
+              }
+          varianceF /= countF;
+          float stdDevF = std::sqrt(varianceF);
+          SOHPerPackStdDevFake->SetElemValue(i, stdDevF);
+        }
+
+
+    int sohIndexF = 0;  // Track index for SOHDummyFake
+
+
+
+//Removing invalid values
+    for (auto it = sohVector.begin(); it != sohVector.end(); ) {
+       // *it = (*it * 100) / 125; 
+
+        if (*it == 255) {  
+            it = sohVector.erase(it);  // Remove invalid values
+        } else {
+            SOHDummyFake->SetElemValue(sohIndexF++, *it);  // Store valid values
+            ++it;  // Move to next element
+        }
+    }
+    int SOHVectorSizeF = sohVector.size();
+    SOHVectorSizeFake->SetValue(SOHVectorSizeF);
+
+// Valid amount of measurements
+// int numPacks = (vweup_modelyear > 2019) ? 14 : 17;
+  int numMeasurementsF = sohVector.size() / 17;
+ // Compute statistics per measurement index (across battery packs)
+ for (int j = 0; j < numMeasurementsF; ++j) {
+        float maxSOHF = 0, minSOHF = 100, sumF = 0, countF = 0;
+        for (int i = 0; i < 17; ++i) {
+            int index = i * numMeasurementsF + j;
+            float sohF = sohVector[index];
+
+            if (sohF != 255) {
+                maxSOHF = std::max(maxSOHF, sohF);
+                minSOHF = std::min(minSOHF, sohF);
+                sumF += sohF;
+                countF++;
+            }
+        }
+          SOHPerMeasureMaxFake->SetElemValue(j, maxSOHF);
+          SOHPerMeasureMinFake->SetElemValue(j, minSOHF);
+          float avgSOHF = sumF / countF;
+          SOHPerMeasureAvgFake->SetElemValue(j, avgSOHF);
+          //MyNotify.NotifyStringf("info", "soh.stat", "SoH statistic data is available.");
+    }  
+  }
