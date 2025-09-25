@@ -240,10 +240,10 @@ void OvmsVehicleVWeUp::OBDInit()
         if (sohVector[i] != 255) {
             sohVector[i] = (sohVector[i] * 100) / 125; 
             }
-            char bufferF[12];
-            snprintf(bufferF, sizeof(bufferF), "%f", sohVector[i]);
-            resultSohF += bufferF;
-            resultSohF += " ";
+          //  char bufferF[12];
+          //  snprintf(bufferF, sizeof(bufferF), "%f", sohVector[i]);
+          //  resultSohF += bufferF;
+          //  resultSohF += " ";
       }
      // CalculateStatsSOH(sohVector);
       
