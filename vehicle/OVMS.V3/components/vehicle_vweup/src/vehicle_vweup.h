@@ -150,7 +150,6 @@ protected:
   void Ticker10(uint32_t ticker) override;
   void Ticker60(uint32_t ticker) override;
   void Ticker300(uint32_t ticker) override; //(znams) Used to initiate SoH history update
-  //void Ticker600(uint32_t ticker) override; //(znams) Used for testing persistent storage
 
 public:
   vehicle_command_t CommandHomelink(int button, int durationms = 1000) override;
@@ -447,16 +446,6 @@ protected:
   
   OvmsMetricBool          *m_was_soh_polled;      // Flag checking SoH history update (znams)
 
-  //Metrics for fake SoH data
-  OvmsMetricVector<float> *SOHDummyFake;                // SOH Dummy data for testing (znams)
-  OvmsMetricVector<float> *SOHPerPackMaxFake;           // SOH Dummy data for testing (znams)
-  OvmsMetricVector<float> *SOHPerPackMinFake;           // SOH Dummy data for testing (znams)
-  OvmsMetricVector<float> *SOHPerPackAvgFake;        // SOH Dummy data for testing (znams)
-  OvmsMetricVector<float> *SOHPerMeasureMaxFake;        // SOH Dummy data for testing (znams)
-  OvmsMetricVector<float> *SOHPerMeasureMinFake;        // SOH Dummy data for testing (znams)
-  OvmsMetricVector<float> *SOHPerMeasureAvgFake;     // SOH Dummy data for testing (znams)
-  OvmsMetricInt *SOHVectorSizeFake;                   // SOH Dummy data for testing (znams)
-  OvmsMetricVector<float> *SOHPerPackStdDevFake;      // SOH Dummy data for testing (znams)
 
 
   OvmsMetricFloat *BatTempMax;

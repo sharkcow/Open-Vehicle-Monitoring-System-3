@@ -207,17 +207,6 @@ void OvmsVehicleVWeUp::OBDInit()
 
     m_was_soh_polled = MyMetrics.InitBool("xvu.b.soh.wasupdated",SM_STALE_MAX, false, Other, true); //(znams)
 
-        //Simulating fake SOH data and storing in the metrics
-    SOHDummyFake = MyMetrics.InitVector<float>("xvu.b.soh.values.fake", SM_STALE_NONE, 0, Percentage, true);  //(znams) 
-    SOHPerPackMaxFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackmax.fake", SM_STALE_NONE, 0, Percentage, true);  //(znams)
-    SOHPerPackMinFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackmin.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerPackAvgFake = MyMetrics.InitVector<float>("xvu.b.soh.perpackavg.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerMeasureMaxFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremax.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerMeasureMinFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasuremin.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHPerMeasureAvgFake = MyMetrics.InitVector<float>("xvu.b.soh.permeasureavg.fake", SM_STALE_NONE, 0, Percentage);  //(znams)
-    SOHVectorSizeFake = MyMetrics.InitInt("xvu.b.soh.vectorsize.fake", SM_STALE_NONE, 0, Other); //(znams)
-    SOHPerPackStdDevFake = MyMetrics.InitVector<float>("xvu.b.soh.standev.fake", SM_STALE_NONE, 0, Percentage); //(znams)
-
 
  
     // Battery SOH:
@@ -1662,7 +1651,7 @@ void OvmsVehicleVWeUp::UpdateChargeCap(bool charging)
 }
 
 //(znams) Ticker3600 triggers the polling updates for SoH history at the beginning of a quarter and filling the m_poll_vector
-/*void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) 
+void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) 
 {
   uint64_t TimeCurrent = StdMetrics.ms_m_timeutc->AsInt();
   std::time_t time_cast = static_cast<std::time_t>(TimeCurrent);
@@ -1694,140 +1683,4 @@ void OvmsVehicleVWeUp::UpdateChargeCap(bool charging)
     {
        m_was_soh_polled->SetValue(false);
     }
-}*/
-
-/*void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) {
-  auto soh_realMetric_state = SOHValidValues->AsVector();
-  if (soh_realMetric_state.empty()){
-        ESP_LOGD(TAG, "Poll vector BEFORE deleting a Terminating Poll Line: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());  // expected size 142
-      // deleting a Terminating Poll Line
-      m_poll_vector.erase(
-      std::remove_if(m_poll_vector.begin(), m_poll_vector.end(),
-      [](const OvmsPoller::poll_pid_t& poll) {
-            // condition: remove if pid matches this value
-            return poll.pid == 0x00;
-        }),
-        m_poll_vector.end());
-        ESP_LOGD(TAG, "Poll vector AFTER deleting a Terminating Poll Line: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());  // expected size 141
-    m_poll_vector.insert(m_poll_vector.end(), {
-    {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0, 1, 1, 1}, 1, ISOTP_STD},
-    });
-    m_poll_vector.push_back(POLL_LIST_END);
-     ESP_LOGD(TAG, "Poll vector AFTER adding the SOH PID and the Terminating Poll Line: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());  // expected size 143
-    PollSetPidList(m_can1, m_poll_vector.data());
-    MyNotify.NotifyStringf("info", "soh.stat", "The SoH metrics are empty. The polling is triggered.");
-  }
-}*/
-
-
-void OvmsVehicleVWeUp::Ticker300(uint32_t ticker){
-  auto soh_metric_state = SOHDummyFake->AsVector();
-  if (soh_metric_state.empty()){
-        std::vector<float> sohVector = {125,122,125,122,119,119,120,122,117,117,118,118,118,115,118,114,117,114,113,114,114,112,117,115,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,122,124,121,119,119,119,121,117,117,118,117,117,115,117,114,116,114,113,113,113,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,124,121,119,119,120,122,118,117,118,118,117,115,117,114,116,113,115,113,114,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,124,122,118,119,120,121,117,117,118,118,117,115,116,114,116,113,114,113,112,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,122,124,121,119,119,120,121,117,117,118,118,117,115,117,114,117,113,114,113,112,113,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,122,124,121,119,119,120,122,118,117,118,118,118,115,117,114,117,113,114,113,114,113,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,124,121,118,118,120,121,117,116,118,117,117,115,116,114,115,112,115,112,113,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,120,118,118,119,121,117,116,117,117,116,114,116,114,115,113,114,112,111,111,116,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,122,123,121,118,118,120,121,117,116,117,117,117,114,116,114,115,113,113,113,112,112,117,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,120,117,118,120,121,116,116,117,117,116,114,116,113,115,113,114,112,111,111,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,120,117,117,118,120,116,116,117,116,116,113,115,113,114,112,115,112,111,111,116,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,120,117,118,120,120,116,116,117,116,116,114,115,113,114,113,115,112,112,111,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,121,118,118,120,120,116,116,118,117,116,114,116,113,115,113,113,112,112,112,116,114,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,121,118,118,120,121,117,116,117,117,116,114,116,113,116,113,114,112,112,112,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,124,121,118,118,119,121,117,116,118,117,116,114,116,114,115,113,114,112,113,111,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,121,117,117,120,120,116,116,117,116,116,113,115,113,115,112,114,112,112,112,116,113,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-                                  125,121,123,120,117,118,120,121,116,116,118,117,116,114,116,113,115,113,115,112,112,111,116,112,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255}; 
-
-        // Precompute and normalize values
-     // std::string resultSohF = "";
-      for (int i = 0; i < sohVector.size(); i++) {
-        if (sohVector[i] != 255) {
-            sohVector[i] = (sohVector[i] * 100) / 125; 
-            }
-          //  char bufferF[12];
-          //  snprintf(bufferF, sizeof(bufferF), "%f", sohVector[i]);
-          //  resultSohF += bufferF;
-          //  resultSohF += " ";
-      }
-     // CalculateStatsSOH(sohVector);
-      
-        // Compute statistics per battery pack
-        for (int i = 0; i < 17; ++i) {
-        float maxSOHF = 0, minSOHF = 100, sumF = 0, countF = 0;
-        std::vector<float> validSOHValuesF;
-          for (int j = 0; j < 40; ++j) {
-            int indexF = i * 40 + j;
-            float sohF = sohVector[indexF];
-
-            if (sohF != 255) {
-                maxSOHF = std::max(maxSOHF, sohF);
-                minSOHF = std::min(minSOHF, sohF);
-                sumF += sohF;
-                countF++;
-                validSOHValuesF.push_back(sohF);
-            }
-
-          } 
-          SOHPerPackMaxFake->SetElemValue(i, maxSOHF);
-          SOHPerPackMinFake->SetElemValue(i, minSOHF);
-          float avgSOHF = sumF / countF;
-          SOHPerPackAvgFake->SetElemValue(i, avgSOHF);
-
-          //Standard deviation calculation
-          float varianceF = 0.0;
-            for (int valF : validSOHValuesF) {
-              varianceF += (valF - avgSOHF) * (valF - avgSOHF);
-              }
-          varianceF /= countF;
-          float stdDevF = std::sqrt(varianceF);
-          SOHPerPackStdDevFake->SetElemValue(i, stdDevF);
-        }
-
-
-    int sohIndexF = 0;  // Track index for SOHDummyFake
-
-
-
-//Removing invalid values
-    for (auto it = sohVector.begin(); it != sohVector.end(); ) {
-       // *it = (*it * 100) / 125; 
-
-        if (*it == 255) {  
-            it = sohVector.erase(it);  // Remove invalid values
-        } else {
-            SOHDummyFake->SetElemValue(sohIndexF++, *it);  // Store valid values
-            ++it;  // Move to next element
-        }
-    }
-    int SOHVectorSizeF = sohVector.size();
-    SOHVectorSizeFake->SetValue(SOHVectorSizeF);
-
-// Valid amount of measurements
-// int numPacks = (vweup_modelyear > 2019) ? 14 : 17;
-  int numMeasurementsF = sohVector.size() / 17;
- // Compute statistics per measurement index (across battery packs)
- for (int j = 0; j < numMeasurementsF; ++j) {
-        float maxSOHF = 0, minSOHF = 100, sumF = 0, countF = 0;
-        for (int i = 0; i < 17; ++i) {
-            int index = i * numMeasurementsF + j;
-            float sohF = sohVector[index];
-
-            if (sohF != 255) {
-                maxSOHF = std::max(maxSOHF, sohF);
-                minSOHF = std::min(minSOHF, sohF);
-                sumF += sohF;
-                countF++;
-            }
-        }
-          SOHPerMeasureMaxFake->SetElemValue(j, maxSOHF);
-          SOHPerMeasureMinFake->SetElemValue(j, minSOHF);
-          float avgSOHF = sumF / countF;
-          SOHPerMeasureAvgFake->SetElemValue(j, avgSOHF);
-    }
-    ESP_LOGD(TAG, "Checking the initial size of a Poll vector: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());  // expected size 142  
-    MyNotify.NotifyStringf("info", "soh.stat", "Notification from Ticker.");
-  }
 }
