@@ -76,8 +76,10 @@ const OvmsPoller::poll_pid_t vweup_polls[] = {
   {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_TEMP,             {  0, 20, 20, 20}, 1, ISOTP_STD},
   {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_HIST18,           {  0, 20, 20, 20}, 1, ISOTP_STD},
   {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_CAC,          {  0, 20, 20, 20}, 1, ISOTP_STD}, 
-  // {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0, 20, 20, 20}, 1, ISOTP_STD}, 
-  //(znams) Needed only to retrieve SoH history for the first time
+  
+  {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0, 20, 20, 20}, 1, ISOTP_STD}, 
+  //(znams) Needed only to retrieve SoH history on module reboot. 
+  // When the data arrives, this entry is removed.
 
   {VWUP_CHG,      UDS_READ, VWUP_CHG_POWER_EFF,             {  0,  0, 10,  0}, 1, ISOTP_STD},
 
@@ -1694,7 +1696,7 @@ void OvmsVehicleVWeUp::UpdateChargeCap(bool charging)
     }
 }*/
 
-void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) {
+/*void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) {
   auto soh_realMetric_state = SOHValidValues->AsVector();
   if (soh_realMetric_state.empty()){
         ESP_LOGD(TAG, "Poll vector BEFORE deleting a Terminating Poll Line: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());  // expected size 142
@@ -1715,7 +1717,7 @@ void OvmsVehicleVWeUp::Ticker300(uint32_t ticker) {
     PollSetPidList(m_can1, m_poll_vector.data());
     MyNotify.NotifyStringf("info", "soh.stat", "The SoH metrics are empty. The polling is triggered.");
   }
-}
+}*/
 
 
 void OvmsVehicleVWeUp::Ticker600(uint32_t ticker){
