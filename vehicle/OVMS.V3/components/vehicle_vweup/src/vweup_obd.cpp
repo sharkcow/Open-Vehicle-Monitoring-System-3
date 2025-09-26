@@ -1826,7 +1826,8 @@ void OvmsVehicleVWeUp::Ticker600(uint32_t ticker){
           SOHPerMeasureMinFake->SetElemValue(j, minSOHF);
           float avgSOHF = sumF / countF;
           SOHPerMeasureAvgFake->SetElemValue(j, avgSOHF);
-    }  
+    }
+    ESP_LOGD(TAG, "Checking the initial size of a Poll vector: size=%d cap=%d", m_poll_vector.size(), m_poll_vector.capacity());  // expected size 142  
     MyNotify.NotifyStringf("info", "soh.stat", "Notification from Ticker.");
   }
 }
