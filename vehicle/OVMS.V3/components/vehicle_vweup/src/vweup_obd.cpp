@@ -1720,7 +1720,7 @@ void OvmsVehicleVWeUp::UpdateChargeCap(bool charging)
 }*/
 
 
-void OvmsVehicleVWeUp::Ticker600(uint32_t ticker){
+void OvmsVehicleVWeUp::Ticker300(uint32_t ticker){
   auto soh_metric_state = SOHDummyFake->AsVector();
   if (soh_metric_state.empty()){
         std::vector<float> sohVector = {125,122,125,122,119,119,120,122,117,117,118,118,118,115,118,114,117,114,113,114,114,112,117,115,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
