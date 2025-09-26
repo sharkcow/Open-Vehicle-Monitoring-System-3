@@ -1,0 +1,267 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">Historic SoH Metrics</div>
+  <div class="receiver">
+
+    <p>
+      This Web-plugin provides the historic State of Health (SoH) data of your VW e-Up vehicle.
+      The first line chart presents SoH values on the Y-axis and the date of measurement on the X-axis.
+      The extra three lines correspond to the statistic data (maximum, minimum and average per measurement).
+    </p>
+
+    <!-- Line Chart -->
+    <div class="metric chart"
+         data-metric="xvu.b.soh.values,
+                      xvu.b.soh.permeasuremax,
+                      xvu.b.soh.permeasuremin,
+                      xvu.b.soh.permeasureavg,
+                      xvu.b.soh.vectorsize"
+         style="height:550px">
+      <div class="chart-box linechart" id="soh-line"></div>
+    </div>
+
+    <!-- Toggle Switches -->
+    <div class="toggle-wrapper">
+      <div class="toggle-container">
+        <label class="toggle-label">
+          SoH Packs
+          <label class="switch">
+            <input type="checkbox" id="toggleSOH" checked>
+            <span class="slider"></span>
+          </label>
+        </label>
+
+        <label class="toggle-label">
+          Statistics
+          <label class="switch">
+            <input type="checkbox" id="toggleStats" checked>
+            <span class="slider"></span>
+          </label>
+        </label>
+      </div>
+    </div>
+
+    <hr/>
+
+    <p>
+      The next graph shows the bar charts with the statistic data (maximum, minimum and average SoH value)
+      per battery pack. Here you can analyze the overall performance of each battery pack.
+    </p>
+
+    <!-- Bar Chart -->
+    <div id="sohstat-perpack" class="metric chart"
+         data-metric="xvu.b.soh.perpackmin,
+                      xvu.b.soh.perpackavg,
+                      xvu.b.soh.standev,
+                      xvu.b.soh.vectorsize"
+         style="height:350px">
+      <div class="chart-box barchart"></div>
+    </div>
+
+<style>
+#sohstat-perpack .highcharts-color-0 {
+   fill: #FA765F;
+   stroke: #FA765F;
+}
+
+#sohstat-perpack .highcharts-color-1 {
+   fill: #5FBFFA;
+   stroke: #5FBFFA;
+}
+</style>
+
+  </div>
+</div>
+
+<style>
+.toggle-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+}
+.toggle-container {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
+.switch input { display: none; }
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 26px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px; width: 20px;
+  left: 3px; bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+input:checked + .slider { background-color: #2196F3; }
+input:checked + .slider:before { transform: translateX(24px); }
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+}
+</style>
+
+<script>
+
+$(function() {
+  
+  let cells = 17; 
+  const vectorSize = metrics["xvu.b.soh.vectorsize"];
+  if (vectorSize) {
+    cells = vectorSize > 560 ? 17 : 14;
+  }
+  let sohChartRef = null;
+  
+  // --- SoH History Chart ---
+  $("#soh-line").chart({
+    chart: { type: 'line', zoomType: 'x', panning: true, panKey: 'ctrl' },
+    title: { text: 'SoH History of all Battery Packs' },
+    xAxis: { type: 'datetime', title: { text: 'Time' } },
+    yAxis: { title: { text: 'State of Health (%)' }, min: 70, max: 100 },
+    tooltip: { shared: true, crosshairs: true, xDateFormat: '%A, %b %e, %Y', valueSuffix: ' %', valueDecimals: 1 },
+    legend: { enabled: true },
+    series: [],
+    onUpdate: function(update) {
+
+      sohChartRef = this;
+
+      const sohVector     = metrics["xvu.b.soh.values"] || [];
+      const perMeasureMax = metrics["xvu.b.soh.permeasuremax"] || [];
+      const perMeasureMin = metrics["xvu.b.soh.permeasuremin"] || [];
+      const perMeasureAvg = metrics["xvu.b.soh.permeasureavg"] || [];
+      const vectorSize = metrics["xvu.b.soh.vectorsize"] || [];
+
+      if (!sohVector.length) return;
+
+      const historyLength = sohVector.length / cells;
+
+      function getQuarterStartDates(count) {
+        const dates = [];
+        const now = new Date();
+        let quarter = Math.floor(now.getMonth() / 3);
+        let year = now.getFullYear();
+        let month = quarter * 3;
+        let start = new Date(year, month, 1);
+        for (let i = count - 1; i >= 0; i--) {
+          let qDate = new Date(start);
+          qDate.setMonth(start.getMonth() - i * 3);
+          dates.push(qDate.getTime());
+        }
+        return dates;
+      }
+      const quarterTimestamps = getQuarterStartDates(historyLength);
+        Highcharts.setOptions({time: {useUTC: false}});
+      const series = [];
+
+      // Per-pack SoH
+      for (let i = 0; i < cells; i++) {
+        const cellData = [];
+        for (let j = 0; j < historyLength; j++) {
+          cellData.push([quarterTimestamps[j], sohVector[i * historyLength + j]]);
+        }
+        series.push({ name: `Pack ${i+1}`, data: cellData });
+      }
+
+      // Statistics
+      series.push({
+        name: "Max SOH",
+        data: perMeasureMax.map((v,i)=>[quarterTimestamps[i], v])
+      });
+      series.push({
+        name: "Min SOH",
+        data: perMeasureMin.map((v,i)=>[quarterTimestamps[i], v])
+      });
+      series.push({
+        name: "Avg SOH",
+        data: perMeasureAvg.map((v,i)=>[quarterTimestamps[i], v])
+      });
+
+      this.update({ series }, true, true, false);
+    }
+  });
+
+  // --- SOH per Pack Bar Chart ---
+  $("#sohstat-perpack").chart({
+    chart: { type: 'column' },
+    title: { text: 'SOH Statistics per Battery Pack' },
+    xAxis: { categories: Array.from({ length: cells }, (_, i) => `Pack ${i+1}`) },
+    yAxis: { title: { text: 'State of Health (%)' }, min: 70, max: 100, tickInterval: 2.5 },
+    tooltip: { shared: true, valueSuffix: ' %', valueDecimals: 1 },
+    legend: { enabled: true },
+    series: [
+      { name: 'Min SOH', data: [] },
+      { name: 'Avg SOH', data: [] },
+      { name: 'Std Dev', type: 'errorbar', data: [] }
+    ],
+    onUpdate: function(update) {
+      const m_min   = metrics["xvu.b.soh.perpackmin"] || [];
+      const m_avg   = metrics["xvu.b.soh.perpackavg"] || [];
+      const m_stdev = metrics["xvu.b.soh.standev"]   || [];
+
+      const val_min=[], val_avg=[], val_err=[];
+      for (let i=0; i<m_min.length; i++) {
+        const avg   = Number((m_avg[i]||0).toFixed(2));
+        const stdev = Number((m_stdev[i]||0).toFixed(2));
+        const min   = Number((m_min[i]||0).toFixed(2));
+        val_min.push(min);
+        val_avg.push(avg);
+        val_err.push([avg-stdev, avg+stdev]);
+      }
+
+      this.series[0].setData(val_min);
+      this.series[1].setData(val_avg);
+      this.series[2].setData(val_err);
+    }
+  });
+
+  // --- Initial draw on page load ---
+  $(".metric.chart").each(function () {
+    const chart = $(this).data("highchartsChart");
+    if (chart != null) {
+      const hc = Highcharts.charts[chart];
+      if (hc && hc.userOptions.onUpdate) {
+        hc.userOptions.onUpdate.call(hc, {});
+      }
+    }
+  });
+
+  // --- Toggle Switch Handlers ---
+  $("#toggleSOH").on("change", function() {
+    if (!sohChartRef) return;
+    const visible = this.checked;
+    for (let i = 0; i < cells; i++) {
+      if (sohChartRef.series[i])
+        sohChartRef.series[i].setVisible(visible, false);
+    }
+    sohChartRef.redraw();
+  });
+
+  $("#toggleStats").on("change", function() {
+    if (!sohChartRef) return;
+    const visible = this.checked;
+    const statIndexes = [cells, cells+1, cells+2];
+    statIndexes.forEach(i => {
+      if (sohChartRef.series[i])
+        sohChartRef.series[i].setVisible(visible, false);
+    });
+    sohChartRef.redraw();
+  });
+
+});
+</script>
