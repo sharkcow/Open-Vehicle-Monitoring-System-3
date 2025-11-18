@@ -238,7 +238,7 @@ void OvmsVehicleVWeUp::OBDInit()
                                  }; 
 
         // Precompute and normalize values
-     // std::string resultSohF = "";
+      std::string resultSohF = "";
       for (int i = 0; i < sohVector.size(); i++) {
         if (sohVector[i] != 255) {
             sohVector[i] = (sohVector[i] * 100) / 125; 
