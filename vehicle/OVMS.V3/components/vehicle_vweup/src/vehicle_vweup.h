@@ -447,6 +447,15 @@ protected:
   OvmsMetricBool          *m_was_soh_polled;      // Flag checking SoH history update (znams)
 
 
+  OvmsMetricVector<float> *SOHDummyFake;          // SOH history vector with valid percentages (znams)
+  OvmsMetricVector<float> *SOHPerPackMaxFake;           // SOH history maximum per cell pack (znams)
+  OvmsMetricVector<float> *SOHPerPackMinFake;           // SOH history minimum per cell pack (znams)
+  OvmsMetricVector<float> *SOHPerPackAvgFake;           // SOH history average per cell pack (znams)
+  OvmsMetricVector<float> *SOHPerMeasureMaxFake;           // SOH history maximum per quarter update (znams)
+  OvmsMetricVector<float> *SOHPerMeasureMinFake;           // SOH history minimum per querter update  (znams)
+  OvmsMetricVector<float> *SOHPerMeasureAvgFake;           // SOH history average per quarter update  (znams)
+  OvmsMetricInt *SOHVectorSizeFake;                   // SOH history vector size (znams)
+  OvmsMetricVector<float> *SOHPerPackStdDevFake;      // SOH calculated standard deviations per cell pack (znams)
 
   OvmsMetricFloat *BatTempMax;
   OvmsMetricFloat *BatTempMin;
