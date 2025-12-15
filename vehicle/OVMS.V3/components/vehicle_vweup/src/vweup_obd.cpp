@@ -218,6 +218,7 @@ void OvmsVehicleVWeUp::OBDInit()
     SOHVectorSizeFake = MyMetrics.InitInt("xvu.b.soh.vectorsize.fake", SM_STALE_NONE, 0); //(znams)
     SOHPerPackStdDevFake = MyMetrics.InitVector<float>("xvu.b.soh.standev.fake", SM_STALE_NONE, 0, Percentage); //(znams)
  
+    // Comment test line
     //int i;
     //int j;
     //int value;
