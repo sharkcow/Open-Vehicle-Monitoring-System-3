@@ -469,8 +469,7 @@ void OvmsVehicleVWeUp::IncomingFrameCan3(CAN_frame_t *p_frame)
       }
       break;
 
-    // Check for running hvac.
-    case 0x3E1:
+    case 0x3E1: // Check for running hvac
       if (d[4] > 0) {
         StdMetrics.ms_v_env_hvac->SetValue(true);
       }

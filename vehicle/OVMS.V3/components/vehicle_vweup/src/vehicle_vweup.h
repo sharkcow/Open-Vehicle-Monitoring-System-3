@@ -462,7 +462,16 @@ protected:
   OvmsMetricFloat     *m_chg_ccs_voltage;         // CCS charger supplied voltage [V]
   OvmsMetricFloat     *m_chg_ccs_current;         // CCS Charger supplied current [A]
   OvmsMetricFloat     *m_chg_ccs_power;           // CCS Charger supplied power [kW]
-
+  OvmsMetricFloat     *m_chg_time_ac;             // AC total charging time [h]
+  OvmsMetricFloat     *m_chg_time_dc;             // DC total charging time [h]
+  OvmsMetricFloat     *m_chg_time_stand;          // total standing time [days]
+  OvmsMetricFloat     *m_chg_time_stand100;       // standing time fully charged [h]
+  OvmsMetricFloat     *m_chg_time_stand0;         // standing time empty battery [h]
+  OvmsMetricFloat     *m_chg_ctr_hv;              // HV contactor usage counter
+  OvmsMetricFloat     *m_chg_ctr_ccs;             // CCS contactor usage counter
+  OvmsMetricFloat     *m_chg_ah_regen;            // total Ah from regeneration [Ah]
+  OvmsMetricFloat     *m_chg_ah_ac;               // total AC Ah [Ah]
+  OvmsMetricFloat     *m_chg_ah_dc;               // total DC Ah [Ah]
   OvmsMetricInt *ServiceDays;                     // Days until next scheduled maintenance/service
   OvmsMetricVector<float> *TPMSDiffusion;         // TPMS Indicator for Pressure Diffusion
   OvmsMetricVector<float> *TPMSEmergency;         // TPMS Indicator for Tyre Emergency

@@ -160,7 +160,10 @@ using namespace std;
 #define VWUP_BAT_MGMT_CELL_TBASE        0x1EAE    // cell temperature base address
 #define VWUP_BAT_MGMT_CELL_TLAST        0x1EBD    // cell temperature last address
 #define VWUP_BAT_MGMT_CELL_T17          0x7425    // cell temperature for module #17 (gen1)
+#define VWUP_BAT_MGMT_HIST1             0x74BE    // "hist. data 1": standing time at 100%/0% SoC (days)
+#define VWUP_BAT_MGMT_HIST17            0x74CE    // "hist. data 17": HV and CCS usage counters
 #define VWUP_BAT_MGMT_HIST18            0x74CF    // "hist. data 18": total AC, CCS & regen Ah charged
+#define VWUP_BAT_MGMT_HIST19            0x74D0    // "hist. data 19": total standing, ac & dc charging time
 #define VWUP_BAT_MGMT_SOH_CAC           0x74CB    // Ah of HV battery and all cells
 #define VWUP_BAT_MGMT_SOH_HIST          0x74CC    // Ah history of each HV battery cell
 

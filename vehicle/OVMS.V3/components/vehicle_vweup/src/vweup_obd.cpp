@@ -73,8 +73,11 @@ const OvmsPoller::poll_pid_t vweup_polls[] = {
   {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_CELL_MIN,         {  0, 20, 20, 20}, 1, ISOTP_STD},
   // Same tick & order important of above 2: VWUP_BAT_MGMT_CELL_MIN calculates the delta
 
-  {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_TEMP,             {  0, 20, 20, 20}, 1, ISOTP_STD},
-  //{VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_HIST18,           {  0, 20, 20, 20}, 1, ISOTP_STD}, // not yet implemented
+  {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_TEMP,             {  0,600,600,600}, 1, ISOTP_STD},
+  {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_HIST1,            {  0,20,20,600}, 1, ISOTP_STD},
+  {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_HIST17,           {  0,20,20,600}, 1, ISOTP_STD},
+  {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_HIST18,           {  0,20,20,600}, 1, ISOTP_STD},
+  {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_HIST19,           {  0,20,20,600}, 1, ISOTP_STD},
   {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_CAC,          {  0,600,600,600}, 1, ISOTP_STD},
   {VWUP_BAT_MGMT, UDS_READ, VWUP_BAT_MGMT_SOH_HIST,         {  0,600,600,600}, 1, ISOTP_STD},
 
@@ -185,7 +188,16 @@ void OvmsVehicleVWeUp::OBDInit()
     m_chg_ccs_voltage = MyMetrics.InitFloat("xvu.c.ccs.u", SM_STALE_MIN, 0, Volts);
     m_chg_ccs_current = MyMetrics.InitFloat("xvu.c.ccs.i", SM_STALE_MIN, 0, Amps);
     m_chg_ccs_power   = MyMetrics.InitFloat("xvu.c.ccs.p", SM_STALE_MIN, 0, kW);
-
+    m_chg_time_ac = MyMetrics.InitFloat("xvu.c.time.ac", SM_STALE_MIN, 0, Hours);
+    m_chg_time_dc = MyMetrics.InitFloat("xvu.c.time.dc", SM_STALE_NONE, 0, Hours);
+    m_chg_time_stand = MyMetrics.InitFloat("xvu.c.time.stand", SM_STALE_NONE, 0);
+    m_chg_time_stand100 = MyMetrics.InitFloat("xvu.c.time.stand100", SM_STALE_MIN, 0, Hours);
+    m_chg_time_stand0 = MyMetrics.InitFloat("xvu.c.time.stand0", SM_STALE_NONE, 0, Hours);
+    m_chg_ctr_hv = MyMetrics.InitFloat("xvu.c.ctr.hv", SM_STALE_NONE, 0);
+    m_chg_ctr_ccs = MyMetrics.InitFloat("xvu.c.ctr.ccs", SM_STALE_NONE, 0);
+    m_chg_ah_regen = MyMetrics.InitFloat("xvu.c.ah.regen", SM_STALE_NONE, 0, AmpHours);
+    m_chg_ah_ac = MyMetrics.InitFloat("xvu.c.ah.ac", SM_STALE_NONE, 0, AmpHours);
+    m_chg_ah_dc = MyMetrics.InitFloat("xvu.c.ah.dc", SM_STALE_NONE, 0, AmpHours);
     ServiceDays =  MyMetrics.InitInt("xvu.e.serv.days", SM_STALE_NONE, 0);
     TPMSDiffusion = MyMetrics.InitVector<float>("xvu.v.t.diff", SM_STALE_NONE, 0);
     TPMSEmergency = MyMetrics.InitVector<float>("xvu.v.t.emgcy", SM_STALE_NONE, 0);
@@ -1442,10 +1454,102 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
       }
       break;
 
-#if 0
-    case VWUP_BAT_MGMT_HIST18:
-      // XXX OBD-Amigos: AC Ah: b21-b24, DC Ah: b29-b32, regen Ah: b5-b8, HV usage counter: U16(V2,V3), CCS usage counter: U16(V8,V9)
+    case VWUP_BAT_MGMT_HIST1:
+      if (PollReply.FromUint8("VWUP_BAT_MGMT_HIST1", ivalue)) {
+        float result;
+        int sum = 0, d, h, m, s;
+        //standing time fully charged: (U32(V24--V27)+U32(V48--V51)+U32(V72--V75)+U32(V96--V99)+U32(V120--V123)+U32(V144--V147)+U32(V168--V171)+U32(V192--V195))/86400) days
+        // offset steps always 24!
+        for (int off = 23; off <= 191; off += 24) {
+          PollReply.FromUint32("VWUP_BAT_MGMT_HIST1", ivalue, off);
+          VALUE_LOG(TAG, "VWUP_BAT_MGMT_HIST19 STAND100 OFF %d: %d", off, ivalue);
+          sum += ivalue;
+        }
+        d = sum / 86400;
+        h = (sum % 86400) / 3600;
+        m = (sum % 3600) / 60;
+        s = sum % 60;
+        result = sum/3600.0f;
+        m_chg_time_stand100->SetValue(result);
+        VALUE_LOG(TAG, "VWUP_BAT_MGMT_HIST19 STAND100=%d => %f = %dd:%02dh:%02dm:%02ds", sum, result, d, h, m, s);
+        //standing time empty battery: (U32(V4--V7)+U32(V28--V31)+U32(V52--V55)+U32(V76--V79)+U32(V100--V103)+U32(V124--V127)+U32(V148--V151)+U32(V172--V175))/86400) days
+        sum = 0;
+        for (int off = 3; off <= 171; off += 24) {
+          PollReply.FromUint32("VWUP_BAT_MGMT_HIST1", ivalue, 3);
+          VALUE_LOG(TAG, "VWUP_BAT_MGMT_HIST19 STAND0 OFF %d: %d", off, ivalue);
+          sum += ivalue;
+        }
+        d = sum / 86400;
+        h = (sum % 86400) / 3600;
+        m = (sum % 3600) / 60;
+        s = sum % 60;
+        result = sum/3600.0f;
+        m_chg_time_stand0->SetValue(result);
+        VALUE_LOG(TAG, "VWUP_BAT_MGMT_HIST19 STAND0=%d => %f = %dd:%02dh:%02dm:%02ds", sum, result, d, h, m, s);
+      }
       break;
+    case VWUP_BAT_MGMT_HIST17:
+      // OBD-Amigos: HV usage counter: U16(V2,V3), CCS usage counter: U16(V8,V9)
+      if (PollReply.FromUint8("VWUP_BAT_MGMT_HIST18", ivalue)) {
+        PollReply.FromUint16("VWUP_BAT_MGMT_HIST18", ivalue, 1);
+        m_chg_ctr_hv->SetValue(ivalue);
+        VALUE_LOG(TAG, "VWUP_BAT_MGMT_HIST19 HV COUNTER=%d", ivalue);
+        PollReply.FromUint16("VWUP_BAT_MGMT_HIST18", ivalue, 7);
+        m_chg_ctr_ccs->SetValue(ivalue);
+        VALUE_LOG(TAG, "VWUP_BAT_MGMT_HIST19 CCS COUNTER=%d", ivalue);
+      }
+      break;
+    case VWUP_BAT_MGMT_HIST18: // XXX CHECK NUMBERS!
+      // XXX OBD-Amigos: AC Ah: b21-b24, DC Ah: b29-b32, regen Ah: b5-b8
+      if (PollReply.FromUint8("VWUP_BAT_MGMT_HIST18", ivalue)) {
+        float result;
+        PollReply.FromUint32("VWUP_BAT_MGMT_HIST18", ivalue, 5);
+        result = ivalue/256.0f;
+        m_chg_ah_regen->SetValue(result);
+        VALUE_LOG(TAG, "VWUP_BAT_MGMT_HIST19 REGEN Ah=%d => %f", ivalue, result);
+        PollReply.FromUint32("VWUP_BAT_MGMT_HIST18", ivalue, 21);
+        result = ivalue/256.0f;
+        m_chg_ah_ac->SetValue(result);
+        VALUE_LOG(TAG, "VWUP_BAT_MGMT_HIST19 AC Ah=%d => %f", ivalue, result);
+        PollReply.FromUint32("VWUP_BAT_MGMT_HIST18", ivalue, 29);
+        result = ivalue/256.0f;
+        m_chg_ah_dc->SetValue(result);
+        VALUE_LOG(TAG, "VWUP_BAT_MGMT_HIST19 DC Ah=%d => %f", ivalue, result);
+      }
+      break;
+    case VWUP_BAT_MGMT_HIST19:
+      if (PollReply.FromUint8("VWUP_BAT_MGMT_HIST19", ivalue)) {
+        float result;
+        int sum = 0;
+        // total standing time: (U32(V6--V9)+U32(V14--V17)+U32(V18--V21)+U32(V22--V25)+U32(V26--V29))/8640) days
+        PollReply.FromUint32("VWUP_BAT_MGMT_HIST19", ivalue, 5);
+        VALUE_LOG(TAG, "VWUP_BAT_MGMT_HIST19 TIME1=%d", ivalue);
+        sum = ivalue;
+        PollReply.FromUint32("VWUP_BAT_MGMT_HIST19", ivalue, 21);
+        sum += ivalue;
+        VALUE_LOG(TAG, "VWUP_BAT_MGMT_HIST19 TIME2=%d", ivalue);
+        PollReply.FromUint32("VWUP_BAT_MGMT_HIST19", ivalue, 25);
+        sum += ivalue;
+        VALUE_LOG(TAG, "VWUP_BAT_MGMT_HIST19 TIME3=%d", ivalue);
+        // total AC charging time: U32(V14--V17)/360) h
+        PollReply.FromUint32("VWUP_BAT_MGMT_HIST19", ivalue, 13);
+        sum += ivalue;
+        result = ivalue/360.0f;
+        m_chg_time_ac->SetValue(result);
+        VALUE_LOG(TAG, "VWUP_BAT_MGMT_HIST19 ACTIME=%d => %f", ivalue, result);
+        // total DC charging time: U32(V18--V21)/360) h
+        PollReply.FromUint32("VWUP_BAT_MGMT_HIST19", ivalue, 17);
+        sum += ivalue;
+        result = ivalue/360.0f;
+        m_chg_time_dc->SetValue(result);
+        VALUE_LOG(TAG, "VWUP_BAT_MGMT_HIST19 DCTIME=%d => %f", ivalue, result);
+        sum += ivalue;
+        result = sum/8640.0f;
+        m_chg_time_stand->SetValue(result);
+        VALUE_LOG(TAG, "VWUP_BAT_MGMT_HIST19 STANDTIME=%d => %f", sum, result);
+      }
+      break;
+#if 0
     case VWUP_CHG_HEATER_I:
       // XXX OBD-Amigos: V1/4
       break;
@@ -1458,6 +1562,10 @@ void OvmsVehicleVWeUp::IncomingPollReply(const OvmsPoller::poll_job_t &job, uint
         if (plugstate != StdMetrics.ms_v_door_chargeport->AsBool()) {
           ESP_LOGI(TAG, "OBD: chargeport changed to %s", plugstate ? "plugged" : "unplugged");
           StdMetrics.ms_v_door_chargeport->SetValue(plugstate);
+          if (plugstate && !lockstate) {
+            ESP_LOGW(TAG, "ODB: socket plugged but not locked!");
+            MyNotify.NotifyStringf("warning", "socket", "socket plugged but not locked!");
+          }
           if (!plugstate && HasT26() && chg_workaround) {
             ESP_LOGD(TAG, "OBD: socket unplugged in workaround mode, resetting charge current");
             SetChargeCurrent(profile0_charge_current_old);
