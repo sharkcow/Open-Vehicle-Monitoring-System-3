@@ -178,7 +178,7 @@ void OvmsVehicleVWeUp::T26Init()
   profile0_charge_current_old = 0;
   profile0_cc_temp_old = 0;
   profile0_delay = 1500;
-  profile0_retries = 5;
+  profile0_retries = 10;
   memset(profile0_cntr, 0, sizeof(profile0_cntr)); // 3 counters to keep track of retries in different states of profile0 state machine
   profile0_state = PROFILE0_IDLE;
   profile0_key = P0_KEY_NOP;
